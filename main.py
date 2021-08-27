@@ -4,7 +4,6 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 from Assets import Keyboards
 from Database import Database
 from ClassProcessor import ClassProcessor
-from ClassProcessor import get_weekday_index
 
 main_id = open('secret/token', 'r').read()  # Токен паблика бота
 main_group_id = 198604544  # Айди паблика бота
@@ -14,7 +13,7 @@ fsm = FiniteStateMachine()
 
 group_index = State("group_index")  # это нужно для fsm
 
-DEFAULT_ANSWER = 'Ok'
+DEFAULT_ANSWER = 'Oк'
 
 
 def get_group_index(event):
@@ -104,10 +103,12 @@ async def timetable(event: SimpleBotEvent):
     payload = event.payload
     cp = ClassProcessor(get_group_index(event))
 
-    if not payload['next week']:
+    if payload['next week']:
+        await event.answer(message=cp.getByDay(payload['day'], True))
+    else:
         await event.answer(message=cp.getByDay(payload['day']))
 
-    await event.answer(message=str(payload))  # TODO delete
+    # await event.answer(message=str(payload))
 
 
 # ... Навигация ...

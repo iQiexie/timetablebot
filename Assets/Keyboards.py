@@ -2,7 +2,7 @@ from vkwave.bots import Keyboard, ButtonColor
 
 
 def main() -> Keyboard:
-    kb = Keyboard(one_time=False)  # TODO поменять на True
+    kb = Keyboard(one_time=True)
 
     kb.add_text_button(
         text="Сегодняшние пары", color=ButtonColor.PRIMARY, payload={"command": "today"}

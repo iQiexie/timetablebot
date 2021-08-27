@@ -3,16 +3,16 @@ from SheetScraper import SheetScraper
 import datetime
 
 
-def isWeekAbove():
+def isWeekAbove(week):
     # проверяет, идёт ли сейчас неделя над линией
     # если неделя нечётная, то она над линией
     # если неделя чётная, то она под линией
 
-    return datetime.date.today().isocalendar()[1] % 2 != 0
+    return week % 2 != 0
 
 
-def isWeekAbove_string():
-    if isWeekAbove():
+def isWeekAbove_string(week):
+    if isWeekAbove(week):
         return 'над чертой'
     else:
         return 'под чертой'
@@ -58,11 +58,18 @@ class ClassProcessor:
     def get_tomorrow(self):
         return self.getByDay(self.weekday + 1)
 
-    def getByDay(self, week_day_index):
+    def getByDay(self, week_day_index, next_week=False):
+        timedelta = week_day_index - self.weekday
+
+        if next_week:
+            timedelta = (week_day_index - self.weekday) + 7
+
+        return self.__getByDay(week_day_index, timedelta)
+
+    def __getByDay(self, week_day_index, timedelta):
         # week_day_index - порядковый номер дня недели, начиная с 0. Понедельник - 0, воскресенье - 6.
         # timedelta = сколько дней нужно добавить к текущей дате
 
-        timedelta = week_day_index - self.weekday
         today = (datetime.date.today() + datetime.timedelta(days=timedelta))
 
         if week_day_index > 6:
@@ -73,7 +80,7 @@ class ClassProcessor:
             return 'Какие пары? Это воскресенье. Это только я тут 24/7 работаю'
 
         # выбираем стартовую позицию для курсора
-        if isWeekAbove():
+        if isWeekAbove(today.isocalendar()[1]):
             current_position = 0 + (week_day_index * 40)  # 40 - количество линий, которые занимает день
         else:
             current_position = 4 + (week_day_index * 40)
@@ -81,7 +88,7 @@ class ClassProcessor:
         step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
         text = f'({get_weekday_name()[week_day_index]}, ' \
-               f'{isWeekAbove_string()}, ' \
+               f'{isWeekAbove_string(today.isocalendar()[1])}, ' \
                f'неделя №{today.isocalendar()[1]}, ' \
                f'{today.strftime("%d.%m.%Y")})\n\n'
 
