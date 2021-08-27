@@ -2,49 +2,137 @@ from vkwave.bots import Keyboard, ButtonColor
 
 
 def main() -> Keyboard:
-    main = Keyboard(one_time=True)
-    main.add_text_button(
+    kb = Keyboard(one_time=False) # TODO поменять на True
+
+    kb.add_text_button(
         text="Сегодняшние пары", color=ButtonColor.PRIMARY, payload={"command": "today"}
     )
-    main.add_text_button(
+    kb.add_text_button(
         text="Завтрашние пары", color=ButtonColor.PRIMARY, payload={"command": "tomorrow"}
     )
 
-    main.add_row()
+    kb.add_row()
 
-    main.add_text_button(
+    kb.add_text_button(
         text="Эта неделя", color=ButtonColor.SECONDARY, payload={"command": "this week"}
     )
 
-    main.add_text_button(
+    kb.add_text_button(
         text="Настройки", color=ButtonColor.SECONDARY, payload={"command": "settings"}
     )
 
-    main.add_text_button(
+    kb.add_text_button(
         text="Следующая неделя", color=ButtonColor.SECONDARY, payload={"command": "next week"}
     )
 
-    main.add_row()
+    kb.add_row()
 
-    main.add_text_button(
+    kb.add_text_button(
         text="Убрать клавиатуру", color=ButtonColor.NEGATIVE, payload={"command": "kill keyboard"}
     )
 
-    return main
+    return kb
 
 
 def settings() -> Keyboard:
-    main = Keyboard(one_time=False)
-    main.add_text_button(
+    kb = Keyboard(one_time=False)
+
+    kb.add_text_button(
         text="Поменять группу", color=ButtonColor.PRIMARY, payload={"command": "change group"}
     )
-    main.add_text_button(
+    kb.add_text_button(
         text="Наша группа", color=ButtonColor.PRIMARY, payload={"command": "settings"}
     )
-    main.add_row()
+    kb.add_row()
 
-    main.add_text_button(
+    kb.add_text_button(
         text="В меню", color=ButtonColor.NEGATIVE, payload={"command": "main menu"}
     )
 
-    return main
+    return kb
+
+
+def week() -> Keyboard:
+    kb = Keyboard(one_time=False)
+
+    kb.add_text_button(
+        text="Понедельник", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "monday",
+                                                              "next week": False})
+    kb.add_text_button(
+        text="Вторник", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "tuesday",
+                                                              "next week": False})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="Среда", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                            "day": "wednesday",
+                                                            "next week": False})
+    kb.add_text_button(
+        text="Четверг", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "thursday",
+                                                              "next week": False})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="Пятница", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "friday",
+                                                              "next week": False})
+    kb.add_text_button(
+        text="Суббота", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "saturday",
+                                                              "next week": False})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="В меню", color=ButtonColor.NEGATIVE, payload={"command": "main menu"}
+    )
+
+    return kb
+
+
+def week_next() -> Keyboard:
+    kb = Keyboard(one_time=False)
+
+    kb.add_text_button(
+        text="Понедельник", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                                  "day": "monday",
+                                                                  "next week": True})
+    kb.add_text_button(
+        text="Вторник", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "tuesday",
+                                                              "next week": True})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="Среда", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                            "day": "wednesday",
+                                                            "next week": True})
+    kb.add_text_button(
+        text="Четверг", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "thursday",
+                                                              "next week": True})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="Пятница", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "friday",
+                                                              "next week": True})
+    kb.add_text_button(
+        text="Суббота", color=ButtonColor.SECONDARY, payload={"command": "show day",
+                                                              "day": "saturday",
+                                                              "next week": True})
+
+    kb.add_row()
+
+    kb.add_text_button(
+        text="В меню", color=ButtonColor.NEGATIVE, payload={"command": "main menu"}
+    )
+
+    return kb

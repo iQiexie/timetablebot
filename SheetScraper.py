@@ -76,7 +76,7 @@ class SheetScraper:
         response = service.spreadsheets().values().get(
             spreadsheetId=self.__spreadsheet_id,
             majorDimension='COLUMNS',
-            range=_range
+            range=_range  # smth like '2 курс!T12:T253'
         ).execute()
 
         return response
