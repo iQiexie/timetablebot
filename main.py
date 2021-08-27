@@ -58,7 +58,13 @@ async def new_index(event: BotEvent):
 
 @bot.message_handler(bot.text_contains_filter("qwe"))
 async def dev(event: SimpleBotEvent):
-    await event.answer(message=DEFAULT_ANSWER)
+    from SheetScraper import SheetScraper
+
+    ss = SheetScraper(218)
+    text = ss.read_column()
+
+    print(text)
+    await event.answer(message=text)
 
 
 # ... Навигация ...
