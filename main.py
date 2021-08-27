@@ -4,6 +4,7 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 from Assets import Keyboards
 from Database import Database
 from ClassProcessor import ClassProcessor
+from ClassProcessor import get_weekday_index
 
 main_id = open('secret/token', 'r').read()  # Токен паблика бота
 main_group_id = 198604544  # Айди паблика бота
@@ -27,18 +28,26 @@ async def start(event: SimpleBotEvent):
     await event.answer(keyboard=Keyboards.main().get_keyboard(), message=DEFAULT_ANSWER)
 
 
-# ... Сегодняшние пары ...
+# ... Сегодняшние и Завтрашние пары ...
 @bot.message_handler(PayloadFilter({"command": "today"}))
 async def today(event: SimpleBotEvent):
     cp = ClassProcessor(get_group_index(event))
 
-    await event.answer(message=cp.getByDay(1))
+    await event.answer(message=cp.get_today())
+
+
+@bot.message_handler(PayloadFilter({"command": "tomorrow"}))
+async def today(event: SimpleBotEvent):
+    cp = ClassProcessor(get_group_index(event))
+
+    await event.answer(message=cp.get_tomorrow())
 
 
 # ... Настройки ...
 @bot.message_handler(PayloadFilter({"command": "settings"}))
 async def settings(event: SimpleBotEvent):
     text = "Ваша группа: " + str(get_group_index(event))
+    text += "\nЕсли чё-то не работает, пиши мне @baboomka."
     await event.answer(message=text, keyboard=Keyboards.settings().get_keyboard())
 
 
@@ -92,7 +101,13 @@ async def timetable(event: SimpleBotEvent):
 
 @bot.message_handler(PayloadContainsFilter("show day"))
 async def timetable(event: SimpleBotEvent):
-    await event.answer(message=str(event.payload))
+    payload = event.payload
+    cp = ClassProcessor(get_group_index(event))
+
+    if not payload['next week']:
+        await event.answer(message=cp.getByDay(payload['day']))
+
+    await event.answer(message=str(payload))  # TODO delete
 
 
 # ... Навигация ...

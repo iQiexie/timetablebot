@@ -2,7 +2,7 @@ from vkwave.bots import Keyboard, ButtonColor
 
 
 def main() -> Keyboard:
-    kb = Keyboard(one_time=False) # TODO поменять на True
+    kb = Keyboard(one_time=False)  # TODO поменять на True
 
     kb.add_text_button(
         text="Сегодняшние пары", color=ButtonColor.PRIMARY, payload={"command": "today"}
@@ -57,33 +57,33 @@ def week() -> Keyboard:
 
     kb.add_text_button(
         text="Понедельник", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "monday",
-                                                              "next week": False})
+                                                                  "day": 0,
+                                                                  "next week": False})
     kb.add_text_button(
         text="Вторник", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "tuesday",
+                                                              "day": 1,
                                                               "next week": False})
 
     kb.add_row()
 
     kb.add_text_button(
         text="Среда", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                            "day": "wednesday",
+                                                            "day": 2,
                                                             "next week": False})
     kb.add_text_button(
         text="Четверг", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "thursday",
+                                                              "day": 3,
                                                               "next week": False})
 
     kb.add_row()
 
     kb.add_text_button(
         text="Пятница", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "friday",
+                                                              "day": 4,
                                                               "next week": False})
     kb.add_text_button(
         text="Суббота", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "saturday",
+                                                              "day": 5,
                                                               "next week": False})
 
     kb.add_row()
@@ -100,33 +100,33 @@ def week_next() -> Keyboard:
 
     kb.add_text_button(
         text="Понедельник", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                                  "day": "monday",
+                                                                  "day": 0,
                                                                   "next week": True})
     kb.add_text_button(
         text="Вторник", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "tuesday",
+                                                              "day": 1,
                                                               "next week": True})
 
     kb.add_row()
 
     kb.add_text_button(
         text="Среда", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                            "day": "wednesday",
+                                                            "day": 2,
                                                             "next week": True})
     kb.add_text_button(
         text="Четверг", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "thursday",
+                                                              "day": 3,
                                                               "next week": True})
 
     kb.add_row()
 
     kb.add_text_button(
         text="Пятница", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "friday",
+                                                              "day": 4,
                                                               "next week": True})
     kb.add_text_button(
         text="Суббота", color=ButtonColor.SECONDARY, payload={"command": "show day",
-                                                              "day": "saturday",
+                                                              "day": 5,
                                                               "next week": True})
 
     kb.add_row()
