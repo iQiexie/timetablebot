@@ -3,7 +3,7 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State, ANY
 from Assets import Keyboards
 from Database import Database
 
-main_id = open('Assets/token', 'r').read()
+main_id = open('secret/token', 'r').read()
 main_group_id = 198604544
 
 bot = SimpleLongPollBot(tokens=main_id, group_id=main_group_id)
@@ -39,7 +39,7 @@ async def new_index(event: BotEvent):
 @bot.message_handler(StateFilter(fsm=fsm, state=group_index, for_what=ForWhat.FOR_CHAT), )
 async def new_index(event: BotEvent):
     if not event.object.object.message.text.isdigit():
-        return f"Мне нужны только целочисленные значения!"
+        return f"Мне нужны только циферки!"
     await fsm.add_data(
         event=event,
         for_what=ForWhat.FOR_CHAT,
@@ -51,9 +51,7 @@ async def new_index(event: BotEvent):
 
     # всё выше - получение индекса. Индекс получен
 
-    id = event.object.object.message.peer_id
-
-    Database(id).update_group_index(user_data['group_index'])
+    Database(event.object.object.message.peer_id).update_group_index(user_data['group_index'])
 
     return f"Ваша новая группа: {user_data['group_index']}"
 
