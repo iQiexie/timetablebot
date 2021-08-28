@@ -21,7 +21,7 @@ class Database:
         self.__cursor_execute(f"""CREATE TABLE IF NOT EXISTS general (
                                     group_index INT UNIQUE PRIMARY KEY
                                     )""")
-        self.__cursor_execute(f'INSERT INTO general VALUES (101)')
+        self.__cursor_execute(f'INSERT INTO general VALUES (1)')
 
     def update_group_index(self, index):
 

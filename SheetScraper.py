@@ -68,8 +68,13 @@ class SheetScraper:
         self.__spreadsheet_id = '18O6RskGSto0doi57CKFTrsakqzGQsKDShP8SFkVgI58'
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
+        self.group_index = group_index
 
     def read_column(self):
+
+        if self.group_index == 1:
+            return {'values': ["invalid index"]}
+
         _range = self.__find_range()
 
         response = service.spreadsheets().values().get(

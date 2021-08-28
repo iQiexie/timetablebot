@@ -1,5 +1,5 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, PayloadFilter, BotEvent, PayloadContainsFilter, \
-    TextContainsFilter
+    TextContainsFilter, ClonesBot
 from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 
 from Assets import Keyboards
@@ -31,11 +31,11 @@ tomorrow_filters = (
 )
 
 start_filters = (
-    TextContainsFilter('старт') |
-    TextContainsFilter('привет') |
-    TextContainsFilter('start') |
-    TextContainsFilter('покежь клаву') |
-    TextContainsFilter('клава')
+        TextContainsFilter('старт') |
+        TextContainsFilter('привет') |
+        TextContainsFilter('start') |
+        TextContainsFilter('покежь клаву') |
+        TextContainsFilter('клава')
 )
 
 
@@ -146,5 +146,11 @@ async def navigation(event: SimpleBotEvent):
     await event.answer(message=DEFAULT_ANSWER, keyboard=Keyboards.main().get_keyboard())
 
 
+token2 = open('secret/tokenmain', 'r').read()
+clones = ClonesBot(
+    bot,
+    SimpleLongPollBot(tokens=token2, group_id=198604544)
+)
+
 print("started")
-bot.run_forever()
+clones.run_all_bots()
