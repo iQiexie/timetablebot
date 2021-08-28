@@ -40,12 +40,6 @@ def get_weekday_name():
     }
 
 
-def get_weekday_index():
-    # метод для получение порядкового номера дня недели в main.py
-
-    return datetime.datetime.today().weekday()
-
-
 class ClassProcessor:
     def __init__(self, group_index):
         self.SS = SheetScraper(group_index)
