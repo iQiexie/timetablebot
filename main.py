@@ -111,6 +111,23 @@ async def dev(event: SimpleBotEvent):
     await event.answer(message=event.text)
 
 
+# обновление гугл таблиц
+@bot.message_handler(bot.text_contains_filter("обновить говно"))
+async def dev(event: SimpleBotEvent):
+    new_spreadsheet_id = event.object.object.message.text[15:]
+    f = open("Assets/spreadsheet_id.txt", "w")
+    f.write(new_spreadsheet_id)
+    f.close()
+
+    await event.answer(message=new_spreadsheet_id)
+
+
+# обновление гугл таблиц
+@bot.message_handler(bot.text_contains_filter("какой щас лист"))
+async def dev(event: SimpleBotEvent):
+    await event.answer(message=open("Assets/spreadsheet_id.txt", "r").read())
+
+
 # ... Расписание ...
 @bot.message_handler(PayloadFilter({"command": "this week"}))
 async def timetable(event: SimpleBotEvent):

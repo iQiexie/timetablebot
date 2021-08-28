@@ -1,4 +1,3 @@
-import os
 import pickle
 import os
 from google_auth_oauthlib.flow import Flow, InstalledAppFlow
@@ -10,17 +9,14 @@ import datetime
 # -- Google library --
 
 def Create_Service(client_secret_file, api_name, api_version, *scopes):
-    # print(client_secret_file, api_name, api_version, scopes, sep='-')
     CLIENT_SECRET_FILE = client_secret_file
     API_SERVICE_NAME = api_name
     API_VERSION = api_version
     SCOPES = [scope for scope in scopes[0]]
-    # print(SCOPES)
 
     cred = None
 
     pickle_file = f'secret/token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
-    # print(pickle_file)
 
     if os.path.exists(pickle_file):
         with open(pickle_file, 'rb') as token:
@@ -65,7 +61,7 @@ class SheetScraper:
     def __init__(self, group_index):
         self.group_index = group_index
 
-        self.__spreadsheet_id = '18O6RskGSto0doi57CKFTrsakqzGQsKDShP8SFkVgI58'
+        self.__spreadsheet_id = open("Assets/spreadsheet_id.txt", "r").read()
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
         self.group_index = group_index
@@ -182,7 +178,6 @@ class SheetScraper:
             second_range = second_grade[str(self.__group_subindex)] + "253"
 
         elif self.__grade == '3':
-            print(str(self.__group_subindex))
             first_range = third_grade[str(self.__group_subindex)] + "13"
             second_range = third_grade[str(self.__group_subindex)] + "253"
 
