@@ -1,4 +1,5 @@
 # extracts data from google sheets columns and pretty prints it
+
 from SheetScraper import SheetScraper
 import datetime
 
@@ -18,8 +19,7 @@ def isWeekAbove_string(week):
         return 'под чертой'
 
 
-def get_time():
-    return {
+get_time = {
         0: '[09:00 - 10:30]:\n\n',
         1: '[10:40 - 12:10]:\n\n',
         2: '[12:40 - 14:10]:\n\n',
@@ -28,8 +28,7 @@ def get_time():
     }
 
 
-def get_weekday_name():
-    return {
+get_weekday_name = {
         0: 'Понедельник',
         1: 'Вторник',
         2: 'Среда',
@@ -85,13 +84,13 @@ class ClassProcessor:
 
         step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
-        text = f'({get_weekday_name()[week_day_index]}, ' \
+        text = f'({get_weekday_name[week_day_index]}, ' \
                f'{isWeekAbove_string(today.isocalendar()[1])}, ' \
                f'неделя №{today.isocalendar()[1]}, ' \
                f'{today.strftime("%d.%m.%Y")})\n\n'
 
         for i in range(5):
-            text += get_time()[i]
+            text += get_time[i]
 
             for current_position in range(current_position, current_position + step_const):
                 try:
@@ -101,7 +100,6 @@ class ClassProcessor:
                 text += '\n'
 
             current_position += step_const + 1
-            text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐'
-            text += '\n\n'
+            text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
 
         return text
