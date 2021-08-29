@@ -41,8 +41,7 @@ get_weekday_name = {
 
 class ClassProcessor:
     def __init__(self, group_index):
-        self.SS = SheetScraper(group_index)
-        self.classes = self.SS.read_column()['values'][0]  # список из полей листа
+        self.classes = SheetScraper(group_index).read_column()['values'][0]  # список из полей листа
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер текущей недели
 
     def get_today(self):
@@ -56,10 +55,10 @@ class ClassProcessor:
         if self.classes == 'invalid index':
             return "Поменяй группу в настройках"
 
-        timedelta = week_day_index - self.weekday
-
         if next_week:
             timedelta = (week_day_index - self.weekday) + 7
+        else:
+            timedelta = week_day_index - self.weekday
 
         return self.__getByDay(week_day_index, timedelta)
 
