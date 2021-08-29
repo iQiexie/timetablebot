@@ -19,6 +19,7 @@ start_filters = (
         TextContainsFilter('старт') |
         TextContainsFilter('привет') |
         TextContainsFilter('start') |
+        TextContainsFilter('начать') |
         TextContainsFilter('покежь клаву') |
         TextContainsFilter('клава')
 )
