@@ -1,41 +1,25 @@
-from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, PayloadFilter, BotEvent, PayloadContainsFilter, \
-    TextContainsFilter, ClonesBot
+from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, \
+    PayloadFilter, TextContainsFilter
 from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 
-from Assets import Keyboards
+from Assets import Keyboards, Filters
 from Database import Database
 from ClassProcessor import ClassProcessor
 
-main_id = open('secret/token', 'r').read()  # Токен паблика бота
-main_group_id = 206763355  # Айди паблика бота
+MAIN_TOKEN = open('secret/token', 'r').read()  # уцацуа
+MAIN_GROUP_ID = 206763355  # уцацуа
+TOKEN2 = open('secret/tokenmain', 'r').read()  # домашка
+GROUP_ID2 = 198604544  # домашка
 
-bot = SimpleLongPollBot(tokens=main_id, group_id=main_group_id)
-fsm = FiniteStateMachine()
-
-group_index = State("group_index")  # это нужно для fsm
+GROUP_INDEX = State("group_index")  # это нужно для fsm
 DEFAULT_ANSWER = 'Oк'
 
-today_filters = (
-        (
-                TextContainsFilter('бот') & TextContainsFilter('пары') &
-                (TextContainsFilter('сёдня') | TextContainsFilter('седня'))
-        ) |
-        PayloadFilter({"command": "today"})
-)
+bot = SimpleLongPollBot(tokens=MAIN_TOKEN, group_id=MAIN_GROUP_ID)
+fsm = FiniteStateMachine()
 
-tomorrow_filters = (
-        (
-                TextContainsFilter('бот') & TextContainsFilter('пары') & TextContainsFilter('завтра')
-        ) |
-        PayloadFilter({"command": "tomorrow"})
-)
-
-start_filters = (
-        TextContainsFilter('старт') |
-        TextContainsFilter('привет') |
-        TextContainsFilter('start') |
-        TextContainsFilter('покежь клаву') |
-        TextContainsFilter('клава')
+CLONES = ClonesBot(
+    bot,
+    SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
 )
 
 
@@ -44,24 +28,22 @@ def get_group_index(event):
 
 
 # ... Cоздание бд для беседы, инициализация ...
-@bot.message_handler(start_filters)
+@bot.message_handler(Filters.start_filters)
 async def start(event: SimpleBotEvent):
     Database(event.peer_id)
     await event.answer(keyboard=Keyboards.main().get_keyboard(), message=DEFAULT_ANSWER)
 
 
 # ... Сегодняшние и Завтрашние пары ...
-@bot.message_handler(today_filters)
+@bot.message_handler(Filters.today_filters)
 async def today(event: SimpleBotEvent):
     cp = ClassProcessor(get_group_index(event))
-
     await event.answer(message=cp.get_today(), keyboard=Keyboards.main().get_keyboard())
 
 
-@bot.message_handler(tomorrow_filters)
+@bot.message_handler(Filters.tomorrow_filters)
 async def today(event: SimpleBotEvent):
     cp = ClassProcessor(get_group_index(event))
-
     await event.answer(message=cp.get_tomorrow(), keyboard=Keyboards.main().get_keyboard())
 
 
@@ -80,12 +62,12 @@ async def settings(event: SimpleBotEvent):
 # начало интервью
 @bot.message_handler(PayloadFilter({"command": "change group"}))
 async def new_index(event: BotEvent):
-    await fsm.set_state(event=event, state=group_index, for_what=ForWhat.FOR_CHAT)
+    await fsm.set_state(event=event, state=GROUP_INDEX, for_what=ForWhat.FOR_CHAT)
     return "Напишите мне новый номер группы"
 
 
 # конец интервью и получение индекса
-@bot.message_handler(StateFilter(fsm=fsm, state=group_index, for_what=ForWhat.FOR_CHAT), )
+@bot.message_handler(StateFilter(fsm=fsm, state=GROUP_INDEX, for_what=ForWhat.FOR_CHAT), )
 async def new_index(event: BotEvent):
     if not event.object.object.message.text.isdigit():
         return f"Мне нужны только циферки!"
@@ -118,11 +100,9 @@ async def dev(event: SimpleBotEvent):
     f = open("Assets/spreadsheet_id.txt", "w")
     f.write(new_spreadsheet_id)
     f.close()
-
     await event.answer(message=new_spreadsheet_id)
 
 
-# обновление гугл таблиц
 @bot.message_handler(bot.text_contains_filter("какой щас лист"))
 async def dev(event: SimpleBotEvent):
     await event.answer(message=open("Assets/spreadsheet_id.txt", "r").read())
@@ -149,8 +129,6 @@ async def timetable(event: SimpleBotEvent):
     else:
         await event.answer(message=cp.getByDay(payload['day']))
 
-    # await event.answer(message=str(payload))
-
 
 # ... Навигация ...
 @bot.message_handler(PayloadFilter({"command": "kill keyboard"}))
@@ -162,12 +140,5 @@ async def navigation(event: SimpleBotEvent):
 async def navigation(event: SimpleBotEvent):
     await event.answer(message=DEFAULT_ANSWER, keyboard=Keyboards.main().get_keyboard())
 
-
-token2 = open('secret/tokenmain', 'r').read()
-clones = ClonesBot(
-    bot,
-    SimpleLongPollBot(tokens=token2, group_id=198604544)
-)
-
 print("started")
-clones.run_all_bots()
+CLONES.run_all_bots()
