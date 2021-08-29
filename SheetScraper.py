@@ -5,6 +5,8 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import datetime
 
+from Assets import Constants
+
 
 # -- Google library --
 
@@ -61,7 +63,7 @@ class SheetScraper:
     def __init__(self, group_index):
         self.group_index = group_index
 
-        self.__spreadsheet_id = open("Assets/Constants.py", "r").read()
+        self.__spreadsheet_id = Constants.SPREADSHEET_ID
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
         self.group_index = group_index
