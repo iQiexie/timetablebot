@@ -67,16 +67,17 @@ class ClassProcessor:
         # timedelta = сколько дней нужно добавить к текущей дате
 
         today = (datetime.date.today() + datetime.timedelta(days=timedelta))
+        current_week = today.isocalendar()[1]
 
+        # проверка на воскресенье
         if week_day_index > 6:
             week_day_index -= 7
 
-        # проверка на воскресенье
         if week_day_index == 6:
             return 'Какие пары? Это воскресенье. Только я тут один 24/7 работаю'
 
         # выбираем стартовую позицию для курсора
-        if isWeekAbove(today.isocalendar()[1]):
+        if isWeekAbove(current_week):
             current_position = 0 + (week_day_index * 40)  # 40 - количество линий, которые занимает день
         else:
             current_position = 4 + (week_day_index * 40)
@@ -84,8 +85,8 @@ class ClassProcessor:
         step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
         text = f'({get_weekday_name[week_day_index]}, ' \
-               f'{isWeekAbove_string(today.isocalendar()[1])}, ' \
-               f'неделя №{today.isocalendar()[1]}, ' \
+               f'{isWeekAbove_string(current_week)}, ' \
+               f'неделя №{current_week}, ' \
                f'{today.strftime("%d.%m.%Y")})\n\n'
 
         for i in range(5):
