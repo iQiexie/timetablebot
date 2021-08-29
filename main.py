@@ -1,6 +1,6 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, PayloadFilter
 from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
-
+#
 from Assets import Keyboards, Filters, Constants
 from Database import Database
 from ClassProcessor import ClassProcessor

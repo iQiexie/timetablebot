@@ -8,6 +8,7 @@ __pycache__/
 
 /secret
 /DATABASE/USERS
+/.idea
 
 # Distribution / packaging
 .Python
