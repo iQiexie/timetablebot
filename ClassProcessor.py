@@ -41,8 +41,8 @@ get_weekday_name = {
 
 class ClassProcessor:
     def __init__(self, group_index):
-        self.classes = SheetScraper(group_index).read_column()['values'][0]  # список из полей листа
-        self.weekday = datetime.datetime.today().weekday()  # порядковый номер текущей недели
+        self.classes = SheetScraper(group_index).read_column()['values'][0]  # столбик с расписанием
+        self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
 
     def get_today(self):
         return self.getByDay(self.weekday)

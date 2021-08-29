@@ -1,6 +1,6 @@
 import pickle
 import os
-from google_auth_oauthlib.flow import Flow, InstalledAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import datetime
@@ -68,7 +68,7 @@ class SheetScraper:
 
     def read_column(self):
 
-        if self.group_index == 1:
+        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
             return {'values': ["invalid index"]}
 
         _range = self.__find_range()
