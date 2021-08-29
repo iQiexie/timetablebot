@@ -1,7 +1,7 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, PayloadFilter
 from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 
-from Assets import Keyboards, Filters
+from Assets import Keyboards, Filters, Constants
 from Database import Database
 from ClassProcessor import ClassProcessor
 
@@ -96,15 +96,13 @@ async def dev(event: SimpleBotEvent):
 @bot.message_handler(bot.text_contains_filter("обновить говно"))
 async def dev(event: SimpleBotEvent):
     new_spreadsheet_id = event.object.object.message.text[15:]
-    f = open("Assets/spreadsheet_id.txt", "w")
-    f.write(new_spreadsheet_id)
-    f.close()
+    Constants.SPREADSHEET_ID = new_spreadsheet_id
     await event.answer(message=new_spreadsheet_id)
 
 
 @bot.message_handler(bot.text_contains_filter("какой щас лист"))
 async def dev(event: SimpleBotEvent):
-    await event.answer(message=open("Assets/spreadsheet_id.txt", "r").read())
+    await event.answer(message=Constants.SPREADSHEET_ID)
 
 
 # ... Расписание ...
