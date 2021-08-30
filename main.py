@@ -96,7 +96,7 @@ async def dev(event: SimpleBotEvent):
 @bot.message_handler(bot.text_contains_filter("обновить говно"))
 async def dev(event: SimpleBotEvent):
     new_spreadsheet_id = event.object.object.message.text[15:]
-    with open('/Assets/spreadsheet_id', 'w') as f:
+    with open('Assets/spreadsheet_id', 'w') as f:
         f.write(new_spreadsheet_id)
     await event.answer(message=new_spreadsheet_id)
 

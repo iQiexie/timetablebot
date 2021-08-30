@@ -5,8 +5,6 @@ from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 import datetime
 
-from Assets import Constants
-
 
 # -- Google library --
 
@@ -58,12 +56,17 @@ API_VERSION = 'v4'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 
+SPREADSHEET_ID = ''
+
+with open('Assets/spreadsheet_id', 'r') as f:
+    SPREADSHEET_ID = f.read()
+
 
 class SheetScraper:
     def __init__(self, group_index):
         self.group_index = group_index
 
-        self.__spreadsheet_id = Constants.SPREADSHEET_ID
+        self.__spreadsheet_id = SPREADSHEET_ID
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
         self.group_index = group_index
