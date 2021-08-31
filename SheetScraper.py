@@ -44,11 +44,6 @@ def Create_Service():
         return None
 
 
-def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
-    dt = datetime.datetime(year, month, day, hour, minute, 0).isoformat() + 'Z'
-    return dt
-
-
 # -- Google library --
 
 service = Create_Service()
@@ -60,6 +55,7 @@ class SheetScraper:
 
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
+        self.__range = self.__find_range()
 
         with open('Assets/spreadsheet_id', 'r') as f:
             self.__spreadsheet_id = f.read()
@@ -69,15 +65,23 @@ class SheetScraper:
         if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
             return {'values': ["invalid index"]}
 
-        _range = self.__find_range()
-
         response = service.spreadsheets().values().get(
             spreadsheetId=self.__spreadsheet_id,
             majorDimension='COLUMNS',
-            range=_range  # smth like '2 курс!T12:T253'
+            range=self.__range  # smth like '2 курс!T12:T253'
         ).execute()
 
         return response
+
+    def get_links(self):
+        # fields = "sheets(properties(title),data(rowData(values(hyperlink,formattedValue))))"
+        fields = "sheets(data(rowData(values(hyperlink))))"
+
+        links = service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
+                                         fields=fields,
+                                         ranges=self.__range).execute()['sheets']
+
+        return links
 
     def __find_range(self):
         first_grade = {

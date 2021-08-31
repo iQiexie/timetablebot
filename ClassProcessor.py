@@ -40,7 +40,9 @@ get_weekday_name = {
 
 class ClassProcessor:
     def __init__(self, group_index):
-        self.classes = SheetScraper(group_index).read_column()['values'][0]  # столбик с расписанием
+        self.ss = SheetScraper(group_index)
+        self.classes = self.ss.read_column()['values'][0]  # столбик с расписанием
+        self.links = self.ss.get_links()[0]["data"][0]["rowData"]
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
 
     def get_today(self):
@@ -97,6 +99,11 @@ class ClassProcessor:
                 try:
                     text += self.classes[current_position]
                 except IndexError:
+                    pass
+
+                try:
+                    text += f'\n\nСсылка: {self.links[current_position]["values"][0]["hyperlink"]}\n'
+                except (KeyError, IndexError):
                     pass
                 text += '\n'
 

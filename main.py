@@ -96,10 +96,10 @@ async def new_index(event: BotEvent):
 
 
 # ... Дебаг ...
-@bot.message_handler(bot.text_contains_filter("qwe"))
+@bot.message_handler(bot.text_contains_filter("baba111"))
 async def dev(event: SimpleBotEvent):
-    await event.answer(message=event.text, keyboard=Keyboards.week().get_keyboard())
-    await event.answer(message=event.text, keyboard=Keyboards.week().get_keyboard())
+    cp = ClassProcessor(get_group_index(event))
+    await event.answer(message=cp.getByDay(0))
 
 
 # обновление гугл таблиц
