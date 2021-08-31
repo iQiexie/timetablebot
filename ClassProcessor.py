@@ -42,7 +42,7 @@ class ClassProcessor:
     def __init__(self, group_index: int):
         self.ss = SheetScraper(group_index)
         self.classes = self.ss.read_column()['values'][0]  # столбик с расписанием
-        self.links = self.ss.get_links()[0]["data"][0]["rowData"]
+        self.links = self.ss.get_links()
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
 
     def get_today(self) -> str:
@@ -116,7 +116,7 @@ class ClassProcessor:
                 try:
                     # пытаемся добавить ссылку к паре в строку
 
-                    text += f'\n\nСсылка: {self.links[current_position]["values"][0]["hyperlink"]}\n'
+                    text += f'\n\nСсылка: {self.links[0]["data"][0]["rowData"][current_position]["values"][0]["hyperlink"]}\n'
                 except (KeyError, IndexError):
                     pass
                 text += '\n'
