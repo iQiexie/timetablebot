@@ -73,6 +73,9 @@ class SheetScraper:
         return response
 
     def get_links(self) -> dict:
+        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
+            return {'values': ["invalid index"]}
+
         fields = "sheets(data(rowData(values(hyperlink))))"
 
         links = service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
@@ -82,6 +85,10 @@ class SheetScraper:
         return links
 
     def __find_range(self) -> str:
+
+        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
+            return {'values': ["invalid index"]}
+
         first_grade = {
             '01': 'D',
             '02': 'E',
