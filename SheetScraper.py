@@ -175,7 +175,7 @@ class SheetScraper:
         second_range = ''
 
         if self.__grade == '1':
-            first_range = first_grade[str(self.__group_subindex)] + "12"
+            first_range = first_grade[str(self.__group_subindex)] + "13"
             second_range = first_grade[str(self.__group_subindex)] + "253"
 
         elif self.__grade == '2':

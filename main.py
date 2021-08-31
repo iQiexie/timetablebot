@@ -39,6 +39,7 @@ async def direct_messages(event: SimpleBotEvent):
         Database(event.peer_id)
         await event.answer(keyboard=Keyboards.main().get_keyboard(), message=DEFAULT_ANSWER)
 
+
 # ... Сегодняшние и Завтрашние пары ...
 @bot.message_handler(Filters.today_filters)
 async def today(event: SimpleBotEvent):
