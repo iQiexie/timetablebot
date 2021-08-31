@@ -1,6 +1,5 @@
 import pickle
 import os
-import datetime
 
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
@@ -50,7 +49,7 @@ service = Create_Service()
 
 
 class SheetScraper:
-    def __init__(self, group_index):
+    def __init__(self, group_index: int):
         self.group_index = group_index
 
         self.__grade = str(group_index)[:1]
@@ -60,7 +59,7 @@ class SheetScraper:
         with open('Assets/spreadsheet_id', 'r') as f:
             self.__spreadsheet_id = f.read()
 
-    def read_column(self):
+    def read_column(self) -> dict:
 
         if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
             return {'values': ["invalid index"]}
@@ -73,8 +72,7 @@ class SheetScraper:
 
         return response
 
-    def get_links(self):
-        # fields = "sheets(properties(title),data(rowData(values(hyperlink,formattedValue))))"
+    def get_links(self) -> dict:
         fields = "sheets(data(rowData(values(hyperlink))))"
 
         links = service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
@@ -83,7 +81,7 @@ class SheetScraper:
 
         return links
 
-    def __find_range(self):
+    def __find_range(self) -> str:
         first_grade = {
             '01': 'D',
             '02': 'E',

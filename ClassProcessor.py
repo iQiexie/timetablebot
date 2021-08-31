@@ -4,7 +4,7 @@ from SheetScraper import SheetScraper
 import datetime
 
 
-def isWeekAbove(week):
+def isWeekAbove(week: int) -> bool:
     # проверяет, идёт ли сейчас неделя над линией
     # если неделя нечётная, то она над линией
     # если неделя чётная, то она под линией
@@ -12,7 +12,7 @@ def isWeekAbove(week):
     return week % 2 != 0
 
 
-def isWeekAbove_string(week):
+def isWeekAbove_string(week: int) -> str:
     if isWeekAbove(week):
         return 'над чертой'
     else:
@@ -39,19 +39,19 @@ get_weekday_name = {
 
 
 class ClassProcessor:
-    def __init__(self, group_index):
+    def __init__(self, group_index: int):
         self.ss = SheetScraper(group_index)
         self.classes = self.ss.read_column()['values'][0]  # столбик с расписанием
         self.links = self.ss.get_links()[0]["data"][0]["rowData"]
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
 
-    def get_today(self):
+    def get_today(self) -> str:
         return self.getByDay(self.weekday)
 
-    def get_tomorrow(self):
+    def get_tomorrow(self) -> str:
         return self.getByDay(self.weekday + 1)
 
-    def getByDay(self, week_day_index, next_week=False):
+    def getByDay(self, week_day_index: int, next_week=False) -> str:
 
         if self.classes == 'invalid index':
             return "Поменяй группу в настройках"
@@ -63,7 +63,7 @@ class ClassProcessor:
 
         return self.__getByDay(week_day_index, timedelta)
 
-    def __getByDay(self, week_day_index, timedelta):
+    def __getByDay(self, week_day_index: int, timedelta: int) -> str:
         # week_day_index - порядковый номер дня недели, начиная с 0. Понедельник - 0, воскресенье - 6.
         # timedelta = сколько дней нужно добавить к текущей дате
 
@@ -83,8 +83,6 @@ class ClassProcessor:
         else:
             current_position = 4 + (week_day_index * 40)
 
-        step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
-
         outliner = f'({get_weekday_name[week_day_index]}, ' \
                    f'{isWeekAbove_string(current_week)}, ' \
                    f'неделя №{current_week}, ' \
@@ -92,24 +90,38 @@ class ClassProcessor:
 
         text = outliner
 
+        text += self.__format_classes(current_position)
+
+        text += outliner
+
+        return text
+
+    def __format_classes(self, current_position: int) -> str:
+
+        text = ''
+
+        STEP = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
+
         for i in range(5):
             text += get_time[i]
 
-            for current_position in range(current_position, current_position + step_const):
+            for current_position in range(current_position, current_position + STEP):
                 try:
+                    # Пытаемся добавить пару в строку
+
                     text += self.classes[current_position]
                 except IndexError:
                     pass
 
                 try:
+                    # пытаемся добавить ссылку к паре в строку
+
                     text += f'\n\nСсылка: {self.links[current_position]["values"][0]["hyperlink"]}\n'
                 except (KeyError, IndexError):
                     pass
                 text += '\n'
 
-            current_position += step_const + 1
+            current_position += STEP + 1
             text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
-
-        text += outliner
 
         return text
