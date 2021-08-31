@@ -20,23 +20,22 @@ def isWeekAbove_string(week):
 
 
 get_time = {
-        0: '[09:00 - 10:30]:\n\n',
-        1: '[10:40 - 12:10]:\n\n',
-        2: '[12:40 - 14:10]:\n\n',
-        3: '[14:20 - 15:50]:\n\n',
-        4: '[16:00 - 17:30]:\n\n'
-    }
-
+    0: '[09:00 - 10:30]:\n\n',
+    1: '[10:40 - 12:10]:\n\n',
+    2: '[12:40 - 14:10]:\n\n',
+    3: '[14:20 - 15:50]:\n\n',
+    4: '[16:00 - 17:30]:\n\n'
+}
 
 get_weekday_name = {
-        0: 'Понедельник',
-        1: 'Вторник',
-        2: 'Среда',
-        3: 'Четверг',
-        4: 'Пятница',
-        5: 'Суббота',
-        6: 'Воскресенье',
-    }
+    0: 'Понедельник',
+    1: 'Вторник',
+    2: 'Среда',
+    3: 'Четверг',
+    4: 'Пятница',
+    5: 'Суббота',
+    6: 'Воскресенье',
+}
 
 
 class ClassProcessor:
@@ -85,9 +84,9 @@ class ClassProcessor:
         step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
         outliner = f'({get_weekday_name[week_day_index]}, ' \
-               f'{isWeekAbove_string(current_week)}, ' \
-               f'неделя №{current_week}, ' \
-               f'{today.strftime("%d.%m.%Y")})\n\n'
+                   f'{isWeekAbove_string(current_week)}, ' \
+                   f'неделя №{current_week}, ' \
+                   f'{today.strftime("%d.%m.%Y")})\n\n'
 
         text = outliner
 

@@ -1,19 +1,21 @@
 import pickle
 import os
+import datetime
+
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
-import datetime
 
 
 # -- Google library --
 
-def Create_Service(client_secret_file, api_name, api_version, *scopes):
-    CLIENT_SECRET_FILE = client_secret_file
-    API_SERVICE_NAME = api_name
-    API_VERSION = api_version
-    SCOPES = [scope for scope in scopes[0]]
+CLIENT_SECRET_FILE = 'secret/secret.json'
+API_SERVICE_NAME = 'sheets'
+API_VERSION = 'v4'
+SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 
+
+def Create_Service():
     cred = None
 
     pickle_file = f'secret/token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
@@ -49,27 +51,18 @@ def convert_to_RFC_datetime(year=1900, month=1, day=1, hour=0, minute=0):
 
 # -- Google library --
 
-
-CLIENT_SECRET_FILE = 'secret/secret.json'
-API_NAME = 'sheets'
-API_VERSION = 'v4'
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
-
-SPREADSHEET_ID = ''
-
-with open('Assets/spreadsheet_id', 'r') as f:
-    SPREADSHEET_ID = f.read()
+service = Create_Service()
 
 
 class SheetScraper:
     def __init__(self, group_index):
         self.group_index = group_index
 
-        self.__spreadsheet_id = SPREADSHEET_ID
         self.__grade = str(group_index)[:1]
         self.__group_subindex = str(group_index)[1:]
-        self.group_index = group_index
+
+        with open('Assets/spreadsheet_id', 'r') as f:
+            self.__spreadsheet_id = f.read()
 
     def read_column(self):
 
