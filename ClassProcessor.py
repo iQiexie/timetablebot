@@ -102,4 +102,9 @@ class ClassProcessor:
             current_position += step_const + 1
             text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
 
+        text += f'({get_weekday_name[week_day_index]}, ' \
+               f'{isWeekAbove_string(current_week)}, ' \
+               f'неделя №{current_week}, ' \
+               f'{today.strftime("%d.%m.%Y")})\n\n'
+
         return text

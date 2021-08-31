@@ -89,7 +89,7 @@ async def new_index(event: BotEvent):
 # ... Дебаг ...
 @bot.message_handler(bot.text_contains_filter("qwe"))
 async def dev(event: SimpleBotEvent):
-    await event.answer(message=event.text)
+    await event.answer(message=event.text, keyboard=Keyboards.week().get_keyboard())
 
 
 # обновление гугл таблиц
