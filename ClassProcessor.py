@@ -84,10 +84,12 @@ class ClassProcessor:
 
         step_const = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
-        text = f'({get_weekday_name[week_day_index]}, ' \
+        outliner = f'({get_weekday_name[week_day_index]}, ' \
                f'{isWeekAbove_string(current_week)}, ' \
                f'неделя №{current_week}, ' \
                f'{today.strftime("%d.%m.%Y")})\n\n'
+
+        text = outliner
 
         for i in range(5):
             text += get_time[i]
@@ -102,9 +104,6 @@ class ClassProcessor:
             current_position += step_const + 1
             text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
 
-        text += f'({get_weekday_name[week_day_index]}, ' \
-               f'{isWeekAbove_string(current_week)}, ' \
-               f'неделя №{current_week}, ' \
-               f'{today.strftime("%d.%m.%Y")})\n\n'
+        text += outliner
 
         return text
