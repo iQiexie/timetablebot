@@ -3,9 +3,7 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 
 from Assets import Keyboards, Filters
 from Database import Database
-from ClassProcessor import ClassProcessor|
-
-# PUSH
+from ClassProcessor import ClassProcessor
 
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
