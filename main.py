@@ -58,13 +58,14 @@ async def today(event: SimpleBotEvent):
 @bot.message_handler(PayloadFilter({"command": "settings"}))
 async def settings(event: SimpleBotEvent):
     text = f"Ваша группа: " + str(get_group_index(event))
-    text += "\nЕсли чё-то не работает, пиши мне @baboomka"
+    text += "\n\nЕсли чё-то не работает, пиши мне @baboomka"
+    text += "\nF.A.Q https://vk.com/topic-206763355_48153565"
     text += "\n\nБыстрый доступ:"
     text += "\n1. Начать, старт, привет, клава, start, покежь клаву - открывает меню (в лс)"
     text += "\n2. Бот начать, бот старт, бот привет, бот клава, бот start, бот покежь клаву - открывает меню (в " \
             "беседах) "
     text += "\n3. Бот пары сёдня - отправляет список пар на сегодня"
-    text += "\n3. Бот пары завтра - отправляет список пар на завтра"
+    text += "\n4. Бот пары завтра - отправляет список пар на завтра"
     await event.answer(message=text, keyboard=Keyboards.settings().get_keyboard())
 
 

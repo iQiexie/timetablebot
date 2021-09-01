@@ -54,7 +54,7 @@ class ClassProcessor:
     def getByDay(self, week_day_index: int, next_week=False) -> str:
 
         if self.classes == 'invalid index':
-            return 'Поменяй группу в настройках. Для этого напиши "старт"'
+            return 'Поменяй группу в настройках. Для этого напиши "старт", а потом нажми на "настройки"'
 
         if next_week:
             timedelta = (week_day_index - self.weekday) + 7
