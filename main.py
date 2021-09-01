@@ -19,7 +19,7 @@ fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,
-    SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
+    # SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
 )
 
 

@@ -57,7 +57,7 @@ class SheetScraper:
 
     def read_column(self) -> dict:
 
-        if self.__validate_index():
+        if self.__wrong_group_index():
             return {'values': ["invalid index"]}
 
         response = service.spreadsheets().values().get(
@@ -70,7 +70,7 @@ class SheetScraper:
 
     def get_links(self) -> dict:
 
-        if self.__validate_index():
+        if self.__wrong_group_index():
             return {'values': ["invalid index"]}
 
         fields = "sheets(data(rowData(values(hyperlink))))"
@@ -81,13 +81,17 @@ class SheetScraper:
 
         return links
 
-    def __validate_index(self):
+    def __wrong_group_index(self):
         if self.group_index < 101:
             return True
         else:
             return False
 
     def __find_range(self) -> str:
+
+        if self.__wrong_group_index():
+            return ''
+
         grade = str(self.group_index)[:1]
         group_subindex = str(self.group_index)[1:]
 
@@ -140,9 +144,6 @@ class SheetScraper:
             '17': 'S',
             '18': 'T'
         }
-
-        first_range = ''
-        second_range = ''
 
         if grade == '2':
             first_range = second_grade[str(group_subindex)] + "13"
