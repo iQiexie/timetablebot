@@ -5,10 +5,11 @@ from Assets import Keyboards, Filters
 from Database import Database
 from ClassProcessor import ClassProcessor
 
-TOKEN2 = open('secret/token', 'r').read()  # домашка
-GROUP_ID2 = 206763355  # домашка
-MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # уцацуа
-MAIN_GROUP_ID = 198604544  # уцацуа
+MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
+MAIN_GROUP_ID = 198604544  # домашка
+
+TOKEN2 = open('secret/token', 'r').read()  # расписание
+GROUP_ID2 = 206763355  # расписание
 
 GROUP_INDEX = State("group_index")  # это нужно для fsm
 DEFAULT_ANSWER = 'Oк'
@@ -115,8 +116,6 @@ async def dev(event: SimpleBotEvent):
 
 @bot.message_handler(bot.text_contains_filter("какой щас лист"))
 async def dev(event: SimpleBotEvent):
-    new_spreadsheet_id = ''
-
     with open('Assets/spreadsheet_id', 'r') as f:
         new_spreadsheet_id = f.read()
 

@@ -50,9 +50,6 @@ service = Create_Service()
 class SheetScraper:
     def __init__(self, group_index: int):
         self.group_index = group_index
-
-        self.__grade = str(group_index)[:1]
-        self.__group_subindex = str(group_index)[1:]
         self.__range = self.__find_range()
 
         with open('Assets/spreadsheet_id', 'r') as f:
@@ -91,9 +88,8 @@ class SheetScraper:
             return False
 
     def __find_range(self) -> str:
-
-        if self.__validate_index():
-            return 'invalid index'
+        grade = str(self.group_index)[:1]
+        group_subindex = str(self.group_index)[1:]
 
         first_grade = {
             '01': 'D',
@@ -145,59 +141,17 @@ class SheetScraper:
             '18': 'T'
         }
 
-        third_grade = {
-            '01': 'D',
-            '02': 'E',
-            '03': 'F',
-            '04': 'G',
-            '05': 'H',
-            '06': 'I',
-            '07': 'G',
-            '08': 'K',
-            '09': 'L',
-            '10': 'M',
-            '11': 'N',
-            '12': 'O',
-            '13': 'P',
-            '14': 'Q',
-            '15': 'R',
-            '16': 'S',
-            '17': 'T'
-        }
-
-        fourth_grade = {
-            '01': 'D',
-            '02': 'E',
-            '03': 'F',
-            '04': 'G',
-            '05': 'H',
-            '06': 'I',
-            '07': 'G',
-            '08': 'K',
-            '09': 'L',
-            '10': 'M',
-            '11': 'N',
-        }
-
         first_range = ''
         second_range = ''
 
-        if self.__grade == '1':
-            first_range = first_grade[str(self.__group_subindex)] + "13"
-            second_range = first_grade[str(self.__group_subindex)] + "253"
+        if grade == '2':
+            first_range = second_grade[str(group_subindex)] + "13"
+            second_range = second_grade[str(group_subindex)] + "253"
 
-        elif self.__grade == '2':
-            first_range = second_grade[str(self.__group_subindex)] + "13"
-            second_range = second_grade[str(self.__group_subindex)] + "253"
+        else:
+            first_range = first_grade[str(group_subindex)] + "13"
+            second_range = first_grade[str(group_subindex)] + "253"
 
-        elif self.__grade == '3':
-            first_range = third_grade[str(self.__group_subindex)] + "13"
-            second_range = third_grade[str(self.__group_subindex)] + "253"
-
-        elif self.__grade == '4':
-            first_range = fourth_grade[str(self.__group_subindex)] + "13"
-            second_range = fourth_grade[str(self.__group_subindex)] + "253"
-
-        text = f"{self.__grade} курс!{first_range}:{second_range}"
+        text = f"{grade} курс!{first_range}:{second_range}"
 
         return text

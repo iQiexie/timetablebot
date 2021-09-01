@@ -40,9 +40,9 @@ get_weekday_name = {
 
 class ClassProcessor:
     def __init__(self, group_index: int):
-        self.ss = SheetScraper(group_index)
-        self.classes = self.ss.read_column()['values'][0]  # столбик с расписанием
-        self.links = self.ss.get_links()
+        ss = SheetScraper(group_index)
+        self.classes = ss.read_column()['values'][0]  # столбик с расписанием
+        self.links = ss.get_links()
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
 
     def get_today(self) -> str:
@@ -54,7 +54,7 @@ class ClassProcessor:
     def getByDay(self, week_day_index: int, next_week=False) -> str:
 
         if self.classes == 'invalid index':
-            return "Поменяй группу в настройках"
+            return 'Поменяй группу в настройках. Для этого напиши "старт"'
 
         if next_week:
             timedelta = (week_day_index - self.weekday) + 7
@@ -70,7 +70,7 @@ class ClassProcessor:
         today = (datetime.date.today() + datetime.timedelta(days=timedelta))
         current_week = today.isocalendar()[1]
 
-        # проверка на воскресенье
+        # валидатор дня недели
         if week_day_index > 6:
             week_day_index -= 7
 
@@ -83,45 +83,39 @@ class ClassProcessor:
         else:
             current_position = 4 + (week_day_index * 40)
 
-        outliner = f'({get_weekday_name[week_day_index]}, ' \
-                   f'{isWeekAbove_string(current_week)}, ' \
-                   f'неделя №{current_week}, ' \
-                   f'{today.strftime("%d.%m.%Y")})\n\n'
+        outline = f'({get_weekday_name[week_day_index]}, ' \
+                  f'{isWeekAbove_string(current_week)}, ' \
+                  f'неделя №{current_week}, ' \
+                  f'{today.strftime("%d.%m.%Y")})\n\n'
 
-        text = outliner
-
-        text += self.__format_classes(current_position)
-
-        text += outliner
-
-        return text
+        return outline + self.__format_classes(current_position) + outline
 
     def __format_classes(self, current_position: int) -> str:
+        STEP = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
 
         text = ''
 
-        STEP = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
-
         for i in range(5):
-            text += get_time[i]
+            # итерируем пары
+
+            text += get_time[i]  # время пары типа "[09:00 - 10:30]"
 
             for current_position in range(current_position, current_position + STEP):
                 try:
-                    # Пытаемся добавить пару в строку
-
+                    # Пытаемся текст ячейки пары в строку (пара состоит из 4 ячеек)
                     text += self.classes[current_position]
                 except IndexError:
                     pass
 
                 try:
-                    # пытаемся добавить ссылку к паре в строку
-
+                    # пытаемся добавить гипер ссылку из ячейки в строку
                     text += f'\n\nСсылка: {self.links[0]["data"][0]["rowData"][current_position]["values"][0]["hyperlink"]}\n'
                 except (KeyError, IndexError):
                     pass
+
                 text += '\n'
 
-            current_position += STEP + 1
+            current_position += STEP + 1  # переходим к следующей паре
             text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
 
         return text
