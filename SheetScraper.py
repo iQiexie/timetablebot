@@ -5,7 +5,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from google.auth.transport.requests import Request
 
-
 # -- Google library --
 
 CLIENT_SECRET_FILE = 'secret/secret.json'
@@ -61,7 +60,7 @@ class SheetScraper:
 
     def read_column(self) -> dict:
 
-        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
+        if self.__validate_index():
             return {'values': ["invalid index"]}
 
         response = service.spreadsheets().values().get(
@@ -73,21 +72,28 @@ class SheetScraper:
         return response
 
     def get_links(self) -> dict:
-        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
+
+        if self.__validate_index():
             return {'values': ["invalid index"]}
 
         fields = "sheets(data(rowData(values(hyperlink))))"
 
         links = service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
-                                         fields=fields,
-                                         ranges=self.__range).execute()['sheets']
+                                           fields=fields,
+                                           ranges=self.__range).execute()['sheets']
 
         return links
 
+    def __validate_index(self):
+        if self.group_index < 101:
+            return True
+        else:
+            return False
+
     def __find_range(self) -> str:
 
-        if self.group_index == 1:  # если номер группы стандартный (см. Database.create_db())
-            return {'values': ["invalid index"]}
+        if self.__validate_index():
+            return 'invalid index'
 
         first_grade = {
             '01': 'D',
