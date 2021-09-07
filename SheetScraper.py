@@ -92,10 +92,7 @@ class SheetScraper:
         if self.__wrong_group_index():
             return ''
 
-        grade = str(self.group_index)[:1]
-        group_subindex = str(self.group_index)[1:]
-
-        first_grade = {
+        FIRST_GRADE = {
             '01': 'D',
             '02': 'E',
             '03': 'F',
@@ -125,7 +122,7 @@ class SheetScraper:
             '27': 'AD'
         }
 
-        second_grade = {
+        SECOND_GRADE = {
             '01': 'D',
             '02': 'E',
             '03': 'F',
@@ -145,14 +142,15 @@ class SheetScraper:
             '18': 'T'
         }
 
+        grade = str(self.group_index)[:1]
+        group_subindex = str(self.group_index)[1:]
+
         if grade == '2':
-            first_range = second_grade[str(group_subindex)] + "13"
-            second_range = second_grade[str(group_subindex)] + "253"
+            first_range = SECOND_GRADE[str(group_subindex)] + "13"
+            second_range = SECOND_GRADE[str(group_subindex)] + "253"
 
         else:
-            first_range = first_grade[str(group_subindex)] + "13"
-            second_range = first_grade[str(group_subindex)] + "253"
+            first_range = FIRST_GRADE[str(group_subindex)] + "13"
+            second_range = FIRST_GRADE[str(group_subindex)] + "253"
 
-        text = f"{grade} курс!{first_range}:{second_range}"
-
-        return text
+        return f"{grade} курс!{first_range}:{second_range}"

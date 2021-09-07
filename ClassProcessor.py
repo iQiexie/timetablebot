@@ -3,6 +3,27 @@
 from SheetScraper import SheetScraper
 import datetime
 
+GET_TIME: dict = {
+    0: '[09:00 - 10:30]:\n\n',
+    1: '[10:40 - 12:10]:\n\n',
+    2: '[12:40 - 14:10]:\n\n',
+    3: '[14:20 - 15:50]:\n\n',
+    4: '[16:00 - 17:30]:\n\n'
+}
+
+GET_WEEKDAY_NAME: dict = {
+    0: 'Понедельник',
+    1: 'Вторник',
+    2: 'Среда',
+    3: 'Четверг',
+    4: 'Пятница',
+    5: 'Суббота',
+    6: 'Воскресенье',
+}
+
+INVALID_INDEX_MESSAGE: str = 'Поменяй группу в настройках. Для этого напиши "старт", а потом нажми на "настройки"'
+SUNDAY_MESSAGE: str = 'Какие пары? Это воскресенье. Только я тут один 24/7 работаю'
+
 
 def isWeekAbove(week: int) -> bool:
     # проверяет, идёт ли сейчас неделя над линией
@@ -17,25 +38,6 @@ def isWeekAbove_string(week: int) -> str:
         return 'над чертой'
     else:
         return 'под чертой'
-
-
-get_time = {
-    0: '[09:00 - 10:30]:\n\n',
-    1: '[10:40 - 12:10]:\n\n',
-    2: '[12:40 - 14:10]:\n\n',
-    3: '[14:20 - 15:50]:\n\n',
-    4: '[16:00 - 17:30]:\n\n'
-}
-
-get_weekday_name = {
-    0: 'Понедельник',
-    1: 'Вторник',
-    2: 'Среда',
-    3: 'Четверг',
-    4: 'Пятница',
-    5: 'Суббота',
-    6: 'Воскресенье',
-}
 
 
 class ClassProcessor:
@@ -54,7 +56,7 @@ class ClassProcessor:
     def getByDay(self, week_day_index: int, next_week=False) -> str:
 
         if self.classes == 'invalid index':
-            return 'Поменяй группу в настройках. Для этого напиши "старт", а потом нажми на "настройки"'
+            return INVALID_INDEX_MESSAGE
 
         if next_week:
             timedelta = (week_day_index - self.weekday) + 7
@@ -75,7 +77,7 @@ class ClassProcessor:
             week_day_index -= 7
 
         if week_day_index == 6:
-            return 'Какие пары? Это воскресенье. Только я тут один 24/7 работаю'
+            return SUNDAY_MESSAGE
 
         # выбираем стартовую позицию для курсора
         if isWeekAbove(current_week):
@@ -83,7 +85,7 @@ class ClassProcessor:
         else:
             current_position = 4 + (week_day_index * 40)
 
-        outline = f'({get_weekday_name[week_day_index]}, ' \
+        outline = f'({GET_WEEKDAY_NAME[week_day_index]}, ' \
                   f'{isWeekAbove_string(current_week)}, ' \
                   f'неделя №{current_week}, ' \
                   f'{today.strftime("%d.%m.%Y")})\n\n'
@@ -98,7 +100,7 @@ class ClassProcessor:
         for i in range(5):
             # итерируем пары
 
-            text += get_time[i]  # время пары типа "[09:00 - 10:30]"
+            text += GET_TIME[i]  # время пары типа "[09:00 - 10:30]"
 
             for current_position in range(current_position, current_position + STEP):
                 try:

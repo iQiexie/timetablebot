@@ -15,10 +15,10 @@ class Database:
             self.create_db()
 
     def create_db(self):
-        self.__cursor_execute(f"""CREATE TABLE IF NOT EXISTS general (
+        self.__cursor_execute("""CREATE TABLE IF NOT EXISTS general (
                                     group_index INT UNIQUE PRIMARY KEY
                                     )""")
-        self.__cursor_execute(f'INSERT INTO general VALUES (1)')
+        self.__cursor_execute('INSERT INTO general VALUES (1)')
 
     def update_group_index(self, index):
 
@@ -28,7 +28,7 @@ class Database:
                                     ROWID = 1""")
 
     def get_group_index(self):
-        unformatted_list = self.__cursor_fetchall(f"""SELECT group_index FROM general""")
+        unformatted_list = self.__cursor_fetchall("SELECT group_index FROM general")
 
         return unformatted_list[0][0]
 
