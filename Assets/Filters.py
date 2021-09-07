@@ -21,7 +21,8 @@ start_filters_dm = (
         TextContainsFilter('start') |
         TextContainsFilter('начать') |
         TextContainsFilter('покежь клаву') |
-        TextContainsFilter('клава')
+        TextContainsFilter('клава') |
+        TextContainsFilter('пар')
 )
 
 start_filters_group = (
