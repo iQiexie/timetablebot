@@ -34,12 +34,12 @@ change_group = (
 )
 
 this_week = (
-        TextContainsFilter('эта неделя') |
+        TextContainsFilter('покежь эту неделю') |
         PayloadFilter({"command": "this week"})
 )
 
 next_week = (
-        (TextContainsFilter('след неделя') | TextContainsFilter('следующая неделя')) |
+        (TextContainsFilter('покежь след неделю') | TextContainsFilter('покежь следующую неделю')) |
         PayloadFilter({"command": "next week"})
 )
 
@@ -48,13 +48,13 @@ kill_keyboard = (
         PayloadFilter({"command": "kill keyboard"})
 )
 
-main_menu = ((
-            TextContainsFilter('меню') |
-            TextContainsFilter('в меню') |
-            TextContainsFilter('главное меню')
-        ) |
-        PayloadFilter({"command": "main menu"})
+main_menu = (
+        TextContainsFilter('меню') |
+        TextContainsFilter('в меню') |
+        TextContainsFilter('главное меню') |
+        PayloadFilter({"command": "kill keyboard"})
 )
+
 
 start = (
         TextContainsFilter('старт') |
