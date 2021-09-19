@@ -1,34 +1,66 @@
 from vkwave.bots import TextContainsFilter, PayloadFilter
 
-today_filters = (
-        (
-                TextContainsFilter('бот') & TextContainsFilter('пары') &
-                (TextContainsFilter('сёдня') | TextContainsFilter('седня'))
-        ) |
-        PayloadFilter({"command": "today"})
-)
 
-tomorrow_filters = (
-        (
-                TextContainsFilter('бот') & TextContainsFilter('пары') & TextContainsFilter('завтра')
-        ) |
+def group_message(peer_id, message) -> bool:
+    # если сообщение из беседы
+
+    return message.startswith('бот ') and int(peer_id) > 2000000000
+
+
+def dm_message(peer_id) -> bool:
+    return int(peer_id) < 2000000000
+
+
+today = ((
+                 TextContainsFilter('пары') &
+                 (TextContainsFilter('сёдня') | TextContainsFilter('седня') | TextContainsFilter('сегодня'))
+         ) |
+         PayloadFilter({"command": "today"})
+         )
+
+tomorrow = (
+        (TextContainsFilter('пары') & TextContainsFilter('завтра')) |
         PayloadFilter({"command": "tomorrow"})
 )
 
-start_filters_dm = (
+settings = (
+        TextContainsFilter('настройки') |
+        PayloadFilter({"command": "settings"})
+)
+
+change_group = (
+        TextContainsFilter('поменять группу') |
+        PayloadFilter({"command": "change group"})
+)
+
+this_week = (
+        TextContainsFilter('эта неделя') |
+        PayloadFilter({"command": "this week"})
+)
+
+next_week = (
+        (TextContainsFilter('след неделя') | TextContainsFilter('следующая неделя')) |
+        PayloadFilter({"command": "next week"})
+)
+
+kill_keyboard = (
+        TextContainsFilter('убрать клаву') |
+        PayloadFilter({"command": "kill keyboard"})
+)
+
+main_menu = ((
+            TextContainsFilter('меню') |
+            TextContainsFilter('в меню') |
+            TextContainsFilter('главное меню')
+        ) |
+        PayloadFilter({"command": "main menu"})
+)
+
+start = (
         TextContainsFilter('старт') |
         TextContainsFilter('привет') |
         TextContainsFilter('start') |
         TextContainsFilter('начать') |
         TextContainsFilter('покежь клаву') |
         TextContainsFilter('клава')
-)
-
-start_filters_group = (
-        TextContainsFilter('бот старт') |
-        TextContainsFilter('бот привет') |
-        TextContainsFilter('бот start') |
-        TextContainsFilter('бот начать') |
-        TextContainsFilter('бот покежь клаву') |
-        TextContainsFilter('бот клава')
 )
