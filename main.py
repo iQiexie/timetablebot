@@ -100,7 +100,6 @@ async def dev(event: SimpleBotEvent):
 # обновление гугл таблиц
 @bot.message_handler(bot.text_contains_filter("обновить говно"))
 async def dev(event: SimpleBotEvent):
-
     if event.peer_id == 232444433:
         new_spreadsheet_id = event.object.object.message.text[15:]  # 15 - кол-во символов в "обновить говно"
         with open('Assets/spreadsheet_id', 'w') as f:
@@ -147,6 +146,11 @@ async def navigation(event: SimpleBotEvent):
 @bot.message_handler(PayloadFilter({"command": "main menu"}))
 async def navigation(event: SimpleBotEvent):
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE, keyboard=Keyboards.main().get_keyboard())
+
+
+@bot.message_handler()
+async def echo(event: SimpleBotEvent) -> str:
+    return 'Я нинаю таких команд(((. Попробуй написать "Старт" или "Привет", а потом зайти в "Настройки"'
 
 
 print("started")
