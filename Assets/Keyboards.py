@@ -89,7 +89,7 @@ def week() -> Keyboard:
     kb.add_row()
 
     kb.add_text_button(
-        text="В меню (эта неделя)", color=ButtonColor.NEGATIVE, payload={"command": "main menu"}
+        text="В меню (эта. неделя)", color=ButtonColor.NEGATIVE, payload={"command": "main menu"}
     )
 
     return kb

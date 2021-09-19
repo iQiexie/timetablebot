@@ -34,12 +34,12 @@ change_group = (
 )
 
 this_week = (
-        TextContainsFilter('покежь эту неделю') |
+        TextContainsFilter('эта неделя') |
         PayloadFilter({"command": "this week"})
 )
 
 next_week = (
-        (TextContainsFilter('покежь след неделю') | TextContainsFilter('покежь следующую неделю')) |
+        (TextContainsFilter('след неделя') | TextContainsFilter('следующая неделя')) |
         PayloadFilter({"command": "next week"})
 )
 
