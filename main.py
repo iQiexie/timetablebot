@@ -14,11 +14,12 @@ GROUP_ID2 = 206763355  # расписание
 GROUP_INDEX = State("group_index")  # это нужно для fsm
 
 bot = SimpleLongPollBot(tokens=MAIN_TOKEN, group_id=MAIN_GROUP_ID)
+new_bot = SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
 fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
+    new_bot  # расписание
 )
 
 
@@ -33,6 +34,20 @@ def reply_allowed(peer_id, message) -> bool:
 @bot.middleware()
 async def check(event: SimpleBotEvent) -> MiddlewareResult:
     # Middleware - это глобальный фильтр. Если он вернёт False, все остальные фильтры забракуются
+
+    if event.object.type == "message_new":
+        peer_id = event.object.object.message.peer_id
+        message = event.object.object.message.text
+
+        if reply_allowed(peer_id, message):
+            return MiddlewareResult(True)
+
+    return MiddlewareResult(False)
+
+
+@new_bot.middleware()
+async def check(event: SimpleBotEvent) -> MiddlewareResult:
+    # эта проверка нужна второй раз для второго бота
 
     if event.object.type == "message_new":
         peer_id = event.object.object.message.peer_id
