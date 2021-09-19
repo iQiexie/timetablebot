@@ -32,22 +32,9 @@ def reply_allowed(peer_id, message) -> bool:
 
 
 @bot.middleware()
-async def check(event: SimpleBotEvent) -> MiddlewareResult:
-    # Middleware - это глобальный фильтр. Если он вернёт False, все остальные фильтры забракуются
-
-    if event.object.type == "message_new":
-        peer_id = event.object.object.message.peer_id
-        message = event.object.object.message.text
-
-        if reply_allowed(peer_id, message):
-            return MiddlewareResult(True)
-
-    return MiddlewareResult(False)
-
-
 @new_bot.middleware()
 async def check(event: SimpleBotEvent) -> MiddlewareResult:
-    # эта проверка нужна второй раз для второго бота
+    # Middleware - это глобальный фильтр. Если он вернёт False, все остальные фильтры забракуются
 
     if event.object.type == "message_new":
         peer_id = event.object.object.message.peer_id
