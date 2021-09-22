@@ -4,7 +4,7 @@ from vkwave.bots import TextContainsFilter, PayloadFilter
 def group_message(peer_id, message) -> bool:
     # если сообщение из беседы
 
-    return (message.startswith('бот ') | message.startswith('[club')) and int(peer_id) > 2000000000
+    return (message.lower().startswith('бот ') | message.lower().startswith('[club')) and int(peer_id) > 2000000000
 
 
 def dm_message(peer_id) -> bool:

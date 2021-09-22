@@ -22,7 +22,6 @@ CLONES = ClonesBot(
     new_bot  # расписание
 )
 
-
 def get_group_index(event):
     return Database(event.peer_id).get_group_index()
 
