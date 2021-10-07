@@ -108,11 +108,11 @@ async def dev(event: SimpleBotEvent):
     await event.answer(message=cp.getByDay(0))
 
 
-# обновление гугл таблиц
-@bot.message_handler(bot.text_contains_filter("обновить говно"))
+# обновление ссылки на гугл таблицы
+@bot.message_handler(bot.text_contains_filter("обновить"))
 async def dev(event: SimpleBotEvent):
-    if event.peer_id == 232444433:
-        new_spreadsheet_id = event.object.object.message.text[15:]  # 15 - кол-во символов в "обновить говно"
+    if event.peer_id in (232444433, 336588318):
+        new_spreadsheet_id = event.object.object.message.text.split(" ")[1]  # сплитим текст сообщения по пробелу
         with open('Assets/spreadsheet_id', 'w') as f:
             f.write(new_spreadsheet_id)
         await event.answer(message=new_spreadsheet_id)
