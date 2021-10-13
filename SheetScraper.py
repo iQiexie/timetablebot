@@ -1,22 +1,17 @@
-import pickle
 import os
+import pickle
 
+from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
-from google.auth.transport.requests import Request
+
 
 # -- Google library --
 
-CLIENT_SECRET_FILE = 'secret/secret.json'
-API_SERVICE_NAME = 'sheets'
-API_VERSION = 'v4'
-SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
-
-
-def Create_Service():
+def Create_Service(client_secret_file, api_service_name, api_version, scopes):
     cred = None
 
-    pickle_file = f'secret/token_{API_SERVICE_NAME}_{API_VERSION}.pickle'
+    pickle_file = f'secret/token_{api_service_name}_{api_version}.pickle'
 
     if os.path.exists(pickle_file):
         with open(pickle_file, 'rb') as token:
@@ -26,15 +21,15 @@ def Create_Service():
         if cred and cred.expired and cred.refresh_token:
             cred.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(CLIENT_SECRET_FILE, SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, scopes)
             cred = flow.run_local_server()
 
         with open(pickle_file, 'wb') as token:
             pickle.dump(cred, token)
 
     try:
-        service = build(API_SERVICE_NAME, API_VERSION, credentials=cred)
-        print(API_SERVICE_NAME, 'service created successfully')
+        service = build(api_service_name, api_version, credentials=cred)
+        print(api_service_name, 'service created successfully')
         return service
     except Exception as e:
         print('Unable to connect.')
@@ -44,7 +39,26 @@ def Create_Service():
 
 # -- Google library --
 
-service = Create_Service()
+sheets_service = Create_Service('secret/secret.json',
+                                'sheets',
+                                'v4',
+                                ['https://www.googleapis.com/auth/spreadsheets.readonly'])
+
+drive_service = Create_Service('secret/secret.json',
+                               'drive',
+                               'v2',
+                               ['https://www.googleapis.com/auth/drive'])
+
+
+def update_spreadsheet():
+    new_spreadsheet = drive_service.files().copy(
+        fileId="1_opvVKnFlMR_jZEuohoVczocRf__Icem",
+        convert=True
+    ).execute()
+
+    print("Spreadsheet updated")
+
+    return new_spreadsheet['id']
 
 
 class SheetScraper:
@@ -53,14 +67,14 @@ class SheetScraper:
         self.__range = self.__find_range()
 
         with open('Assets/spreadsheet_id', 'r') as f:
-            self.__spreadsheet_id = f.read()
+            self.__spreadsheet_id = f.readline()
 
     def read_column(self) -> dict:
 
         if self.__wrong_group_index():
             return {'values': ["invalid index"]}
 
-        response = service.spreadsheets().values().get(
+        response = sheets_service.spreadsheets().values().get(
             spreadsheetId=self.__spreadsheet_id,
             majorDimension='COLUMNS',
             range=self.__range  # smth like '2 курс!T12:T253'
@@ -75,9 +89,9 @@ class SheetScraper:
 
         fields = "sheets(data(rowData(values(hyperlink))))"
 
-        links = service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
-                                           fields=fields,
-                                           ranges=self.__range).execute()['sheets']
+        links = sheets_service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
+                                                  fields=fields,
+                                                  ranges=self.__range).execute()['sheets']
 
         return links
 

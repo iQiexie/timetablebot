@@ -13,3 +13,13 @@ https://vk.com/mpsu_schedule?w=wall-206763355_30
 
 Если чё-то не работает, пиши мне @baboomka
 F.A.Q https://vk.com/topic-206763355_48153565"""
+
+
+def Spreadsheet_update_info():
+    with open('Assets/spreadsheet_lastupdatetime', 'r') as f:
+        last_update_time = f.read()
+
+    with open('Assets/spreadsheet_id', 'r') as f:
+        spreadsheet_id = f.read()
+
+    return f"Расписание обновлялось в {last_update_time}\nid: {spreadsheet_id}"

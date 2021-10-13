@@ -41,7 +41,7 @@ def settings() -> Keyboard:
         text="Поменять группу", color=ButtonColor.PRIMARY, payload={"command": "change group"}
     )
     kb.add_text_button(
-        text="Наша группа", color=ButtonColor.PRIMARY, payload={"command": "settings"}
+        text="Uptime расписания", color=ButtonColor.PRIMARY, payload={"command": "get spreadsheet uptime"}
     )
     kb.add_row()
 

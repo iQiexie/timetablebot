@@ -64,3 +64,14 @@ start = (
         TextContainsFilter('покежь клаву') |
         TextContainsFilter('клава')
 )
+
+last_update_time = (
+        TextContainsFilter('актуальность') |
+        TextContainsFilter('расписания') |
+        TextContainsFilter('обновился') |
+        TextContainsFilter('uptime') |
+        TextContainsFilter('аптайм') |
+        (TextContainsFilter('время') & TextContainsFilter('обновления')) |
+        (TextContainsFilter('время') & TextContainsFilter('обновы')) |
+        PayloadFilter({"command": "get spreadsheet uptime"})
+)

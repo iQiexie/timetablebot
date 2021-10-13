@@ -4,6 +4,11 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 from Assets import Keyboards, Filters, Strings
 from Database import Database
 from ClassProcessor import ClassProcessor
+from SheetScraper import update_spreadsheet
+
+from threading import Timer
+from datetime import datetime
+
 
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
@@ -19,8 +24,23 @@ fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot  # расписание
+    # new_bot  # расписание
 )
+
+
+def spreadsheet_updating_service():
+    new_spreadsheet_id = update_spreadsheet()
+
+    with open('Assets/spreadsheet_id', 'w') as f:
+        f.write(new_spreadsheet_id)
+
+    with open('Assets/spreadsheet_lastupdatetime', 'w') as f:
+        f.write(datetime.now().strftime('%H:%M'))
+
+    Timer(3600, spreadsheet_updating_service).start()
+
+
+spreadsheet_updating_service()
 
 
 def get_group_index(event):
@@ -108,22 +128,9 @@ async def dev(event: SimpleBotEvent):
     await event.answer(message=cp.getByDay(0))
 
 
-# обновление ссылки на гугл таблицы
-@bot.message_handler(bot.text_contains_filter("обновить"))
+@bot.message_handler(Filters.last_update_time)
 async def dev(event: SimpleBotEvent):
-    if event.peer_id in (232444433, 336588318):
-        new_spreadsheet_id = event.object.object.message.text.split(" ")[1]  # сплитим текст сообщения по пробелу
-        with open('Assets/spreadsheet_id', 'w') as f:
-            f.write(new_spreadsheet_id)
-        await event.answer(message=new_spreadsheet_id)
-
-
-@bot.message_handler(bot.text_contains_filter("какой щас лист"))
-async def dev(event: SimpleBotEvent):
-    with open('Assets/spreadsheet_id', 'r') as f:
-        new_spreadsheet_id = f.read()
-
-    await event.answer(message=new_spreadsheet_id)
+    await event.answer(message=Strings.Spreadsheet_update_info())
 
 
 # ... Расписание ...
