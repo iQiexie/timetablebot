@@ -12,7 +12,7 @@ def dm_message(peer_id) -> bool:
 
 
 today = ((
-                 TextContainsFilter('пары') &
+                 (TextContainsFilter('пары') | TextContainsFilter('список') | TextContainsFilter('Расписание')) &
                  (TextContainsFilter('сёдня') | TextContainsFilter('седня') | TextContainsFilter('сегодня'))
          ) |
          PayloadFilter({"command": "today"})

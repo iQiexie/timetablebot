@@ -13,18 +13,24 @@ from datetime import datetime
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
 
-TOKEN2 = open('secret/token', 'r').read()  # расписание
-GROUP_ID2 = 206763355  # расписание
+SCHEDULE_TOKEN = open('secret/token', 'r').read()  # расписание
+SCHEDULE_GROUP_ID = 206763355  # расписание
+
+MPSU_TOKEN = open('secret/tokenmpsu', 'r').read()  # расписание
+MPSU_GROUP_ID = 152158632  # расписание
 
 GROUP_INDEX = State("group_index")  # это нужно для fsm
 
 bot = SimpleLongPollBot(tokens=MAIN_TOKEN, group_id=MAIN_GROUP_ID)
-new_bot = SimpleLongPollBot(tokens=TOKEN2, group_id=GROUP_ID2)
+new_bot = SimpleLongPollBot(tokens=SCHEDULE_TOKEN, group_id=SCHEDULE_GROUP_ID)
+mpsu_bot = SimpleLongPollBot(tokens=MPSU_TOKEN, group_id=MPSU_GROUP_ID)
+
 fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    # new_bot  # расписание
+    new_bot,  # расписание
+    mpsu_bot
 )
 
 
@@ -103,12 +109,17 @@ async def new_index(event: BotEvent):
 # } block Получение индекса {
 @bot.message_handler(StateFilter(fsm=fsm, state=GROUP_INDEX, for_what=ForWhat.FOR_CHAT), )
 async def new_index(event: BotEvent):
-    if not event.object.object.message.text.isdigit():
+    received_message = event.object.object.message.text
+
+    if "бот" in received_message:
+        received_message = received_message[4:]
+
+    if not received_message.isdigit():
         return Strings.INVALID_INPUT_MESSAGE
     await fsm.add_data(
         event=event,
         for_what=ForWhat.FOR_CHAT,
-        state_data={"group_index": event.object.object.message.text},
+        state_data={"group_index": received_message},
     )
     user_data = await fsm.get_data(event=event, for_what=ForWhat.FOR_CHAT)
 

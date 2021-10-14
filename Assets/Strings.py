@@ -10,9 +10,13 @@ def Settings(group_index):
 
 Список команд:
 https://vk.com/mpsu_schedule?w=wall-206763355_30
+https://vk.com/wall-206763355_42
 
-Если чё-то не работает, пиши мне @baboomka
-F.A.Q https://vk.com/topic-206763355_48153565"""
+
+F.A.Q:
+https://vk.com/topic-206763355_48153565
+
+Если чё-то не работает, пиши мне @baboomka"""
 
 
 def Spreadsheet_update_info():
@@ -22,4 +26,4 @@ def Spreadsheet_update_info():
     with open('Assets/spreadsheet_id', 'r') as f:
         spreadsheet_id = f.read()
 
-    return f"Расписание обновлялось в {last_update_time}\nid: {spreadsheet_id}"
+    return f"Расписание последний раз обновлялось сегодня в {last_update_time}\n\nid: {spreadsheet_id}"
