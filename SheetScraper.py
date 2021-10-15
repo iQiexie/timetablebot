@@ -113,7 +113,7 @@ class SheetScraper:
             '04': 'G',
             '05': 'H',
             '06': 'I',
-            '07': 'G',
+            '07': 'J',
             '08': 'K',
             '09': 'L',
             '10': 'M',
@@ -162,6 +162,10 @@ class SheetScraper:
         if grade == '2':
             first_range = SECOND_GRADE[str(group_subindex)] + "13"
             second_range = SECOND_GRADE[str(group_subindex)] + "253"
+
+        elif grade == '1':
+            first_range = FIRST_GRADE[str(group_subindex)] + "15"
+            second_range = FIRST_GRADE[str(group_subindex)] + "300"
 
         else:
             first_range = FIRST_GRADE[str(group_subindex)] + "13"
