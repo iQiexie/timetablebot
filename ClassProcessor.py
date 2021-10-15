@@ -118,6 +118,7 @@ class ClassProcessor:
                 text += '\n'
 
             current_position += STEP + 1  # переходим к следующей паре
-            text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
+            text += '\n\n\n\n'
+            # text += '\n\n๐৹ₒₒₒₒₒₒₒₒₒₒₒ৹๐\n\n'
 
         return text
