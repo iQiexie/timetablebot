@@ -35,9 +35,16 @@ def isWeekAbove(week: int) -> bool:
 
 def isWeekAbove_string(week: int) -> str:
     if isWeekAbove(week):
-        return 'над чертой'
+        return 'Над чертой'
     else:
-        return 'под чертой'
+        return 'Под чертой'
+
+
+def isCurrentWeek_string(week: int) -> str:
+    if week == datetime.date.today().isocalendar()[1]:
+        return 'Эта неделя'
+    else:
+        return 'Следующая неделя'
 
 
 class ClassProcessor:
@@ -87,7 +94,7 @@ class ClassProcessor:
 
         outline = f'({GET_WEEKDAY_NAME[week_day_index]}, ' \
                   f'{isWeekAbove_string(current_week)}, ' \
-                  f'неделя №{current_week}, ' \
+                  f'{isCurrentWeek_string(current_week)}, ' \
                   f'{today.strftime("%d.%m.%Y")})\n\n'
 
         return outline + self.__format_classes(current_position) + outline
