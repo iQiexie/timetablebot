@@ -9,7 +9,6 @@ from SheetScraper import update_spreadsheet, delete_spreadsheet
 from threading import Timer
 from datetime import datetime
 
-
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
 
@@ -33,18 +32,15 @@ CLONES = ClonesBot(
     mpsu_bot
 )
 
-current_spreadsheet = {
-    "id": None,
-    "updated_time": ""
-}
-
 
 def spreadsheet_updating_service():
-    if current_spreadsheet['id'] is not None:
-        delete_spreadsheet(current_spreadsheet['id'])
+    """Сохраняет копию гугл таблиц на драйв аккаунт. Вызывается каждый час"""
 
-    current_spreadsheet['id'] = update_spreadsheet()
-    current_spreadsheet['updated_time'] = datetime.now().strftime('%H:%M')
+    if Strings.current_spreadsheet['id'] is not None:
+        delete_spreadsheet(Strings.current_spreadsheet['id'])  # Удаляем старый документ, if it's in ram
+
+    Strings.current_spreadsheet['id'] = update_spreadsheet()  # Создаём новый документ
+    Strings.current_spreadsheet['updated_time'] = datetime.now().strftime('%H:%M')  # updating last doc creation time
 
     Timer(3600, spreadsheet_updating_service).start()
 
@@ -104,11 +100,7 @@ async def settings(event: SimpleBotEvent):
 
 @bot.message_handler(Filters.last_update_time)
 async def uptime(event: SimpleBotEvent):
-
-    await event.answer(message=Strings.Spreadsheet_update_info(
-                            current_spreadsheet['updated_time'],
-                            current_spreadsheet['id']
-                        ))
+    await event.answer(message=Strings.Spreadsheet_update_info())
 
 
 # block Интервью {

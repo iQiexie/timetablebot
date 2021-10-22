@@ -4,6 +4,7 @@ import pickle
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+from Assets.Strings import current_spreadsheet
 
 
 # -- Google library --
@@ -77,9 +78,7 @@ class SheetScraper:
     def __init__(self, group_index: int):
         self.group_index = group_index
         self.__range = self.__find_range()
-
-        with open('Assets/spreadsheet_id', 'r') as f:
-            self.__spreadsheet_id = f.readline()
+        self.__spreadsheet_id = current_spreadsheet['id']
 
     def read_column(self) -> dict:
 
