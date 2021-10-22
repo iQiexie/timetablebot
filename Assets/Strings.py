@@ -34,5 +34,5 @@ https://vk.com/topic-206763355_48153565
 
 
 def Spreadsheet_update_info():
-    return f"Расписание последний раз обновлялось сегодня в {current_spreadsheet['id']}" \
-           f"\n\nid: {current_spreadsheet['updated_time']}"
+    return f"Расписание последний раз обновлялось сегодня в {current_spreadsheet['updated_time']}" \
+           f"\n\nid: {current_spreadsheet['id']}"
