@@ -4,7 +4,7 @@ from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
 from Assets import Keyboards, Filters, Strings
 from Database import Database
 from ClassProcessor import ClassProcessor
-from SheetScraper import update_spreadsheet
+from SheetScraper import update_spreadsheet, delete_spreadsheet
 
 from threading import Timer
 from datetime import datetime
@@ -29,19 +29,22 @@ fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
+
+current_spreadsheet = {
+    "id": None,
+    "updated_time": ""
+}
 
 
 def spreadsheet_updating_service():
-    new_spreadsheet_id = update_spreadsheet()
+    if current_spreadsheet['id'] is not None:
+        delete_spreadsheet(current_spreadsheet['id'])
 
-    with open('Assets/spreadsheet_id', 'w') as f:
-        f.write(new_spreadsheet_id)
-
-    with open('Assets/spreadsheet_lastupdatetime', 'w') as f:
-        f.write(datetime.now().strftime('%H:%M'))
+    current_spreadsheet['id'] = update_spreadsheet()
+    current_spreadsheet['updated_time'] = datetime.now().strftime('%H:%M')
 
     Timer(3600, spreadsheet_updating_service).start()
 
@@ -99,6 +102,15 @@ async def settings(event: SimpleBotEvent):
                        keyboard=Keyboards.settings().get_keyboard())
 
 
+@bot.message_handler(Filters.last_update_time)
+async def uptime(event: SimpleBotEvent):
+
+    await event.answer(message=Strings.Spreadsheet_update_info(
+                            current_spreadsheet['updated_time'],
+                            current_spreadsheet['id']
+                        ))
+
+
 # block Интервью {
 @bot.message_handler(Filters.change_group)
 async def new_index(event: BotEvent):
@@ -137,11 +149,6 @@ async def new_index(event: BotEvent):
 async def dev(event: SimpleBotEvent):
     cp = ClassProcessor(get_group_index(event))
     await event.answer(message=cp.getByDay(0))
-
-
-@bot.message_handler(Filters.last_update_time)
-async def dev(event: SimpleBotEvent):
-    await event.answer(message=Strings.Spreadsheet_update_info())
 
 
 # ... Расписание ...

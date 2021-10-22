@@ -50,13 +50,25 @@ drive_service = Create_Service('secret/secret.json',
                                ['https://www.googleapis.com/auth/drive'])
 
 
+def get_spreadsheet_url(spreadsheet_id):
+    return f"https://docs.google.com/spreadsheets/d/{spreadsheet_id}/edit#gid=594793772"
+
+
+def delete_spreadsheet(spreadsheet_id):
+    drive_service.files().delete(
+        fileId=spreadsheet_id
+    ).execute()
+
+    print("Deleted:", get_spreadsheet_url(spreadsheet_id))
+
+
 def update_spreadsheet():
     new_spreadsheet = drive_service.files().copy(
         fileId="1_opvVKnFlMR_jZEuohoVczocRf__Icem",
         convert=True
     ).execute()
 
-    print("Spreadsheet updated")
+    print("Created:", get_spreadsheet_url(new_spreadsheet['id']))
 
     return new_spreadsheet['id']
 

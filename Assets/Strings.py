@@ -20,11 +20,5 @@ https://vk.com/topic-206763355_48153565
 Если чё-то не работает, пиши мне @baboomka"""
 
 
-def Spreadsheet_update_info():
-    with open('Assets/spreadsheet_lastupdatetime', 'r') as f:
-        last_update_time = f.read()
-
-    with open('Assets/spreadsheet_id', 'r') as f:
-        spreadsheet_id = f.read()
-
+def Spreadsheet_update_info(last_update_time, spreadsheet_id):
     return f"Расписание последний раз обновлялось сегодня в {last_update_time}\n\nid: {spreadsheet_id}"
