@@ -5,6 +5,7 @@ from Assets import Keyboards, Filters, Strings
 from Database import Database
 from ClassProcessor import ClassProcessor
 from SheetScraper import update_spreadsheet, delete_spreadsheet
+from AiHandler import get_response as ai_get_response
 
 from threading import Timer
 from datetime import datetime
@@ -28,8 +29,8 @@ fsm = FiniteStateMachine()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
 
 
@@ -178,7 +179,7 @@ async def navigation(event: SimpleBotEvent):
 
 @bot.message_handler()
 async def echo(event: SimpleBotEvent) -> str:
-    return Strings.INVALID_COMMAND
+    return ai_get_response(event.object.object.message.text)
 
 
 print("started")
