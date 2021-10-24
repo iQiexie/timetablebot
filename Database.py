@@ -9,9 +9,12 @@ class Database:
         self.__user = user
         self.__path = f"{os.path.dirname(__file__)}\\Database\\USERS\\{self.__user}.db"
 
+        self.first_message = False
+
         if os.path.isfile(self.__path):
             pass
         else:
+            self.first_message = True
             self.create_db()
 
     def create_db(self):

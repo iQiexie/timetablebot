@@ -76,8 +76,11 @@ async def check(event: SimpleBotEvent) -> MiddlewareResult:
 # ... Cоздание бд для беседы, инициализация ...
 @bot.message_handler(Filters.start)
 async def group_messages(event: SimpleBotEvent):
-    Database(event.peer_id)
-    await event.answer(keyboard=Keyboards.main().get_keyboard(), message=Strings.DEFAULT_ANSWER_MESSAGE)
+    db = Database(event.peer_id)
+    if db.first_message:
+        await event.answer(keyboard=Keyboards.main().get_keyboard(), message=Strings.GREETINGS)
+    else:
+        await event.answer(keyboard=Keyboards.main().get_keyboard(), message=Strings.DEFAULT_ANSWER_MESSAGE)
 
 
 # ... Сегодняшние и Завтрашние пары ...
