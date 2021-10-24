@@ -50,14 +50,19 @@ def make_aiproject_request(input_message, userid):
                              headers=get_headers("application/x-www-form-urlencoded"),
                              data=data)
 
-    if response.status_code == 200:
+    if response.status_code == 200 and response.json()['status'] == 1:
         return response.json()['aiml'].encode('l1').decode()
     else:
         return None
 
 
 def make_roughs_request(input_message):
-    return requests.get(f"https://roughs.ru/api/talker?text={input_message}&source_from=test@test.ru").json()['answer']
+    response = requests.get(f"https://roughs.ru/api/talker?text={input_message}&source_from=test@test.ru")
+
+    if response.status_code == 200:
+        return response.json()['answer']
+    else:
+        return "Я не знаю, как на это ответить("
 
 
 class Ai_Handler:
