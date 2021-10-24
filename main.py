@@ -30,8 +30,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    # new_bot,  # расписание
-    # mpsu_bot
+    new_bot,  # расписание
+    mpsu_bot
 )
 
 
