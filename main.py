@@ -30,8 +30,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
 
 
@@ -199,7 +199,7 @@ async def navigation(event: SimpleBotEvent):
 
 @bot.message_handler()
 async def echo(event: SimpleBotEvent) -> str:
-    return Ai.get_response(event.object.object.message.text)
+    return Ai.get_response(event.object.object.message.text, event.peer_id)
 
 
 print("started")
