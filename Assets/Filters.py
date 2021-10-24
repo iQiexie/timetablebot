@@ -55,13 +55,19 @@ main_menu = (
         PayloadFilter({"command": "kill keyboard"})
 )
 
-
 start = (
         TextContainsFilter('старт') |
         TextContainsFilter('start') |
         TextContainsFilter('начать') |
         TextContainsFilter('покежь клаву') |
         TextContainsFilter('клава')
+)
+
+misuse = (
+        TextContainsFilter('расписан') |
+
+        (TextContainsFilter('пары') &
+         (TextContainsFilter('покажи') | TextContainsFilter('дай') | TextContainsFilter('какие')))
 )
 
 last_update_time = (

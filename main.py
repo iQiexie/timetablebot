@@ -30,8 +30,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
 
 
@@ -114,6 +114,12 @@ async def uptime(event: SimpleBotEvent):
     new_creds = event.object.object.message.text
     Ai.update_creds(new_creds)
     await event.answer(message="New credits: " + new_creds)
+
+
+@bot.message_handler(Filters.misuse)
+async def uptime(event: SimpleBotEvent):
+    """ Если кто-то пытается получить расписание """
+    await event.answer(message=Strings.INVALID_COMMAND)
 
 
 # block Интервью {
@@ -199,6 +205,9 @@ async def navigation(event: SimpleBotEvent):
 
 @bot.message_handler()
 async def echo(event: SimpleBotEvent) -> str:
+    if event.object.group_id == MPSU_GROUP_ID:
+        return Strings.WRONG_COMMUNITY
+
     return Ai.get_response(event.object.object.message.text, event.peer_id)
 
 

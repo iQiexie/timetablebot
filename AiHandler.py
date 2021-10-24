@@ -71,12 +71,10 @@ class Ai_Handler:
     def get_response(self, input_message, userid):
         pbot_response = make_pbot_request(input_message, self.__creds)
         if pbot_response:
-            print("pbot ", pbot_response)
             return pbot_response
 
         aiproject_response = make_aiproject_request(input_message, userid)
         if aiproject_response:
-            print("ai", aiproject_response, userid)
             return aiproject_response
 
         return make_roughs_request(input_message)
