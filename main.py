@@ -5,7 +5,7 @@ from Assets import Keyboards, Filters, Strings
 from Database import Database
 from ClassProcessor import ClassProcessor
 from SheetScraper import update_spreadsheet, delete_spreadsheet
-from AiHandler import get_response as ai_get_response
+from AiHandler import Ai_Handler
 
 from threading import Timer
 from datetime import datetime
@@ -19,13 +19,14 @@ SCHEDULE_GROUP_ID = 206763355  # расписание
 MPSU_TOKEN = open('secret/tokenmpsu', 'r').read()  # расписание
 MPSU_GROUP_ID = 152158632  # расписание
 
-GROUP_INDEX = State("group_index")  # это нужно для fsm
-
 bot = SimpleLongPollBot(tokens=MAIN_TOKEN, group_id=MAIN_GROUP_ID)
 new_bot = SimpleLongPollBot(tokens=SCHEDULE_TOKEN, group_id=SCHEDULE_GROUP_ID)
 mpsu_bot = SimpleLongPollBot(tokens=MPSU_TOKEN, group_id=MPSU_GROUP_ID)
 
+GROUP_INDEX = State("group_index")  # это нужно для fsm
+
 fsm = FiniteStateMachine()
+Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
@@ -95,6 +96,8 @@ async def today(event: SimpleBotEvent):
 # ... Настройки ...
 @bot.message_handler(Filters.settings)
 async def settings(event: SimpleBotEvent):
+    """ Отправка клавиатуры настроек """
+
     await event.answer(message=Strings.Settings(get_group_index(event)),
                        keyboard=Keyboards.settings().get_keyboard())
 
@@ -102,6 +105,15 @@ async def settings(event: SimpleBotEvent):
 @bot.message_handler(Filters.last_update_time)
 async def uptime(event: SimpleBotEvent):
     await event.answer(message=Strings.Spreadsheet_update_info())
+
+
+@bot.message_handler(bot.text_contains_filter("&a=public-api"))
+async def uptime(event: SimpleBotEvent):
+    """ Обновление кредитов p-bot'a """
+
+    new_creds = event.object.object.message.text
+    Ai.update_creds(new_creds)
+    await event.answer(message="New credits: " + new_creds)
 
 
 # block Интервью {
@@ -147,11 +159,15 @@ async def dev(event: SimpleBotEvent):
 # ... Расписание ...
 @bot.message_handler(Filters.this_week)
 async def timetable(event: SimpleBotEvent):
+    """ Отправка клавиатуры с текущей неделей """
+
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE, keyboard=Keyboards.week().get_keyboard())
 
 
 @bot.message_handler(Filters.next_week)
 async def timetable(event: SimpleBotEvent):
+    """ Отправка клавиатуры со следующей неделей """
+
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE, keyboard=Keyboards.week_next().get_keyboard())
 
 
@@ -169,17 +185,21 @@ async def timetable(event: SimpleBotEvent):
 # ... Навигация ...
 @bot.message_handler(Filters.kill_keyboard)
 async def navigation(event: SimpleBotEvent):
+    """ Отправка сообщения при нажатии на "Убрать клавиатуру" """
+
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE)
 
 
 @bot.message_handler(Filters.main_menu)
 async def navigation(event: SimpleBotEvent):
+    """ Отправка клавиатуры с главным меню """
+
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE, keyboard=Keyboards.main().get_keyboard())
 
 
 @bot.message_handler()
 async def echo(event: SimpleBotEvent) -> str:
-    return ai_get_response(event.object.object.message.text)
+    return Ai.get_response(event.object.object.message.text)
 
 
 print("started")
