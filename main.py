@@ -119,12 +119,6 @@ async def settings(event: SimpleBotEvent):
     await event.answer(message="New credits: " + new_creds)
 
 
-@bot.message_handler(Filters.misuse)
-async def settings(event: SimpleBotEvent):
-    """ Если кто-то пытается получить расписание """
-    await event.answer(message=Strings.INVALID_COMMAND)
-
-
 @bot.message_handler(Filters.update_ai)
 async def settings(event: SimpleBotEvent):
     """ Если кто-то пытается получить расписание """
@@ -224,10 +218,16 @@ async def navigation(event: SimpleBotEvent):
 
 @bot.message_handler()
 async def echo(event: SimpleBotEvent) -> str:
+
+    db = Database(event.peer_id)
+
     if event.object.group_id == MPSU_GROUP_ID:
         return Strings.WRONG_COMMUNITY
 
-    return Ai.get_response(event.object.object.message.text, event.peer_id)
+    if db.get_ai() == 1:
+        return Ai.get_response(event.object.object.message.text, event.peer_id)
+    else:
+        return Strings.INVALID_COMMAND
 
 
 print("started")

@@ -34,7 +34,6 @@ change_group = (
 )
 
 update_ai = (
-        TextContainsFilter('Пока') |
         PayloadFilter({"command": "update ai"})
 )
 
@@ -68,16 +67,8 @@ start = (
         TextContainsFilter('клава')
 )
 
-misuse = (
-        TextContainsFilter('расписан') |
-
-        (TextContainsFilter('пары') &
-         (TextContainsFilter('покажи') | TextContainsFilter('дай') | TextContainsFilter('какие')))
-)
-
 last_update_time = (
         TextContainsFilter('актуальность') |
-        TextContainsFilter('расписания') |
         TextContainsFilter('обновился') |
         TextContainsFilter('uptime') |
         TextContainsFilter('аптайм') |
