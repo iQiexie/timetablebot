@@ -45,9 +45,7 @@ def Settings(group_index):
     return f"""Твоя/ваша группа: {group_index}
 
 Список команд:
-https://vk.com/mpsu_schedule?w=wall-206763355_30
-https://vk.com/wall-206763355_42
-
+{__COMMANDS_LIST}
 
 F.A.Q:
 https://vk.com/topic-206763355_48153565
