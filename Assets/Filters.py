@@ -33,6 +33,11 @@ change_group = (
         PayloadFilter({"command": "change group"})
 )
 
+update_ai = (
+        TextContainsFilter('Пока') |
+        PayloadFilter({"command": "update ai"})
+)
+
 this_week = (
         TextContainsFilter('эта неделя') |
         PayloadFilter({"command": "this week"})

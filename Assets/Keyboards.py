@@ -1,4 +1,5 @@
 from vkwave.bots import Keyboard, ButtonColor
+from Database import Database
 
 
 def main() -> Keyboard:
@@ -34,14 +35,25 @@ def main() -> Keyboard:
     return kb
 
 
-def settings() -> Keyboard:
+def settings(userid) -> Keyboard:
     kb = Keyboard(one_time=False)
+    db = Database(userid)
+
+    if db.get_ai() == 1:
+        ai_status = "Вкл."
+    else:
+        ai_status = "Выкл."
 
     kb.add_text_button(
         text="Поменять группу", color=ButtonColor.PRIMARY, payload={"command": "change group"}
     )
     kb.add_text_button(
         text="Uptime расписания", color=ButtonColor.PRIMARY, payload={"command": "get spreadsheet uptime"}
+    )
+    kb.add_row()
+
+    kb.add_text_button(
+        text=f"Виртуальный собеседник: {ai_status}", color=ButtonColor.PRIMARY, payload={"command": "update ai"}
     )
     kb.add_row()
 

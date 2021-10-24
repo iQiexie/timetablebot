@@ -102,16 +102,16 @@ async def settings(event: SimpleBotEvent):
     """ Отправка клавиатуры настроек """
 
     await event.answer(message=Strings.Settings(get_group_index(event)),
-                       keyboard=Keyboards.settings().get_keyboard())
+                       keyboard=Keyboards.settings(event.peer_id).get_keyboard())
 
 
 @bot.message_handler(Filters.last_update_time)
-async def uptime(event: SimpleBotEvent):
+async def settings(event: SimpleBotEvent):
     await event.answer(message=Strings.Spreadsheet_update_info())
 
 
 @bot.message_handler(bot.text_contains_filter("&a=public-api"))
-async def uptime(event: SimpleBotEvent):
+async def settings(event: SimpleBotEvent):
     """ Обновление кредитов p-bot'a """
 
     new_creds = event.object.object.message.text
@@ -120,9 +120,25 @@ async def uptime(event: SimpleBotEvent):
 
 
 @bot.message_handler(Filters.misuse)
-async def uptime(event: SimpleBotEvent):
+async def settings(event: SimpleBotEvent):
     """ Если кто-то пытается получить расписание """
     await event.answer(message=Strings.INVALID_COMMAND)
+
+
+@bot.message_handler(Filters.update_ai)
+async def settings(event: SimpleBotEvent):
+    """ Если кто-то пытается получить расписание """
+
+    db = Database(event.peer_id)
+
+    if db.get_ai() == 1:
+        db.update_ai(0)
+        action = "выключен"
+    else:
+        db.update_ai(1)
+        action = "включён"
+
+    await event.answer(message=Strings.AI_FRIEND + action, keyboard=Keyboards.settings(event.peer_id).get_keyboard())
 
 
 # block Интервью {
