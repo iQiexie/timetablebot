@@ -7,7 +7,7 @@ class Database:
         # user - peer_id
 
         self.__user = user
-        self.__path = f"{os.path.dirname(__file__)}\\Database\\USERS\\{self.__user}.db"
+        self.__path = f"{os.path.dirname(__file__)}/DATABASE/USERS/{self.__user}.db"
 
         self.first_message = False
 
