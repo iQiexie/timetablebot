@@ -1,6 +1,4 @@
 # Timetable bot for my university
-## How to run:
+How to run:
 
 ``` docker-compose up --build ```
-
-
