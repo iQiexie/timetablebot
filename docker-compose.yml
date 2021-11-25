@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+  timetablebot:
+    build: ./
+    container_name: timetablebot
+    volumes:
+        - ./app/DATABASE/USERS:/webscraper/app/DATABASE/USERS
