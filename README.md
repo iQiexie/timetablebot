@@ -1,2 +1,6 @@
-# timetablevkbot
-Timetable bot for my university
+# Timetable bot for my university
+## How to run:
+
+``` docker-compose up --build ```
+
+
