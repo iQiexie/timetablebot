@@ -1,8 +1,7 @@
 import json
 
 import vk_api
-import ast
-from app.Assets.Filters import today, tomorrow
+from vk_api import ApiError
 from app.ClassProcessor import ClassProcessor
 from app.Database import Database
 
@@ -10,7 +9,7 @@ MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 SCHEDULE_TOKEN = open('secret/token', 'r').read()  # расписание
 MPSU_TOKEN = open('secret/tokenmpsu', 'r').read()  # расписание
 
-vk_session = vk_api.VkApi(token=MPSU_TOKEN)
+vk_session = vk_api.VkApi(token=SCHEDULE_TOKEN)
 vk = vk_session.get_api()
 
 
@@ -71,7 +70,6 @@ def identify_intent(message: UnprocessedMessage) -> UnprocessedMessage:
         message.payload = {}
     else:
         message.payload = json.loads(str(message.payload))
-        print(message.payload)
 
     return message
 
@@ -85,24 +83,45 @@ def process_messages():
     return unprocessed_messages
 
 
-def run_catchup():
-    report = ""
+def send_message(text: str, user_id: int):
+    vk_session.method("messages.send", {
+        "user_id": user_id,
+        "message": text,
+        "random_id": 0
+    })
 
+
+def run_catchup():
+    report = "Report:"
     messages = process_messages()
+
     for message in messages:
         command = message.payload.get("command")
         group_id = Database(message.user_id).get_group_index()
         cp = ClassProcessor(group_index=group_id)
 
+        if not command:
+            continue
+
         if command == "today":
             sending_message = cp.get_today()
         elif command == "tomorrow":
             sending_message = cp.get_tomorrow()
+        elif command == "show day":
+            sending_message = cp.getByDay(message.payload.get("day"), message.payload.get('next week'))
         else:
-            sending_message = "None"
+            sending_message = None
 
-        print(f"----------------------------------{command}------------------------------------------")
-        print(sending_message)
+        try:
+            if sending_message:
+                send_message(sending_message, message.user_id)
+                report += f"\nSuccessfully sent: {message.user_id}"
+                print(f"Responding to: {message.message} $$$ With {command}")
+        except ApiError as e:
+            report += f"\n {message.user_id} Failed due to {e}"
 
-        # TODO разобраться с show day. Потому что щас я беру только команду из  payload, а там ещё другие штуки есть
-        # TODO
+    send_message(report, 232444433)
+
+
+# TODO добавить свитч токенов
+# TODO добавить свитч unanswered, unread в get_unanswered_messages
