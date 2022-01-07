@@ -11,6 +11,8 @@ def dm_message(peer_id) -> bool:
     return int(peer_id) < 2000000000
 
 
+# Фильтры today, tomorrow дублируются в Catchup.py
+
 today = ((
                  (TextContainsFilter('пары') | TextContainsFilter('список') | TextContainsFilter('Расписание')) &
                  (TextContainsFilter('сёдня') | TextContainsFilter('седня') | TextContainsFilter('сегодня'))

@@ -7,6 +7,7 @@ from Database import Database
 from ClassProcessor import ClassProcessor
 from SheetScraper import update_spreadsheet, delete_spreadsheet
 from AiHandler import Ai_Handler
+from app.Catchup import run_catchup
 
 from threading import Timer
 from datetime import datetime
@@ -172,7 +173,13 @@ async def new_index(event: BotEvent):
 # ... Дебаг ...
 @bot.message_handler(bot.text_contains_filter("baba111"))
 async def dev(event: SimpleBotEvent):
-    cp = ClassProcessor(get_group_index(event))
+    run_catchup()
+    await event.answer(message="ertgergerger")
+
+
+@bot.message_handler(bot.text_contains_filter("catchup"))
+async def dev(event: SimpleBotEvent):
+    run_catchup()
     await event.answer(message="ertgergerger")
 
 
