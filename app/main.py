@@ -1,5 +1,6 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, MiddlewareResult
-from vkwave.bots.fsm import FiniteStateMachine, StateFilter, ForWhat, State
+from vkwave.bots.fsm import StateFilter
+from app.fsm import FiniteStateMachine, ForWhat, State
 
 from Assets import Keyboards, Filters, Strings
 from Database import Database
@@ -30,8 +31,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
 
 
@@ -143,7 +144,7 @@ async def new_index(event: BotEvent):
 
 
 # } block Получение индекса {
-@bot.message_handler(StateFilter(fsm=fsm, state=GROUP_INDEX, for_what=ForWhat.FOR_CHAT), )
+@bot.message_handler(StateFilter(fsm=fsm, state=GROUP_INDEX, for_what=ForWhat.FOR_CHAT))
 async def new_index(event: BotEvent):
     received_message = event.object.object.message.text
 
@@ -172,7 +173,7 @@ async def new_index(event: BotEvent):
 @bot.message_handler(bot.text_contains_filter("baba111"))
 async def dev(event: SimpleBotEvent):
     cp = ClassProcessor(get_group_index(event))
-    await event.answer(message=cp.getByDay(0))
+    await event.answer(message="ertgergerger")
 
 
 # ... Расписание ...
