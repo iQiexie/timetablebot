@@ -2,3 +2,5 @@
 How to run:
 
 ``` docker-compose up --build ```
+
+NOTE: использует модифицированный vk_vawe
