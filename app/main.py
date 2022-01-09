@@ -1,13 +1,13 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, MiddlewareResult
 from vkwave.bots.fsm import StateFilter
-from app.fsm import FiniteStateMachine, ForWhat, State
+from fsm import FiniteStateMachine, ForWhat, State
 
 from Assets import Keyboards, Filters, Strings
 from Database import Database
 from ClassProcessor import ClassProcessor
 from SheetScraper import update_spreadsheet, delete_spreadsheet
 from AiHandler import Ai_Handler
-from app.Catchup import run_catchup
+from Catchup import run_catchup
 
 from threading import Timer
 from datetime import datetime

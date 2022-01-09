@@ -2,8 +2,8 @@ import json
 
 import vk_api
 from vk_api import ApiError
-from app.ClassProcessor import ClassProcessor
-from app.Database import Database
+from ClassProcessor import ClassProcessor
+from Database import Database
 
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 SCHEDULE_TOKEN = open('secret/token', 'r').read()  # расписание

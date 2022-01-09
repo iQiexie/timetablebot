@@ -3,6 +3,7 @@ version: "3"
 services:
   timetablebot:
     build: ./
+    command: poetry run python main.py
     container_name: timetablebot
     volumes:
-        - ./app/DATABASE/USERS:/webscraper/app/DATABASE/USERS
+        - ./app/DATABASE/USERS:/code/app/DATABASE/USERS

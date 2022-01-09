@@ -1,7 +1,8 @@
-FROM python:3.9.6
+FROM python:3.10.1-bullseye
 
-ENV PYTHONPATH=/webscraper \
-  PYTHONDONTWRITEBYTECODE=1 \
+ARG YOUR_ENV
+
+ENV YOUR_ENV=${YOUR_ENV} \
   PYTHONFAULTHANDLER=1 \
   PYTHONUNBUFFERED=1 \
   PYTHONHASHSEED=random \
@@ -10,11 +11,17 @@ ENV PYTHONPATH=/webscraper \
   PIP_DEFAULT_TIMEOUT=100 \
   POETRY_VERSION=1.1.6
 
-WORKDIR /webscraper
-COPY . /webscraper
-WORKDIR /webscraper/app
+# System deps:
+RUN pip install "poetry==$POETRY_VERSION"
 
-RUN rm -rf /usr/local/lib/python3.9/site-packages
-RUN cp -r venv/Lib/site-packages /usr/local/lib/python3.9/
+# Copy only requirements to cache them in docker layer
+WORKDIR /code
+COPY poetry.lock pyproject.toml /code/
 
-CMD ["python3", "-u", "main.py"]
+# Project initialization:
+RUN poetry config virtualenvs.create false \
+  && poetry install $(test "$YOUR_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
+
+# Creating folders, and files for a project:
+COPY . /code
+WORKDIR /code/app
