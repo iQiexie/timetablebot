@@ -173,8 +173,8 @@ async def new_index(event: BotEvent):
 # ... Дебаг ...
 @bot.message_handler(bot.text_contains_filter("baba111"))
 async def dev(event: SimpleBotEvent):
-    run_catchup()
-    await event.answer(message="ertgergerger")
+    update_spreadsheet()
+    await event.answer(message="spreadsheet created")
 
 
 @bot.message_handler(bot.text_contains_filter("catchup"))
