@@ -1,4 +1,9 @@
-from vkwave.bots import TextContainsFilter, PayloadFilter
+import json
+
+from vkwave.bots import TextContainsFilter, PayloadFilter, BaseEvent
+from vkwave.bots.core.dispatching.filters.base import FilterResult, BaseFilter
+from vkwave.bots.core.dispatching.filters.builtin import get_payload
+from vkwave.bots.core.types.json_types import JSONDecoder
 
 
 def group_message(peer_id, message) -> bool:
@@ -78,3 +83,22 @@ last_update_time = (
         (TextContainsFilter('время') & TextContainsFilter('обновы')) |
         PayloadFilter({"command": "get spreadsheet uptime"})
 )
+
+
+class CustomPayloadContainsFilter(BaseFilter):
+    """
+        Checking payload dict contains some key
+    """
+
+    def __init__(self, key: str, json_loader: JSONDecoder = json.loads):
+        self.key = key
+        self.json_loader = json_loader
+
+    async def check(
+        self,
+        event: BaseEvent,
+    ) -> FilterResult:
+        current_payload = get_payload(event)
+        if current_payload is None:
+            return FilterResult(False)
+        return FilterResult(self.key in str(current_payload))
