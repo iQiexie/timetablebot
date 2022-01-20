@@ -1,8 +1,8 @@
-from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, MiddlewareResult
+from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, MiddlewareResult
 from vkwave.bots.fsm import StateFilter
 
-from app.Assets.Filters import CustomPayloadContainsFilter
-from fsm import FiniteStateMachine, ForWhat, State
+from Assets.Filters import CustomPayloadContainsFilter
+from Assets.custom_fsm import FiniteStateMachine, ForWhat, State
 
 from Assets import Keyboards, Filters, Strings
 from Database import Database
