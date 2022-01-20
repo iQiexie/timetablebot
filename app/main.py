@@ -1,5 +1,7 @@
 from vkwave.bots import SimpleLongPollBot, SimpleBotEvent, BotEvent, ClonesBot, PayloadContainsFilter, MiddlewareResult
 from vkwave.bots.fsm import StateFilter
+
+from app.Assets.Filters import CustomPayloadContainsFilter
 from fsm import FiniteStateMachine, ForWhat, State
 
 from Assets import Keyboards, Filters, Strings
@@ -32,8 +34,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    # new_bot,  # расписание
-    # mpsu_bot
+    new_bot,  # расписание
+    mpsu_bot
 )
 
 
@@ -198,7 +200,7 @@ async def timetable(event: SimpleBotEvent):
     await event.answer(message=Strings.DEFAULT_ANSWER_MESSAGE, keyboard=Keyboards.week_next().get_keyboard())
 
 
-@bot.message_handler(PayloadContainsFilter("show day"))
+@bot.message_handler(CustomPayloadContainsFilter("show day"))
 async def timetable(event: SimpleBotEvent):
     payload = event.payload
     cp = ClassProcessor(get_group_index(event))
@@ -232,6 +234,7 @@ async def echo(event: SimpleBotEvent) -> str:
     if event.object.group_id == MPSU_GROUP_ID:
         return Strings.WRONG_COMMUNITY
 
+    # если виртуальный собеседник включён
     if db.get_ai() == 1:
         return Ai.get_response(event.object.object.message.text, event.peer_id)
     else:
