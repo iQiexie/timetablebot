@@ -2,21 +2,19 @@ import os
 import pickle
 
 from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from Assets.Strings import current_spreadsheet
 
 
-# -- Google library --
-
 def Create_Service(client_secret_file, api_service_name, api_version, scopes):
     cred = None
 
-    pickle_file = f'secret/token_{api_service_name}_{api_version}.pickle'
+    creds_file = f'secret/token_{api_service_name}_{api_version}.json'
 
-    if os.path.exists(pickle_file):
-        with open(pickle_file, 'rb') as token:
-            cred = pickle.load(token)
+    if os.path.exists(creds_file):
+        cred = Credentials.from_authorized_user_file(filename=creds_file, scopes=scopes)
 
     if not cred or not cred.valid:
         if cred and cred.expired and cred.refresh_token:
@@ -25,8 +23,8 @@ def Create_Service(client_secret_file, api_service_name, api_version, scopes):
             flow = InstalledAppFlow.from_client_secrets_file(client_secret_file, scopes)
             cred = flow.run_local_server()
 
-        with open(pickle_file, 'wb') as token:
-            pickle.dump(cred, token)
+        with open(creds_file, 'w') as token:
+            token.write(str(cred.to_json()))
 
     try:
         service = build(api_service_name, api_version, credentials=cred)
@@ -38,17 +36,19 @@ def Create_Service(client_secret_file, api_service_name, api_version, scopes):
         return None
 
 
-# -- Google library --
+sheets_service = Create_Service(
+    'secret/secret.json',
+    'sheets',
+    'v4',
+    ['https://www.googleapis.com/auth/spreadsheets.readonly']
+)
 
-sheets_service = Create_Service('secret/secret.json',
-                                'sheets',
-                                'v4',
-                                ['https://www.googleapis.com/auth/spreadsheets.readonly'])
-
-drive_service = Create_Service('secret/secret.json',
-                               'drive',
-                               'v2',
-                               ['https://www.googleapis.com/auth/drive'])
+drive_service = Create_Service(
+    'secret/secret.json',
+    'drive',
+    'v2',
+    ['https://www.googleapis.com/auth/drive']
+)
 
 
 def get_spreadsheet_url(spreadsheet_id):
