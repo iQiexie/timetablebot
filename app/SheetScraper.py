@@ -1,11 +1,11 @@
 import os
-import pickle
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from Assets.Strings import current_spreadsheet
+from config import SPREADSHEETID, SECOND_GRADE, FIRST_GRADE, THIRD_GRADE, FOURTH_GRADE
 
 
 def Create_Service(client_secret_file, api_service_name, api_version, scopes):
@@ -65,7 +65,7 @@ def delete_spreadsheet(spreadsheet_id):
 
 def update_spreadsheet():
     new_spreadsheet = drive_service.files().copy(
-        fileId="1_opvVKnFlMR_jZEuohoVczocRf__Icem",
+        fileId=SPREADSHEETID,
         convert=True
     ).execute()
 
@@ -117,69 +117,23 @@ class SheetScraper:
         if self.__wrong_group_index():
             return ''
 
-        FIRST_GRADE = {
-            '01': 'D',
-            '02': 'E',
-            '03': 'F',
-            '04': 'G',
-            '05': 'H',
-            '06': 'I',
-            '07': 'J',
-            '08': 'K',
-            '09': 'L',
-            '10': 'M',
-            '11': 'N',
-            '12': 'O',
-            '13': 'P',
-            '14': 'Q',
-            '15': 'R',
-            '16': 'S',
-            '17': 'T',
-            '18': 'U',
-            '19': 'V',
-            '20': 'W',
-            '21': 'X',
-            '22': 'Y',
-            '23': 'Z',
-            '24': 'AA',
-            '25': 'AB',
-            '26': 'AC',
-            '27': 'AD'
-        }
-
-        SECOND_GRADE = {
-            '01': 'D',
-            '02': 'E',
-            '03': 'F',
-            '04': 'G',
-            '05': 'H',
-            '06': 'I',
-            '07': 'G',
-            '08': 'K',
-            '09': 'L',
-            '11': 'M',
-            '12': 'N',
-            '13': 'O',
-            '14': 'P',
-            '15': 'Q',
-            '16': 'R',
-            '17': 'S',
-            '18': 'T'
-        }
-
         grade = str(self.group_index)[:1]
         group_subindex = str(self.group_index)[1:]
 
-        if grade == '2':
-            first_range = SECOND_GRADE[str(group_subindex)] + "13"
-            second_range = SECOND_GRADE[str(group_subindex)] + "253"
+        if grade == '1':
+            first_range = FIRST_GRADE[str(group_subindex)] + FIRST_GRADE['startswith']
+            second_range = FIRST_GRADE[str(group_subindex)] + FIRST_GRADE['endswith']
 
-        elif grade == '1':
-            first_range = FIRST_GRADE[str(group_subindex)] + "15"
-            second_range = FIRST_GRADE[str(group_subindex)] + "300"
+        elif grade == '2':
+            first_range = SECOND_GRADE[str(group_subindex)] + SECOND_GRADE['startswith']
+            second_range = SECOND_GRADE[str(group_subindex)] + SECOND_GRADE['endswith']
+
+        elif grade == '3':
+            first_range = THIRD_GRADE[str(group_subindex)] + THIRD_GRADE['startswith']
+            second_range = THIRD_GRADE[str(group_subindex)] + THIRD_GRADE['endswith']
 
         else:
-            first_range = FIRST_GRADE[str(group_subindex)] + "13"
-            second_range = FIRST_GRADE[str(group_subindex)] + "253"
+            first_range = FOURTH_GRADE[str(group_subindex)] + FOURTH_GRADE['startswith']
+            second_range = FOURTH_GRADE[str(group_subindex)] + FOURTH_GRADE['endswith']
 
-        return f"{grade} курс!{first_range}:{second_range}"
+        return f"{grade} КУРС!{first_range}:{second_range}"
