@@ -53,6 +53,8 @@ class ClassProcessor:
         self.classes = ss.read_column()['values'][0]  # столбик с расписанием
         self.links = ss.get_links()
         self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
+        self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
+        self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
 
     def get_today(self) -> str:
         return self.getByDay(self.weekday)
@@ -88,9 +90,9 @@ class ClassProcessor:
 
         # выбираем стартовую позицию для курсора
         if isWeekAbove(current_week):
-            current_position = 0 + (week_day_index * 40)  # 40 - количество линий, которые занимает день
+            current_position = 0 + (week_day_index * self.lines_one_day_takes)
         else:
-            current_position = 4 + (week_day_index * 40)
+            current_position = self.lines_one_class_takes + (week_day_index * self.lines_one_day_takes)
 
         outline = f'({GET_WEEKDAY_NAME[week_day_index]}, ' \
                   f'{isWeekAbove_string(current_week)}, ' \
@@ -100,7 +102,7 @@ class ClassProcessor:
         return outline + self.__format_classes(current_position) + outline
 
     def __format_classes(self, current_position: int) -> str:
-        STEP = 4  # количество линий, которые надо пропускать. Именно столько занимает одна пара
+        STEP = self.lines_one_class_takes  # колво линий, которые надо пропускать. Именно столько занимает одна пара
 
         text = ''
 
