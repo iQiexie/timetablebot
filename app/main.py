@@ -232,7 +232,8 @@ async def echo(event: SimpleBotEvent) -> str:
     db = Database(event.peer_id)
 
     if event.object.group_id == MPSU_GROUP_ID:
-        return Strings.WRONG_COMMUNITY
+        return
+        # return Strings.WRONG_COMMUNITY
 
     # если виртуальный собеседник включён
     if db.get_ai() == 1:

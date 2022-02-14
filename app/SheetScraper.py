@@ -102,7 +102,7 @@ class SheetScraper:
 
         links = sheets_service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
                                                   fields=fields,
-                                                  ranges=self.__range).execute()['sheets']
+                                                  ranges=self.__range).execute()['sheets']  # превышение лимита
 
         return links
 
