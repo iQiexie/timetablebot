@@ -97,7 +97,7 @@ async def today(event: SimpleBotEvent):
 
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD)
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     await event.answer(message=cp.get_today(), keyboard=Keyboards.main().get_keyboard())
 
@@ -108,7 +108,7 @@ async def today(event: SimpleBotEvent):
 
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD)
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     await event.answer(message=cp.get_tomorrow(), keyboard=Keyboards.main().get_keyboard())
 
@@ -220,7 +220,7 @@ async def timetable(event: SimpleBotEvent):
     payload = event.payload
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD)
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     if payload['next week']:
         await event.answer(message=cp.getByDay(week_day_index=payload['day'], next_week=True))

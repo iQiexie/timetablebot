@@ -81,7 +81,6 @@ class SheetScraper:
         self.__spreadsheet_id = current_spreadsheet['id']
 
     def read_column(self) -> dict:
-
         if self.__wrong_group_index():
             return {'values': ["invalid index"]}
 
