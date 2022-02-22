@@ -49,12 +49,19 @@ def isCurrentWeek_string(week: int) -> str:
 
 class ClassProcessor:
     def __init__(self, group_index: int):
-        ss = SheetScraper(group_index)
-        self.classes = ss.read_column()['values'][0]  # столбик с расписанием
-        self.links = ss.get_links()
-        self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
-        self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
-        self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
+        try:
+            ss = SheetScraper(group_index)
+            self.classes = ss.read_column()['values'][0]  # столбик с расписанием
+            self.links = ss.get_links()
+            self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
+            self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
+            self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
+            self.initialized = True
+            self.not_initialized_reason = "Всё норм"
+        except Exception as e:
+            self.initialized = False
+            self.not_initialized_reason = f"ClassProcessor failed to initialize due to: {e}"
+            print(f"ClassProcessor failed to initialize due to: {e}")
 
     def get_today(self) -> str:
         return self.getByDay(self.weekday)
@@ -63,16 +70,19 @@ class ClassProcessor:
         return self.getByDay(self.weekday + 1)
 
     def getByDay(self, week_day_index: int, next_week=False) -> str:
+        try:
+            if self.classes == 'invalid index':
+                return INVALID_INDEX_MESSAGE
 
-        if self.classes == 'invalid index':
-            return INVALID_INDEX_MESSAGE
+            if next_week:
+                timedelta = (week_day_index - self.weekday) + 7
+            else:
+                timedelta = week_day_index - self.weekday
 
-        if next_week:
-            timedelta = (week_day_index - self.weekday) + 7
-        else:
-            timedelta = week_day_index - self.weekday
-
-        return self.__getByDay(week_day_index, timedelta)
+            return self.__getByDay(week_day_index, timedelta)
+        except Exception as e:
+            print(f"Произошла ошибка. Reason: {e}")
+            return f"Произошла ошибка. Reason: {e}"
 
     def __getByDay(self, week_day_index: int, timedelta: int) -> str:
         # week_day_index - порядковый номер дня недели, начиная с 0. Понедельник - 0, воскресенье - 6.

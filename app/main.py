@@ -14,6 +14,8 @@ from Catchup import run_catchup
 from threading import Timer
 from datetime import datetime
 
+from app.Assets.Strings import SERVER_OVERLOAD
+
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
 
@@ -52,6 +54,7 @@ def spreadsheet_updating_service():
 
 
 spreadsheet_updating_service()
+run_catchup()
 
 
 def get_group_index(event):
@@ -90,13 +93,23 @@ async def group_messages(event: SimpleBotEvent):
 # ... Сегодняшние и Завтрашние пары ...
 @bot.message_handler(Filters.today)
 async def today(event: SimpleBotEvent):
+    """ Отправка пар на сегодня """
+
     cp = ClassProcessor(get_group_index(event))
+    if not cp.initialized:
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
+
     await event.answer(message=cp.get_today(), keyboard=Keyboards.main().get_keyboard())
 
 
 @bot.message_handler(Filters.tomorrow)
 async def today(event: SimpleBotEvent):
+    """ Отправка пар на завтра """
+
     cp = ClassProcessor(get_group_index(event))
+    if not cp.initialized:
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
+
     await event.answer(message=cp.get_tomorrow(), keyboard=Keyboards.main().get_keyboard())
 
 
@@ -111,6 +124,8 @@ async def settings(event: SimpleBotEvent):
 
 @bot.message_handler(Filters.last_update_time)
 async def settings(event: SimpleBotEvent):
+    """ Когда расписание обновлялось последний раз """
+
     await event.answer(message=Strings.Spreadsheet_update_info())
 
 
@@ -125,7 +140,7 @@ async def settings(event: SimpleBotEvent):
 
 @bot.message_handler(Filters.update_ai)
 async def settings(event: SimpleBotEvent):
-    """ Если кто-то пытается получить расписание """
+    """ Обновление ии """
 
     db = Database(event.peer_id)
 
@@ -204,6 +219,8 @@ async def timetable(event: SimpleBotEvent):
 async def timetable(event: SimpleBotEvent):
     payload = event.payload
     cp = ClassProcessor(get_group_index(event))
+    if not cp.initialized:
+        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     if payload['next week']:
         await event.answer(message=cp.getByDay(week_day_index=payload['day'], next_week=True))
@@ -232,7 +249,8 @@ async def echo(event: SimpleBotEvent) -> str:
     db = Database(event.peer_id)
 
     if event.object.group_id == MPSU_GROUP_ID:
-        return Strings.WRONG_COMMUNITY
+        return
+        # return Strings.WRONG_COMMUNITY
 
     # если виртуальный собеседник включён
     if db.get_ai() == 1:

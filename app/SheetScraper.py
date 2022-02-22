@@ -81,7 +81,6 @@ class SheetScraper:
         self.__spreadsheet_id = current_spreadsheet['id']
 
     def read_column(self) -> dict:
-
         if self.__wrong_group_index():
             return {'values': ["invalid index"]}
 
@@ -102,7 +101,7 @@ class SheetScraper:
 
         links = sheets_service.spreadsheets().get(spreadsheetId=self.__spreadsheet_id,
                                                   fields=fields,
-                                                  ranges=self.__range).execute()['sheets']
+                                                  ranges=self.__range).execute()['sheets']  # превышение лимита
 
         return links
 
