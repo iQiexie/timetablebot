@@ -49,12 +49,17 @@ def isCurrentWeek_string(week: int) -> str:
 
 class ClassProcessor:
     def __init__(self, group_index: int):
-        ss = SheetScraper(group_index)
-        self.classes = ss.read_column()['values'][0]  # столбик с расписанием
-        self.links = ss.get_links()
-        self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
-        self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
-        self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
+        try:
+            ss = SheetScraper(group_index)
+            self.classes = ss.read_column()['values'][0]  # столбик с расписанием
+            self.links = ss.get_links()
+            self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
+            self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
+            self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
+            self.initialized = True
+        except Exception as e:
+            self.initialized = False
+            print(f"ClassProcessor failed to initialize due to: {e}")
 
     def get_today(self) -> str:
         return self.getByDay(self.weekday)
