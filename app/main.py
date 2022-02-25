@@ -14,8 +14,6 @@ from Catchup import run_catchup
 from threading import Timer
 from datetime import datetime
 
-from app.Assets.Strings import SERVER_OVERLOAD
-
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка
 MAIN_GROUP_ID = 198604544  # домашка
 
@@ -36,8 +34,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    new_bot,  # расписание
-    mpsu_bot
+    # new_bot,  # расписание
+    # mpsu_bot
 )
 
 
@@ -97,7 +95,7 @@ async def today(event: SimpleBotEvent):
 
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
+        await event.answer(message=Strings.SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     await event.answer(message=cp.get_today(), keyboard=Keyboards.main().get_keyboard())
 
@@ -108,7 +106,7 @@ async def today(event: SimpleBotEvent):
 
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
+        await event.answer(message=Strings.SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     await event.answer(message=cp.get_tomorrow(), keyboard=Keyboards.main().get_keyboard())
 
@@ -220,7 +218,7 @@ async def timetable(event: SimpleBotEvent):
     payload = event.payload
     cp = ClassProcessor(get_group_index(event))
     if not cp.initialized:
-        await event.answer(message=SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
+        await event.answer(message=Strings.SERVER_OVERLOAD + f"\n\nReason: {cp.not_initialized_reason}")
 
     if payload['next week']:
         await event.answer(message=cp.getByDay(week_day_index=payload['day'], next_week=True))
