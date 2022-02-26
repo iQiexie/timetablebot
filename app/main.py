@@ -34,8 +34,8 @@ Ai = Ai_Handler()
 
 CLONES = ClonesBot(
     bot,  # домашка
-    # new_bot,  # расписание
-    # mpsu_bot
+    new_bot,  # расписание
+    mpsu_bot
 )
 
 
@@ -136,6 +136,17 @@ async def settings(event: SimpleBotEvent):
     await event.answer(message="New credits: " + new_creds)
 
 
+@bot.message_handler(bot.text_contains_filter("живи"))
+async def settings(event: SimpleBotEvent):
+    if Strings.current_spreadsheet['id'] is not None:
+        delete_spreadsheet(Strings.current_spreadsheet['id'])  # Удаляем старый документ, if it's in ram
+
+    Strings.current_spreadsheet['id'] = update_spreadsheet()  # Создаём новый документ
+    Strings.current_spreadsheet['updated_time'] = datetime.now().strftime('%H:%M')  # updating last doc creation time
+    await event.answer(message="Ууух, аж до самого транзистора в процессоре пробило. Спасибо, повтри, какие тебе пары "
+                               "нужны?")
+
+
 @bot.message_handler(Filters.update_ai)
 async def settings(event: SimpleBotEvent):
     """ Обновление ии """
@@ -195,7 +206,6 @@ async def dev(event: SimpleBotEvent):
 @bot.message_handler(bot.text_contains_filter("catchup"))
 async def dev(event: SimpleBotEvent):
     run_catchup()
-    await event.answer(message="ertgergerger")
 
 
 # ... Расписание ...

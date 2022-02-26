@@ -81,8 +81,8 @@ class ClassProcessor:
 
             return self.__getByDay(week_day_index, timedelta)
         except Exception as e:
-            print(f"Произошла ошибка. Reason: {e}")
-            return f"Произошла ошибка. Reason: {e}"
+            print(f"{e}")
+            return f'{e}\n\nПрости, разболелся что-то. Попробуй написать "бот живи", я тогда скину тебе пары'
 
     def __getByDay(self, week_day_index: int, timedelta: int) -> str:
         # week_day_index - порядковый номер дня недели, начиная с 0. Понедельник - 0, воскресенье - 6.
