@@ -1,9 +1,23 @@
 version: "3"
 
 services:
-  timetablebot:
-    build: ./
-    command: poetry run python main.py
-    container_name: timetablebot
+#  timetablebot:
+#    build: ./
+#    command: poetry run python main.py
+#    container_name: timetablebot
+#    volumes:
+#        - ./app/DATABASE/USERS:/code/app/DATABASE/USERS
+
+  dabatabse:
+    image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
+    container_name: dabatabse
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: db
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
-        - ./app/DATABASE/USERS:/code/app/DATABASE/USERS
+      - ./data/postgres:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - "5432:5432"

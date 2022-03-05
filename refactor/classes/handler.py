@@ -7,4 +7,4 @@ async def create_classes(spreadsheet_column: ColumnSchema, db: ClassesCRUD):
 
 
 async def test(db: ClassesCRUD):
-    print('test')
+    print(await db.create(absolute_index=1, group_id=1, text="rge", links="erge"))
