@@ -1,5 +1,5 @@
 from contextlib import asynccontextmanager
-from typing import Union, ClassVar, Type, TypeVar, AsyncContextManager, cast, Any
+from typing import Union, ClassVar, Type, TypeVar, AsyncContextManager, cast, Any, List
 
 from sqlalchemy import update, lambda_stmt, select, delete
 from sqlalchemy.engine import Result
@@ -29,21 +29,22 @@ class BaseCRUD:
         add_model = self._convert_to_model(**kwargs)
         self.session.add(add_model)
         await self.session.commit()
+        print("reger")
         return add_model
 
-    async def get_one(self, *args) -> Model:
+    async def get_one(self, *args) -> Union[List[Model], None]:
         stmt = select(self.model).where(*args)
-        result = await self.session.execute(stmt)
-        return result.scalar_one()
+        result_stmt = await self.session.execute(stmt)
+        result = result_stmt.scalars().all()
+        if len(result) > 0:
+            return result[0]
+        return None
 
-    async def get_many(self, *args: Any) -> Model:
-        query_model = self.model
-        stmt = lambda_stmt(lambda: select(query_model))
-        stmt += lambda s: s.where(*args)
-        query_stmt = cast(Executable, stmt)
-
-        result = await self.session.execute(query_stmt)
-        return result.scalars().all()
+    async def get_many(self, *args: Any) -> List[Model]:
+        stmt = select(self.model).where(*args)
+        result_stmt = await self.session.execute(stmt)
+        result = result_stmt.scalars().all()
+        return result
 
     async def update(self, *args: Any, **kwargs: Any) -> Model:
         res = await self._update(*args, **kwargs)
