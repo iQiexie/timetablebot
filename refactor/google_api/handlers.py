@@ -11,33 +11,28 @@ from googleapiclient.discovery import build
 
 from config import settings
 from refactor.google_api.crud import GoogleApiCRUD
+from refactor.google_api.schemas import CredentialSchema
 
 
 class GoogleApiHandler:
     def __init__(self, db: GoogleApiCRUD):
         self.db = db
-    #
-    # @staticmethod
-    # def create_google_creds(scopes, service_name, service_version) -> Tuple:
-    #
-    #     return build(service_name, service_version, credentials=cred), cred
+
+    @staticmethod
+    async def server(flow):
+        return flow.run_local_server()
 
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
-        # cred = await self.db.get("google")
+        creds = await self.db.get("google")
 
-        aiogoogle = Aiogoogle(service_account_creds=settings.google_secret)
-        await aiogoogle.service_account_manager.detect_default_creds_source()
+        if creds is not None:
+            creds = Credentials.from_authorized_user_info(info=json.loads(creds.credentials), scopes=scopes)
+        else:
+            flow = InstalledAppFlow.from_client_config(settings.google_secret, scopes)
+            creds = await self.server(flow)
+            await self.db.create(service_name="google", credentials=str(creds.to_json()))
 
+        if any((creds.valid, creds.expired, creds.refresh_token)):
+            creds.refresh(Request())
 
-        # if cred is None:
-        #     service, cred = self.create_google_creds(scopes, service_name, service_version)
-        #     await self.db.create(service_name="google", credentials=str(cred.to_json()))
-
-        # try:
-        #     service = build(api_service_name, api_version, credentials=cred)
-        #     print(api_service_name, 'service created successfully')
-        #     return service
-        # except Exception as e:
-        #     print('Unable to connect.')
-        #     print(e)
-        #     return None
+        return build(service_name, service_version, credentials=creds)

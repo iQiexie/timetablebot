@@ -7,3 +7,7 @@ class ColumnSchema(BaseSchema):
     group_index: int
     rows: List[str]
 
+
+class CredentialSchema(BaseSchema):
+    service_name: str
+    credentials: str
