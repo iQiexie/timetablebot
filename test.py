@@ -5,28 +5,11 @@ from refactor.google_api.crud import GoogleApiCRUD
 from refactor.google_api.handlers import GoogleApiHandler
 
 
-async def test_driver():
-    google = GoogleApiHandler(GoogleApiCRUD(async_session))
-    return await google.create_service(
-        'drive',
-        'v2',
-        ['https://www.googleapis.com/auth/drive']
-    )
-
-
-async def test_sheets():
-    google = GoogleApiHandler(GoogleApiCRUD(async_session))
-    return await google.create_service(
-        'sheets',
-        'v4',
-        ['https://www.googleapis.com/auth/spreadsheets.readonly']
-    )
-
-
 async def test():
-    driver = await test_driver()
-    sheets = await test_sheets()
-    print(driver, sheets)
+    google = GoogleApiHandler(GoogleApiCRUD(async_session))
+    await google.init_services()
+    await google.update_sheet()
+    print(google.drive_service, google.sheets_service)
 
 
 asyncio.run(test())

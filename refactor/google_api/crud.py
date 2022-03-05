@@ -1,6 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from refactor.base.crud import BaseCRUD
+from refactor.event_logs.crud import EventLogCRUD
 from refactor.google_api.models import Credential
 from refactor.google_api.schemas import CredentialSchema
 
@@ -9,7 +10,9 @@ class GoogleApiCRUD:
     def __init__(self, db_session: AsyncSession):
         self.model = Credential
         self.schema = CredentialSchema
-        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)
+        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)\
+
+        self.logger = EventLogCRUD(db_session=db_session)
 
     async def create(self, **kwargs):
         async with self.base.transaction():

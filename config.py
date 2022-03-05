@@ -15,7 +15,8 @@ class Settings(BaseSettings):
     DB_NAME: str = Field(env="DB_NAME")
 
     google_secret: dict = Field(env="GOOGLE_SECRET")
-    spreadsheet_current: Optional[str] = Field(default=None)
+    spreadsheet_original_id: str = Field(env="spreadsheet_original_id")
+    spreadsheet_current_id: str = Field(default=None)
 
     @property
     def db_url(self):
