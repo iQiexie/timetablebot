@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import BaseSettings, Field
 
 
@@ -11,6 +13,9 @@ class Settings(BaseSettings):
     DB_PORT: int = Field(env="DB_PORT")
     DB_HOST: str = Field(env="DB_HOST")
     DB_NAME: str = Field(env="DB_NAME")
+
+    google_secret: dict = Field(env="GOOGLE_SECRET")
+    spreadsheet_current: Optional[str] = Field(default=None)
 
     @property
     def db_url(self):
