@@ -29,10 +29,6 @@
 # 		print(f"Sent to: {user_id}")
 
 import vk_api
-
-SCHEDULE_TOKEN = \
-    '86cb2d37e043794bf720c51415f267f6bcab2ac3e66eca28a092458d9baf6cff692595321a09cb4fed5bb'  #
-# расписание
 vk_session = vk_api.VkApi(token=SCHEDULE_TOKEN)
 vk = vk_session.get_api()
 
