@@ -44,8 +44,19 @@ class GoogleApiHandler:
         return build(service_name, service_version, credentials=creds)
 
     async def update_sheet(self):
-        await self.db.logger.create_log(data="created reger")
-        # if settings.spreadsheet_current_id is not None:
-        #     self.drive_service.files().delete(fileId=settings.spreadsheet_current_id).execute()
+        if settings.spreadsheet_current_id is not None:
+            self.drive_service.files().delete(fileId=settings.spreadsheet_current_id).execute()
+            await self.db.logger.new_log.deleted.spreadsheet(f"id={settings.spreadsheet_current_id}")
 
-        # new = self.drive_service.files().copy(fileId=settings.spreadsheet_original_id, convert=True).execute()
+        new = self.drive_service.files().copy(fileId=settings.spreadsheet_original_id, convert=True).execute()
+        settings.spreadsheet_current_id = new['id']
+        await self.db.logger.new_log.created.spreadsheet(f"id={new['id']}")
+    #
+    # async def get_values(self) -> str:
+    #     response = self.sheets_service.spreadsheets().values().get(
+    #         spreadsheetId=settings.spreadsheet_original_id,
+    #         majorDimension='COLUMNS',
+    #         range="2 курс!T12:T253"  # smth like '2 курс!T12:T253'
+    #     ).execute()
+    #
+    #     print(response)
