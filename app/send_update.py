@@ -9,14 +9,6 @@
 # 	def send_message(self, id, text):
 # 		self.__vk_api.method('messages.send', {'user_id': id, 'message': text, 'random_id': 0})
 #
-#
-# domashka = VkGroup(
-# "efa8f72bc9f5aab07245dbc8eb42f58551b1c56be06fc8ac549a92db582a9dfbd6866d44351067cd08534")
-# raspisanie = VkGroup(
-# "86cb2d37e043794bf720c51415f267f6bcab2ac3e66eca28a092458d9baf6cff692595321a09cb4fed5bb")
-# mpgu = VkGroup(
-# "a3608f75ac2a4cd423e8551853c7f1348bc94f3de8fa4b7509f28c9ac63ad00e05abcebe2defb874416aa")
-#
 # msg = """
 # [Автоматическая рассылка сообщений]
 # Новое расписание теперь доступно в боте. Для начала работы с ботом напиши "старт"
