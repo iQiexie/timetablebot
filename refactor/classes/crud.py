@@ -3,12 +3,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from refactor.base.crud import BaseCRUD
 from refactor.classes.models import Class
+from refactor.classes.schemas import ClassSchema
 
 
 class ClassesCRUD:
     def __init__(self, db_session: AsyncSession):
         self.model = Class
-        self.base = BaseCRUD(db_session=db_session, model=self.model)
+        self.schema = ClassSchema
+        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)
 
     async def create(self, **kwargs):
         async with self.base.transaction():

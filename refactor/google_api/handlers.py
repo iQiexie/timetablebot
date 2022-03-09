@@ -1,6 +1,6 @@
 import json
 from random import randint
-from typing import List
+from typing import List, Tuple, Any
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -8,6 +8,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from config import settings
+from refactor.base.utils import safe_get_dict
 from refactor.google_api.crud import GoogleApiCRUD
 
 drive_service_args = ('drive', 'v2', ['https://www.googleapis.com/auth/drive'])
@@ -43,20 +44,23 @@ class GoogleApiHandler:
 
         return build(service_name, service_version, credentials=creds)
 
-    async def update_sheet(self):
-        if settings.spreadsheet_current_id is not None:
-            self.drive_service.files().delete(fileId=settings.spreadsheet_current_id).execute()
-            await self.db.logger.new_log.deleted.spreadsheet(f"id={settings.spreadsheet_current_id}")
+    async def get_values(self, group_index: int) -> Tuple[Any, Any]:
+        if group_index == 1:
+            starts_with = 7
+        else:
+            starts_with = 12
 
-        new = self.drive_service.files().copy(fileId=settings.spreadsheet_original_id, convert=True).execute()
-        settings.spreadsheet_current_id = new['id']
-        await self.db.logger.new_log.created.spreadsheet(f"id={new['id']}")
-    #
-    # async def get_values(self) -> str:
-    #     response = self.sheets_service.spreadsheets().values().get(
-    #         spreadsheetId=settings.spreadsheet_original_id,
-    #         majorDimension='COLUMNS',
-    #         range="2 курс!T12:T253"  # smth like '2 курс!T12:T253'
-    #     ).execute()
-    #
-    #     print(response)
+        values = self.sheets_service.spreadsheets().values().get(
+            spreadsheetId=settings.spreadsheet_original_id,
+            majorDimension='COLUMNS',
+            range=f"{group_index} курс!D{starts_with}:AD253"
+        ).execute()
+
+        hyperlinks_raw = self.sheets_service.spreadsheets().get(
+            spreadsheetId=settings.spreadsheet_original_id,
+            fields="sheets(data(rowData(values(hyperlink))))",
+            ranges=f"{group_index} курс!D{starts_with}:AD253"
+        ).execute()
+        hyperlinks = hyperlinks_raw.get('sheets')[0].get("data")[0]
+
+        return values, await safe_get_dict(hyperlinks, 'rowData')

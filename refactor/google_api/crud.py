@@ -10,7 +10,7 @@ class GoogleApiCRUD:
     def __init__(self, db_session: AsyncSession):
         self.model = Credential
         self.schema = CredentialSchema
-        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)\
+        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)
 
         self.logger = EventLogCRUD(db_session=db_session)
 

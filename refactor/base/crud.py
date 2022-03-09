@@ -19,7 +19,7 @@ class BaseCRUD:
     def __init__(
         self, db_session: Union[sessionmaker, AsyncSession],
         model: ClassVar[Type[Model]],
-        schema: Callable[[BaseSchema, Any], Any]
+        schema: Any
     ):
         self.model = model
         self.schema = schema
