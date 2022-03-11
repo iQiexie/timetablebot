@@ -1,7 +1,10 @@
+from typing import List
+
 from sqlalchemy import and_, delete
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from refactor.base.crud import BaseCRUD
+from refactor.base.utils import columns_to_pydantic
 from refactor.classes.models import Class, Hyperlink
 from refactor.classes.schemas import ClassSchema, HyperlinkSchema
 
@@ -29,12 +32,31 @@ class ClassesCRUD:
 
             return returning_model
 
-    async def get(self, group_id: int, absolute_index: int):
+    async def get(self, group_id: int, week_day_index: int, above_line: bool) -> List[ClassSchema]:
         async with self.base.transaction():
-            return await self.base.get_many(and_(
+            result = await self.base.get_many(and_(
                 self.model.group_id == group_id,
-                self.model.absolute_index == absolute_index
+                self.model.week_day_index == week_day_index,
+                self.model.above_line == above_line
             ))
+
+        result_list = []
+
+        for sub_result in result:
+            class_model = columns_to_pydantic(sub_result, ClassSchema)
+            class_model.hyperlinks = []
+
+            async with self.hyperlinks.transaction():
+                hyperlinks = await self.hyperlinks.get_many(self.hyperlinks.model.class_id == sub_result.id)
+
+            for hyperlink in hyperlinks:
+                print(hyperlink)
+                hyperlink_model = columns_to_pydantic(hyperlink, HyperlinkSchema)
+                class_model.hyperlinks.append(hyperlink_model.hyperlink)
+
+            result_list.append(class_model)
+
+        return result_list
 
     async def update(self, group_id: int, absolute_index: int, **kwargs):
         async with self.base.transaction():

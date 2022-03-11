@@ -49,7 +49,6 @@ class BaseCRUD:
             return result[0]
         return None
 
-    @pydantic_converter
     async def get_many(self, *args: Any) -> List[Model]:
         stmt = select(self.model).where(*args)
         result_stmt = await self.session.execute(stmt)

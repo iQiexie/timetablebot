@@ -80,23 +80,50 @@ async def scrape_classes(days: List[DaySchema], grade: int):
     return classes
 
 
+async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_classes: list):
+    for index, column in enumerate(columns):
+        days = await scrape_days(MetaInfoSchema(
+            class_column=column,
+            hyperlinks=hyperlinks,
+            grade=grade,
+            group_id=index + 1
+        ))
+        for _class in await scrape_classes(days, grade):
+            final_classes.append(_class)
+
+    return final_classes
+
+
 async def scrape_spreadsheet():
     google = GoogleApiHandler(GoogleApiCRUD(async_session))
     await google.init_services()
     final_classes = []
-    for grade in range(1, 5):
+    for grade in range(2, 3):
         print(grade)
-        # TODO сделать отдельный цикл для grade == 2. Там 210 группы нет. Не работает для 1 курса
         lessons, hyperlinks = await google.get_values(grade)
         columns = lessons.get("values")
-        for index, column in enumerate(columns):
-            days = await scrape_days(MetaInfoSchema(
-                class_column=column,
-                hyperlinks=hyperlinks,
-                grade=grade,
-                group_id=index + 1
-            ))
-            for _class in await scrape_classes(days, grade):
-                final_classes.append(_class)
+
+        if grade != 2:
+            final_classes = await _scrape_spreadsheet(columns, hyperlinks, grade, final_classes)
+        else:
+            # костыль для пропущенного столбика 210 группы
+            for i in range(len(columns)):
+                if i < 9:
+                    index = i
+                    column = columns[i]
+                else:
+                    index = i+1
+                    column = columns[i]
+
+                days = await scrape_days(MetaInfoSchema(
+                    class_column=column,
+                    hyperlinks=hyperlinks,
+                    grade=grade,
+                    group_id=index + 1
+                ))
+                for _class in await scrape_classes(days, grade):
+                    final_classes.append(_class)
+
+
 
     return final_classes

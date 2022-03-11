@@ -22,3 +22,11 @@ async def safe_get_dict(array: dict, key: str):
         return array.get(key)
     else:
         return None
+
+
+def columns_to_pydantic(result, model):
+    dict_ = {}
+    for key in result.__mapper__.c.keys():
+        dict_[key] = getattr(result, key)
+
+    return model(**dict_)
