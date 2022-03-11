@@ -14,9 +14,18 @@ class Settings(BaseSettings):
     DB_HOST: str = Field(env="DB_HOST")
     DB_NAME: str = Field(env="DB_NAME")
 
+    REDIS_HOST: str = Field(env="REDIS_HOST")
+    REDIS_PORT: int = Field(env="REDIS_PORT")
+
     google_secret: dict = Field(env="GOOGLE_SECRET")
-    spreadsheet_original_id: str = Field(env="spreadsheet_original_id")
+    spreadsheet_original_id: str = Field(env="SPREADSHEET_ID")
     spreadsheet_current_id: str = Field(default=None)
+
+    RASPISANIE_TOKEN: str = Field(env='RASPISANIE_TOKEN')
+    DOMASHKA_TOKEN: str = Field(env='DOMASHKA_TOKEN')
+    # MPGU_TOKEN: str = Field(env='MPGU_TOKEN')
+
+    CLASSES_PER_DAY: int = Field(env='CLASSES_PER_DAY')
 
     @property
     def db_url(self):
@@ -29,6 +38,7 @@ class Settings(BaseSettings):
         )
 
     class Config:
+        # TODO закомментить весь класс
         env_file = '.env'
         env_file_encoding = 'utf-8'
 

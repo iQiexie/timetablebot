@@ -21,3 +21,13 @@ services:
     restart: always
     ports:
       - "5432:5432"
+
+  redis:
+    image: redis:alpine
+    container_name: redis_db
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./reddis_cache:/reddis_cache
+    restart: always

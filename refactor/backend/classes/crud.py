@@ -1,78 +1,67 @@
+import ast
+import json
 from typing import List
 
-from sqlalchemy import and_
-from sqlalchemy.ext.asyncio import AsyncSession
-
-from refactor.backend.base.crud import BaseCRUD
-from refactor.backend.base.utils import columns_to_pydantic
-from refactor.backend.classes.models import Class, Hyperlink
-from refactor.backend.classes.schemas import ClassSchema, HyperlinkSchema
+import aioredis
+from config import settings
+from refactor.backend.classes.schemas import ClassSchema
 
 
-class ClassesCRUD:
-    def __init__(self, db_session: AsyncSession):
-        self.model = Class
-        self.schema = ClassSchema
+class ClassesREDIS:
+    def __init__(self):
+        # TODO подумать над оптимизацией сессий. Мб контекст для транзакций придумать какой-нибудь
 
-        self.base = BaseCRUD(db_session=db_session, model=self.model, schema=self.schema)
-        self.hyperlinks = BaseCRUD(db_session=db_session, model=Hyperlink, schema=HyperlinkSchema)
+        self.session = aioredis.from_url(
+            f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+            decode_responses=True
+        )
 
-    async def create(self, **kwargs):
-        async with self.base.transaction():
-            hyperlink_list = kwargs.get("hyperlinks")
-            kwargs.pop("hyperlinks")
-            returning_model = await self.base.insert(**kwargs)
+    async def insert(self, class_object: ClassSchema):
+        key = {
+            'week_day_index': class_object.week_day_index,
+            'above_line': class_object.above_line,
+            'group_id': class_object.group_id
+        }
 
-            for hyperlink in hyperlink_list:
-                if hyperlink is not None:
-                    await self.hyperlinks.insert(
-                        class_id=returning_model.id,
-                        hyperlink=hyperlink
-                    )
+        value = {
+            'index': class_object.index,
+            'text': class_object.text,
+            'hyperlinks': class_object.hyperlinks,
+        }
 
-            return returning_model
+        exists = await self.session.lpos(str(key), str(value))
+        list_length = await self.session.llen(str(key))
+
+        if isinstance(exists, int):
+            return
+
+        if list_length >= settings.CLASSES_PER_DAY:
+            await self.session.delete(str(key))
+
+        await self.session.rpush(str(key), str(value))
 
     async def get(self, group_id: int, week_day_index: int, above_line: bool) -> List[ClassSchema]:
-        async with self.base.transaction():
-            result = await self.base.get_many(and_(
-                self.model.group_id == group_id,
-                self.model.week_day_index == week_day_index,
-                self.model.above_line == above_line
-            ))
+        key = {
+            'week_day_index': week_day_index,
+            'above_line': above_line,
+            'group_id': group_id
+        }
 
-        result_list = []
+        list_length = await self.session.llen(str(key))
+        results = await self.session.lrange(str(key), 0, list_length)
+        classes = []
 
-        for sub_result in result:
-            class_model = columns_to_pydantic(sub_result, ClassSchema)
-            class_model.hyperlinks = []
+        for result in results:
+            result_dict = ast.literal_eval(result)
 
-            async with self.hyperlinks.transaction():
-                hyperlinks = await self.hyperlinks.get_many(self.hyperlinks.model.class_id == sub_result.id)
-
-            for hyperlink in hyperlinks:
-                print(hyperlink)
-                hyperlink_model = columns_to_pydantic(hyperlink, HyperlinkSchema)
-                class_model.hyperlinks.append(hyperlink_model.hyperlink)
-
-            result_list.append(class_model)
-
-        return result_list
-
-    async def update(self, group_id: int, absolute_index: int, **kwargs):
-        async with self.base.transaction():
-            return await self.base.update(
-                and_(self.model.group_id == group_id, self.model.absolute_index == absolute_index),
-                **kwargs
+            class_object = ClassSchema(
+                week_day_index=week_day_index,
+                above_line=above_line,
+                group_id=group_id,
+                index=result_dict.get('index'),
+                text=result_dict.get('text'),
+                hyperlinks=result_dict.get("hyperlinks")
             )
+            classes.append(class_object)
 
-    async def delete(self, group_id: int, absolute_index: int):
-        async with self.base.transaction():
-            return await self.base.delete((and_(
-                self.model.group_id == group_id,
-                self.model.absolute_index == absolute_index
-            )))
-
-    async def empty_table(self):
-        async with self.base.transaction():
-            await self.hyperlinks.delete(self.hyperlinks.model.id == self.hyperlinks.model.id)
-            await self.base.delete(self.model.id == self.model.id)
+        return classes

@@ -15,6 +15,7 @@ alembic = "^1.7.6"
 pydantic = {extras = ["dotenv"], version = "^1.9.0"}
 asyncpg = "^0.25.0"
 httpx = "^0.22.0"
+aioredis = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 

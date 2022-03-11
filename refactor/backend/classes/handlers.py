@@ -64,13 +64,14 @@ async def scrape_classes(days: List[DaySchema], grade: int):
     """ парсит сами пары. Добавляет их в бд """
     classes = []
     for day in days:
-        for lesson in day.classes:
+        for index, lesson in enumerate(day.classes):
             if type(lesson) == list:
                 lesson = {'class': '', 'hyperlinks': ''}
             class_model = ClassSchema(
                 week_day_index=day.week_day_index,
                 above_line=day.above_line,
                 group_id=day.group_id + grade*100,
+                index=index + 1,
                 text=lesson.get("class"),
                 hyperlinks=lesson.get("hyperlinks")
             )
