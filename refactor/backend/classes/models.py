@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey, UnicodeText
-from refactor.base.db import Base, TimestampMixin
+from refactor.backend.base.db import Base, TimestampMixin
 
 
 class Class(Base, TimestampMixin):

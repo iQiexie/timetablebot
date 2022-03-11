@@ -1,9 +1,9 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from refactor.base.crud import BaseCRUD
-from refactor.event_logs.crud import EventLogCRUD
-from refactor.google_api.models import Credential
-from refactor.google_api.schemas import CredentialSchema
+from refactor.backend.base.crud import BaseCRUD
+from refactor.backend.event_logs.crud import EventLogCRUD
+from refactor.backend.google_api.models import Credential
+from refactor.backend.google_api.schemas import CredentialSchema
 
 
 class GoogleApiCRUD:

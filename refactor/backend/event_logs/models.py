@@ -1,7 +1,7 @@
 import enum
 from sqlalchemy import Column, Integer, String, Enum
 
-from refactor.base.db import Base, TimestampMixin
+from refactor.backend.base.db import Base, TimestampMixin
 
 
 class EventLogType(enum.Enum):

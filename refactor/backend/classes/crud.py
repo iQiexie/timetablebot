@@ -1,12 +1,12 @@
 from typing import List
 
-from sqlalchemy import and_, delete
+from sqlalchemy import and_
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from refactor.base.crud import BaseCRUD
-from refactor.base.utils import columns_to_pydantic
-from refactor.classes.models import Class, Hyperlink
-from refactor.classes.schemas import ClassSchema, HyperlinkSchema
+from refactor.backend.base.crud import BaseCRUD
+from refactor.backend.base.utils import columns_to_pydantic
+from refactor.backend.classes.models import Class, Hyperlink
+from refactor.backend.classes.schemas import ClassSchema, HyperlinkSchema
 
 
 class ClassesCRUD:

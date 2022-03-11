@@ -1,15 +1,12 @@
 from contextlib import asynccontextmanager
-from typing import Union, ClassVar, Type, TypeVar, AsyncContextManager, cast, Any, List, Callable
+from typing import Union, ClassVar, Type, TypeVar, AsyncContextManager, cast, Any, List
 
-from pydantic import BaseModel
-from sqlalchemy import update, lambda_stmt, select, delete
+from sqlalchemy import update, select, delete
 from sqlalchemy.engine import Result
 from sqlalchemy.ext.asyncio import AsyncSession, AsyncSessionTransaction
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy.sql import Executable
 
-from refactor.base.decorators import pydantic_converter
-from refactor.base.schema import BaseSchema
+from refactor.backend.base.decorators import pydantic_converter
 
 Model = TypeVar("Model")
 TransactionContext = AsyncContextManager[AsyncSessionTransaction]

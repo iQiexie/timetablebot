@@ -1,8 +1,8 @@
 import enum
 from sqlalchemy.ext.asyncio import AsyncSession
-from refactor.base.crud import BaseCRUD
-from refactor.event_logs.models import EventLog, EventLogType, EventLogAction
-from refactor.event_logs.schemas import EventLogSchema
+from refactor.backend.base.crud import BaseCRUD
+from refactor.backend.event_logs.models import EventLog, EventLogType, EventLogAction
+from refactor.backend.event_logs.schemas import EventLogSchema
 
 
 class EventLogActionMixin:

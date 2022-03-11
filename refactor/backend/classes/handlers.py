@@ -1,11 +1,10 @@
 from typing import List
 
-from refactor.base.db import async_session
-from refactor.base.utils import safe_pop, safe_get
-from refactor.classes.crud import ClassesCRUD
-from refactor.classes.schemas import ClassSchema, DaySchema, MetaInfoSchema
-from refactor.google_api.crud import GoogleApiCRUD
-from refactor.google_api.handlers import GoogleApiHandler
+from refactor.backend.base.db import async_session
+from refactor.backend.base.utils import safe_pop, safe_get
+from refactor.backend.classes.schemas import ClassSchema, DaySchema, MetaInfoSchema
+from refactor.backend.google_api.crud import GoogleApiCRUD
+from refactor.backend.google_api.handlers import GoogleApiHandler
 
 
 async def _get_hyperlink(info: MetaInfoSchema, class_index: int):
@@ -98,7 +97,7 @@ async def scrape_spreadsheet():
     google = GoogleApiHandler(GoogleApiCRUD(async_session))
     await google.init_services()
     final_classes = []
-    for grade in range(2, 3):
+    for grade in range(1, 5):
         print(grade)
         lessons, hyperlinks = await google.get_values(grade)
         columns = lessons.get("values")
@@ -123,7 +122,4 @@ async def scrape_spreadsheet():
                 ))
                 for _class in await scrape_classes(days, grade):
                     final_classes.append(_class)
-
-
-
     return final_classes

@@ -6,7 +6,7 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import AsyncEngine
 
 from alembic import context
-from refactor.base.binding import Base
+from refactor.backend.base import Base
 from config import settings
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

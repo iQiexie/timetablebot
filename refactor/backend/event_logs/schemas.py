@@ -1,7 +1,7 @@
 from enum import Enum
 from typing import Optional
 from pydantic import Field
-from refactor.base.schema import BaseSchema
+from refactor.backend.base.schema import BaseSchema
 
 
 class EventLogSchema(BaseSchema):

@@ -1,6 +1,6 @@
-from typing import Optional, List, Any, Union
+from typing import Optional, List, Any
 from pydantic import Field
-from refactor.base.schema import BaseSchema
+from refactor.backend.base.schema import BaseSchema
 
 
 class HyperlinkSchema(BaseSchema):
