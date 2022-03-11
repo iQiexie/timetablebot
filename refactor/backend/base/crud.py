@@ -37,7 +37,6 @@ class BaseCRUD:
         await self.session.commit()
         return add_model
 
-    @pydantic_converter
     async def get_one(self, *args) -> Union[List[Model], None]:
         stmt = select(self.model).where(*args)
         result_stmt = await self.session.execute(stmt)
@@ -60,7 +59,6 @@ class BaseCRUD:
         res = await self._update(*args, **kwargs)
         return res.scalars().all()
 
-    @pydantic_converter
     async def delete(self, *args: Any) -> Result:
         stmt = delete(self.model).where(*args).returning("*")
         result = await self.session.execute(stmt)
@@ -68,7 +66,6 @@ class BaseCRUD:
 
         return result
 
-    @pydantic_converter
     async def _update(self, *args: Any, **kwargs: Any) -> Model:
         stmt = (update(self.model).where(*args).values(**kwargs).returning(self.model))
         stmt = (select(self.model).from_statement(stmt).execution_options(synchronize_session="fetch"))
