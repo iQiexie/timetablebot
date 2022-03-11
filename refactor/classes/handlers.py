@@ -45,7 +45,6 @@ async def _scrape_days(info: MetaInfoSchema, start_week: int) -> List[List[dict]
 
 
 async def scrape_days(info: MetaInfoSchema) -> List[DaySchema]:
-    """ парсит целую колонку (всё расписание для одной группы). Возвращает дни """
     days = []
     for i in range(2):
         day_classes = await _scrape_days(info, i)
@@ -62,18 +61,21 @@ async def scrape_days(info: MetaInfoSchema) -> List[DaySchema]:
     return days
 
 
-async def scrape_classes(days: List[DaySchema]):
+async def scrape_classes(days: List[DaySchema], grade: int):
     """ парсит сами пары. Добавляет их в бд """
     classes = []
     for day in days:
         for lesson in day.classes:
-            classes.append(ClassSchema(
+            if type(lesson) == list:
+                lesson = {'class': '', 'hyperlinks': ''}
+            class_model = ClassSchema(
                 week_day_index=day.week_day_index,
                 above_line=day.above_line,
-                group_id=day.group_id,
+                group_id=day.group_id + grade*100,
                 text=lesson.get("class"),
                 hyperlinks=lesson.get("hyperlinks")
-            ))
+            )
+            classes.append(class_model)
 
     return classes
 
@@ -81,21 +83,20 @@ async def scrape_classes(days: List[DaySchema]):
 async def scrape_spreadsheet():
     google = GoogleApiHandler(GoogleApiCRUD(async_session))
     await google.init_services()
-    for grade in range(2, 3):
-        """ сделать отдельный цикл для grade == 2. Там 210 группы нет """
+    final_classes = []
+    for grade in range(1, 5):
+        print(grade)
+        # TODO сделать отдельный цикл для grade == 2. Там 210 группы нет. Не работает для 1 курса
         lessons, hyperlinks = await google.get_values(grade)
         columns = lessons.get("values")
         for index, column in enumerate(columns):
-            print(f"group: {index + 1}")
             days = await scrape_days(MetaInfoSchema(
                 class_column=column,
                 hyperlinks=hyperlinks,
                 grade=grade,
                 group_id=index + 1
             ))
-            return await scrape_classes(days)
-            # last_row_index = ROWS_IN_DAY
-            # print(group_index)
-            # for week_day_index in range(1, 7):
-            #     one_day_rows = column[last_row_index * (week_day_index - 1): last_row_index * week_day_index]
-            #     await scrape_day(one_day_rows, week_day_index)
+            for _class in await scrape_classes(days, grade):
+                final_classes.append(_class)
+
+    return final_classes
