@@ -1,4 +1,12 @@
 [[package]]
+name = "aiofiles"
+version = "0.8.0"
+description = "File support for asyncio."
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
 name = "aiohttp"
 version = "3.8.1"
 description = "Async http client/server framework (asyncio)"
@@ -137,6 +145,17 @@ python-versions = ">=3.5.0"
 
 [package.extras]
 unicode_backport = ["unicodedata2"]
+
+[[package]]
+name = "choicelib"
+version = "0.1.5"
+description = "Choice a best similar-interface library from given list"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+typing-extensions = ">=4.0.1,<5.0.0"
 
 [[package]]
 name = "frozenlist"
@@ -548,11 +567,11 @@ sqlcipher = ["sqlcipher3-binary"]
 
 [[package]]
 name = "typing-extensions"
-version = "3.10.0.2"
-description = "Backported and Experimental Type Hints for Python 3.5+"
+version = "4.1.1"
+description = "Backported and Experimental Type Hints for Python 3.6+"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.6"
 
 [[package]]
 name = "uritemplate"
@@ -576,6 +595,17 @@ secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "cer
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
+name = "vbml"
+version = "1.1.post1"
+description = "Way to check, match & resist. Sofisticated object oriented regex-based text parser"
+category = "main"
+optional = false
+python-versions = ">=3.7,<4.0"
+
+[package.dependencies]
+typing_extensions = "*"
+
+[[package]]
 name = "vk-api"
 version = "11.9.7"
 description = "Python модуль для создания скриптов для социальной сети Вконтакте (vk.com API wrapper)"
@@ -591,21 +621,42 @@ vkaudio = ["beautifulsoup4"]
 vkstreaming = ["websocket-client"]
 
 [[package]]
-name = "vkwave"
-version = "0.2.13"
-description = "Framework for building high-performance & easy to scale projects interacting with VK's API."
+name = "vkbottle"
+version = "4.2.1"
+description = "Homogenic! Customizable asynchronous VK API framework implementing comfort and speed"
 category = "main"
 optional = false
-python-versions = ">=3.7,<4.0"
+python-versions = ">=3.7.2,<4.0.0"
 
 [package.dependencies]
-aiohttp = ">=3.6,<4.0"
-pydantic = ">=1.7,<2.0"
-typing_extensions = ">=3.7.4,<4.0.0"
+aiofiles = ">=0.8.0,<0.9.0"
+aiohttp = ">=3.6.2,<4.0.0"
+choicelib = ">=0.1.5,<0.2.0"
+pydantic = ">=1.8.2,<2.0.0"
+typing-extensions = ">=4.0.1,<5.0.0"
+vbml = ">=1.1.post1,<2.0"
+vkbottle-types = ">=5.131.134,<6.0.0"
+watchgod = ">=0.7,<0.8"
 
-[package.extras]
-storage-redis = ["aioredis (>=1.3,<2.0)"]
-all = ["aioredis (>=1.3,<2.0)"]
+[[package]]
+name = "vkbottle-types"
+version = "5.131.146.1"
+description = "Types for vkbottle"
+category = "main"
+optional = false
+python-versions = ">=3.7.2,<4.0.0"
+
+[package.dependencies]
+pydantic = ">=1.6.1,<2.0.0"
+vkbottle = ">=4.1,<5.0"
+
+[[package]]
+name = "watchgod"
+version = "0.7"
+description = "Simple, modern file watching and code reload in python."
+category = "main"
+optional = false
+python-versions = ">=3.5"
 
 [[package]]
 name = "yarl"
@@ -622,9 +673,13 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "37c01ea92520cc6ef8afb8a47fb212e609bc45415feab2b375cc5c5eefad9127"
+content-hash = "5d288068227a6bb1c94268280d4c8035529a7f0d25cfdbd28669c269963b410c"
 
 [metadata.files]
+aiofiles = [
+    {file = "aiofiles-0.8.0-py3-none-any.whl", hash = "sha256:7a973fc22b29e9962d0897805ace5856e6a566ab1f0c8e5c91ff6c866519c937"},
+    {file = "aiofiles-0.8.0.tar.gz", hash = "sha256:8334f23235248a3b2e83b2c3a78a22674f39969b96397126cc93664d9a901e59"},
+]
 aiohttp = [
     {file = "aiohttp-3.8.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:1ed0b6477896559f17b9eaeb6d38e07f7f9ffe40b9f0f9627ae8b9926ae260a8"},
     {file = "aiohttp-3.8.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:7dadf3c307b31e0e61689cbf9e06be7a867c563d5a63ce9dca578f956609abf8"},
@@ -762,6 +817,10 @@ certifi = [
 charset-normalizer = [
     {file = "charset-normalizer-2.0.12.tar.gz", hash = "sha256:2857e29ff0d34db842cd7ca3230549d1a697f96ee6d3fb071cfa6c7393832597"},
     {file = "charset_normalizer-2.0.12-py3-none-any.whl", hash = "sha256:6881edbebdb17b39b4eaaa821b438bf6eddffb4468cf344f09f89def34a8b1df"},
+]
+choicelib = [
+    {file = "choicelib-0.1.5-py3-none-any.whl", hash = "sha256:6170daad66ef9ef7f72c75fbb527e8980720c63b84f8b7b379380095e6bec8ca"},
+    {file = "choicelib-0.1.5.tar.gz", hash = "sha256:450035a260e5621af793ea858be1f7b04e38bb50c7c40f9ef480da3c571314c7"},
 ]
 frozenlist = [
     {file = "frozenlist-1.3.0-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:d2257aaba9660f78c7b1d8fea963b68f3feffb1a9d5d05a18401ca9eb3e8d0a3"},
@@ -1205,9 +1264,8 @@ sqlalchemy = [
     {file = "SQLAlchemy-1.4.32.tar.gz", hash = "sha256:6fdd2dc5931daab778c2b65b03df6ae68376e028a3098eb624d0909d999885bc"},
 ]
 typing-extensions = [
-    {file = "typing_extensions-3.10.0.2-py2-none-any.whl", hash = "sha256:d8226d10bc02a29bcc81df19a26e56a9647f8b0a6d4a83924139f4a8b01f17b7"},
-    {file = "typing_extensions-3.10.0.2-py3-none-any.whl", hash = "sha256:f1d25edafde516b146ecd0613dabcc61409817af4766fbbcfb8d1ad4ec441a34"},
-    {file = "typing_extensions-3.10.0.2.tar.gz", hash = "sha256:49f75d16ff11f1cd258e1b988ccff82a3ca5570217d7ad8c5f48205dd99a677e"},
+    {file = "typing_extensions-4.1.1-py3-none-any.whl", hash = "sha256:21c85e0fe4b9a155d0799430b0ad741cdce7e359660ccbd8b530613e8df88ce2"},
+    {file = "typing_extensions-4.1.1.tar.gz", hash = "sha256:1a9462dcc3347a79b1f1c0271fbe79e844580bb598bafa1ed208b94da3cdcd42"},
 ]
 uritemplate = [
     {file = "uritemplate-4.1.1-py2.py3-none-any.whl", hash = "sha256:830c08b8d99bdd312ea4ead05994a38e8936266f84b9a7878232db50b044e02e"},
@@ -1217,13 +1275,25 @@ urllib3 = [
     {file = "urllib3-1.26.8-py2.py3-none-any.whl", hash = "sha256:000ca7f471a233c2251c6c7023ee85305721bfdf18621ebff4fd17a8653427ed"},
     {file = "urllib3-1.26.8.tar.gz", hash = "sha256:0e7c33d9a63e7ddfcb86780aac87befc2fbddf46c58dbb487e0855f7ceec283c"},
 ]
+vbml = [
+    {file = "vbml-1.1.post1-py3-none-any.whl", hash = "sha256:e3037c3f67b79128c48a100326fde833345e7d1e0d466566d37c2c98d08a587d"},
+    {file = "vbml-1.1.post1.tar.gz", hash = "sha256:59e852b35b2c4d3f8e7d927ab2e0a9dde753f3427ab9a61aca7ed2f4d3986f3c"},
+]
 vk-api = [
     {file = "vk_api-11.9.7-py3-none-any.whl", hash = "sha256:68f4bf836780669790c1a5b4e1c02523d981f1274bfd17bf648a6997122a579c"},
     {file = "vk_api-11.9.7.tar.gz", hash = "sha256:e88f69f4df4378995a43d00283c8c80a7d4c2f36aecacae1ff1e9fe4562f9e0d"},
 ]
-vkwave = [
-    {file = "vkwave-0.2.13-cp38-cp38-win_amd64.whl", hash = "sha256:4caebdbb87ab2bc50843b7eac7fda8f15ce9e70f5e1468578945f768550f7600"},
-    {file = "vkwave-0.2.13.tar.gz", hash = "sha256:b5a6a59de6891cd272de568b119392476d2e64229835eb73514a19f009e6ebcc"},
+vkbottle = [
+    {file = "vkbottle-4.2.1-py3-none-any.whl", hash = "sha256:ca6dc185d391c4a0210e78e321bde9707d08d2d8d76b23006ed10f4165906fc5"},
+    {file = "vkbottle-4.2.1.tar.gz", hash = "sha256:09256ec24debfb75ecbb172017e242790e0d42053af63490e30ab6c07bec19d8"},
+]
+vkbottle-types = [
+    {file = "vkbottle-types-5.131.146.1.tar.gz", hash = "sha256:28dbff9ec244dc11e1ad903f2934daa7b2ce100a7af1c2ccd84f8f53ba7780d5"},
+    {file = "vkbottle_types-5.131.146.1-py3-none-any.whl", hash = "sha256:b6255d128330f3ec66ae53dda64dec06e7b48227947786ce6bc030374bcd09e2"},
+]
+watchgod = [
+    {file = "watchgod-0.7-py3-none-any.whl", hash = "sha256:d6c1ea21df37847ac0537ca0d6c2f4cdf513562e95f77bb93abbcf05573407b7"},
+    {file = "watchgod-0.7.tar.gz", hash = "sha256:48140d62b0ebe9dd9cf8381337f06351e1f2e70b2203fa9c6eff4e572ca84f29"},
 ]
 yarl = [
     {file = "yarl-1.7.2-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:f2a8508f7350512434e41065684076f640ecce176d262a7d54f0da41d99c5a95"},

@@ -8,7 +8,6 @@ authors = ["Neykuratick <neykuratick@yahoo.com>"]
 python = "^3.10"
 gspread = "^5.1.1"
 google-api-python-client = "^2.34.0"
-vkwave = "0.2.13"
 vk-api = "^11.9.7"
 SQLAlchemy = "^1.4.31"
 alembic = "^1.7.6"
@@ -16,6 +15,7 @@ pydantic = {extras = ["dotenv"], version = "^1.9.0"}
 asyncpg = "^0.25.0"
 httpx = "^0.22.0"
 aioredis = "^2.0.1"
+vkbottle = "^4.2.1"
 
 [tool.poetry.dev-dependencies]
 

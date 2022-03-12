@@ -1,3 +1,4 @@
+import logging
 from typing import Optional
 
 from pydantic import BaseSettings, Field
@@ -9,6 +10,17 @@ def generate_db_url(user, password, host, port, db_name):
 
 def generate_redis_url(host, port):
     return f"redis://{host}:{port}/"
+
+
+def generate_logging_level(level):
+    level_map = {
+        'DEBUG': logging.DEBUG,
+        'INFO': logging.INFO,
+        'WARNING': logging.WARNING,
+        'ERROR': logging.ERROR,
+        'CRITICAL': logging.CRITICAL,
+    }
+    return level_map.get(f'{level}')
 
 
 class Settings(BaseSettings):
@@ -27,9 +39,12 @@ class Settings(BaseSettings):
 
     RASPISANIE_TOKEN: str = Field(env='RASPISANIE_TOKEN')
     DOMASHKA_TOKEN: str = Field(env='DOMASHKA_TOKEN')
+    TEST_TOKEN: str = Field(env='TEST_TOKEN')
     # MPGU_TOKEN: str = Field(env='MPGU_TOKEN')
 
     CLASSES_PER_DAY: int = Field(env='CLASSES_PER_DAY')
+
+    LOGGING_LEVEL: str = Field(env='LOGGING_LEVEL')
 
     @property
     def db_url(self):
@@ -43,7 +58,12 @@ class Settings(BaseSettings):
 
     @property
     def redis_url(self):
+        print(self.REDIS_HOST)
         return generate_redis_url(host=self.REDIS_HOST, port=self.REDIS_PORT)
+
+    @property
+    def logging_level(self):
+        return generate_logging_level(level=self.LOGGING_LEVEL)
 
     class Config:
         # TODO закомментить весь класс
