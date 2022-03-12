@@ -1,22 +1,18 @@
 import enum
-
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import current_timestamp
 
 from refactor.backend.base.db import Base, TimestampMixin
 
 
-class MessageType(enum.Enum):
-    # TODO перенести в логи
+class MessageType(str, enum.Enum):
     READ = 'READ'
     UPDATE = 'UPDATE'
     UNDEFINED = 'UNDEFINED'
 
 
-class MessageIntent(enum.Enum):
-    # TODO перенести в логи
-
+class MessageIntent(str, enum.Enum):
     MONDAY_BELOW = 'MONDAY_BELOW'
     MONDAY_ABOVE = 'MONDAY_ABOVE'
     TUESDAY_BELOW = 'TUESDAY_BELOW'
@@ -54,5 +50,5 @@ class UserMessage(Base, TimestampMixin):
 
     user_uuid = Column(UUID, ForeignKey('users.uuid'))
 
-    message_type = Column(enum.Enum(MessageType), default=MessageType.UNDEFINED)
-    message_intent = Column(enum.Enum(MessageIntent), default=MessageIntent.UNDEFINED)
+    message_type = Column(Enum(MessageType), default=MessageType.UNDEFINED)
+    message_intent = Column(Enum(MessageIntent), default=MessageIntent.UNDEFINED)

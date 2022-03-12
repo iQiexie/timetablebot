@@ -4,6 +4,7 @@ from typing import List
 
 import aioredis
 from config import settings
+from refactor.backend.base.utils import RedisDatabases
 from refactor.backend.classes.handlers import scrape_spreadsheet
 from refactor.backend.classes.schemas import ClassSchema
 
@@ -13,7 +14,7 @@ class ClassesREDIS:
         # TODO подумать над оптимизацией сессий. Мб контекст для транзакций придумать какой-нибудь
 
         self.session = aioredis.from_url(
-            f"redis://{settings.REDIS_HOST}:{settings.REDIS_PORT}",
+            settings.redis_url + RedisDatabases.CLASSES,
             decode_responses=True
         )
 
@@ -26,9 +27,10 @@ class ClassesREDIS:
         # но тогда надо из scrape_spreadhseet возвращать пары не просто одним большим списком, а по дням
         # потому что по сути, один редис лист - один день
 
+        await self._flush_db()
+
         results = await scrape_spreadsheet()
 
-        await self.session.flushdb()
         for result in results:
             await self._insert(result)
 
@@ -47,16 +49,21 @@ class ClassesREDIS:
             'hyperlinks': class_object.hyperlinks,
         }
 
-        exists = await self.session.lpos(str(key), str(value))
-        list_length = await self.session.llen(str(key))
+        async with self.session.client() as client:
+            exists = await client.execute_command('lpos', str(key), str(value))
+            list_length = await client.execute_command('llen', str(key))
 
-        if isinstance(exists, int):
-            return
+            if isinstance(exists, int):
+                return
 
-        if list_length >= settings.CLASSES_PER_DAY:
-            await self.session.delete(str(key))
+            if list_length >= settings.CLASSES_PER_DAY:
+                await client.execute_command('delete', str(key))
 
-        await self.session.rpush(str(key), str(value))
+            await client.execute_command('rpush', str(key), str(value))
+
+    async def _flush_db(self):
+        async with self.session.client() as client:
+            await client.execute_command('flushdb')
 
     async def get(self, group_id: int, week_day_index: int, above_line: bool) -> List[ClassSchema]:
         key = {
@@ -65,8 +72,10 @@ class ClassesREDIS:
             'group_id': group_id
         }
 
-        list_length = await self.session.llen(str(key))
-        results = await self.session.lrange(str(key), 0, list_length)
+        async with self.session.client() as client:
+            list_length = await client.execute_command('llen', str(key))
+            results = await client.execute_command('lrange', str(key), 0, list_length)
+
         classes = []
 
         for result in results:

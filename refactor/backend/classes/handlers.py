@@ -3,7 +3,7 @@ from typing import List
 from refactor.backend.base.db import async_session
 from refactor.backend.base.utils import safe_pop, safe_get
 from refactor.backend.classes.schemas import ClassSchema, DaySchema, MetaInfoSchema
-from refactor.backend.google_api.crud import GoogleApiCRUD
+from refactor.backend.google_api.crud import GoogleApiREDIS
 from refactor.backend.google_api.handlers import GoogleApiHandler
 
 
@@ -97,9 +97,11 @@ async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_
 
 
 async def scrape_spreadsheet():
-    google = GoogleApiHandler(GoogleApiCRUD(async_session))
+    google = GoogleApiHandler()
     await google.init_services()
+
     final_classes = []
+
     for grade in range(1, 5):
         print(grade)
         lessons, hyperlinks = await google.get_values(grade)

@@ -7,6 +7,10 @@ def generate_db_url(user, password, host, port, db_name):
     return f"postgresql+asyncpg://{user}:{password}@{host}:{port}/{db_name}"
 
 
+def generate_redis_url(host, port):
+    return f"redis://{host}:{port}/"
+
+
 class Settings(BaseSettings):
     DB_USER: str = Field(env="DB_USER")
     DB_PASSWORD: str = Field(env="DB_PASSWORD")
@@ -36,6 +40,10 @@ class Settings(BaseSettings):
             port=self.DB_PORT,
             db_name=self.DB_NAME
         )
+
+    @property
+    def redis_url(self):
+        return generate_redis_url(host=self.REDIS_HOST, port=self.REDIS_PORT)
 
     class Config:
         # TODO закомментить весь класс

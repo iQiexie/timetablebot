@@ -1,3 +1,8 @@
+class RedisDatabases:
+    CLASSES = '1'
+    CREDENTIALS = '2'
+
+
 async def safe_pop(array: list, index: int):
     if index >= len(array):
         return array
