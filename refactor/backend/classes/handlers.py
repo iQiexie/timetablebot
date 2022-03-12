@@ -18,7 +18,9 @@ async def _get_hyperlink(info: MetaInfoSchema, class_index: int):
 
     try:
         for possible_hyperlink in links['values']:
-            hyperlinks.append(possible_hyperlink.get("hyperlink"))
+            hyperlink = possible_hyperlink.get("hyperlink")
+            hyperlinks.append(hyperlink) if hyperlink else None
+
     except (KeyError, AttributeError, TypeError):
         pass
 

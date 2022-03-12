@@ -8,12 +8,15 @@ from refactor.backend.base.db import Base, TimestampMixin
 
 
 class MessageType(enum.Enum):
+    # TODO перенести в логи
     READ = 'READ'
     UPDATE = 'UPDATE'
     UNDEFINED = 'UNDEFINED'
 
 
 class MessageIntent(enum.Enum):
+    # TODO перенести в логи
+
     MONDAY_BELOW = 'MONDAY_BELOW'
     MONDAY_ABOVE = 'MONDAY_ABOVE'
     TUESDAY_BELOW = 'TUESDAY_BELOW'

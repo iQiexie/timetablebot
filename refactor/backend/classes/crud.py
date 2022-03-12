@@ -4,6 +4,7 @@ from typing import List
 
 import aioredis
 from config import settings
+from refactor.backend.classes.handlers import scrape_spreadsheet
 from refactor.backend.classes.schemas import ClassSchema
 
 
@@ -16,7 +17,24 @@ class ClassesREDIS:
             decode_responses=True
         )
 
-    async def insert(self, class_object: ClassSchema):
+    async def reset_database(self):
+        """ Перезаписывает дб с парами на новые. Вызывать раз в час """
+
+        # TODO либо придумать чё-нибудь с этим, либо короче высылать юзверу сообщение о том, что бд обновляется \
+        # TODO если запрос придёт в это время
+        # как вариант, можно не флашить дб, а поочерёдно удалять листы, когда обновляешь дб.
+        # но тогда надо из scrape_spreadhseet возвращать пары не просто одним большим списком, а по дням
+        # потому что по сути, один редис лист - один день
+
+        results = await scrape_spreadsheet()
+
+        await self.session.flushdb()
+        for result in results:
+            await self._insert(result)
+
+    async def _insert(self, class_object: ClassSchema):
+        """ Кладёт пару в лист редиса. Проверяет на бубликаты """
+
         key = {
             'week_day_index': class_object.week_day_index,
             'above_line': class_object.above_line,

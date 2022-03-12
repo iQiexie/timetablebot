@@ -13,6 +13,8 @@ class UserCRUD:
         self.message_crud = BaseCRUD(db_session=db_session, model=UserMessage, schema=UserMessageSchema)
 
     async def log_message(self, **kwargs):
+        # TODO перенести в логи
+
         async with self.message_crud.transaction():
             await self.message_crud.insert(**kwargs)
 

@@ -17,7 +17,7 @@ sheets_service_args = ('sheets', 'v4', ['https://www.googleapis.com/auth/spreads
 
 class GoogleApiHandler:
     def __init__(self, db: GoogleApiCRUD):
-        self.db = db
+        self.db = db  # TODO перенести на редис
         self.drive_service = None
         self.sheets_service = None
 
@@ -30,14 +30,14 @@ class GoogleApiHandler:
         return flow.run_local_server(port=randint(5, 1000))
 
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
-        creds = await self.db.get(service_name)
+        creds = await self.db.get(service_name)  # TODO перенести на редис
 
         if creds is not None:
             creds = Credentials.from_authorized_user_info(info=json.loads(creds.credentials), scopes=scopes)
         else:
             flow = InstalledAppFlow.from_client_config(settings.google_secret, scopes)
             creds = await self.run_server(flow)
-            await self.db.create(service_name=service_name, credentials=str(creds.to_json()))
+            await self.db.create(service_name=service_name, credentials=str(creds.to_json())) # TODO перенести на редис
 
         if any((creds.valid, creds.expired, creds.refresh_token)):
             creds.refresh(Request())

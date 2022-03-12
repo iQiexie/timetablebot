@@ -6,6 +6,9 @@ from refactor.backend.google_api.models import Credential
 from refactor.backend.google_api.schemas import CredentialSchema
 
 
+# TODO перенести на редис
+
+
 class GoogleApiCRUD:
     def __init__(self, db_session: AsyncSession):
         self.model = Credential
