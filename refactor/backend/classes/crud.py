@@ -6,7 +6,7 @@ import aioredis
 from config import settings
 from refactor.backend.base.utils import RedisDatabases
 from refactor.backend.classes.handlers import scrape_spreadsheet
-from refactor.backend.classes.schemas import ClassSchema
+from refactor.backend.classes.schemas import ClassSchema, DaySchema
 
 
 class ClassesREDIS:
@@ -27,68 +27,48 @@ class ClassesREDIS:
         # но тогда надо из scrape_spreadhseet возвращать пары не просто одним большим списком, а по дням
         # потому что по сути, один редис лист - один день
 
-        await self._flush_db()
+        day_schemas = await scrape_spreadsheet()
 
-        results = await scrape_spreadsheet()
+        for day_schema in day_schemas:
+            await self._insert(day_schema)
 
-        for result in results:
-            await self._insert(result)
-
-    async def _insert(self, class_object: ClassSchema):
+    async def _insert(self, day: DaySchema):
         """ Кладёт пару в лист редиса. Проверяет на бубликаты """
 
         key = {
-            'week_day_index': class_object.week_day_index,
-            'above_line': class_object.above_line,
-            'group_id': class_object.group_id
+            'week_day_index': day.week_day_index,
+            'above_line': day.above_line,
+            'group_id': day.group_id
         }
 
         value = {
-            'index': class_object.index,
-            'text': class_object.text,
-            'hyperlinks': class_object.hyperlinks,
+            'classes': str([json.dumps(str(class_model.dict())) for class_model in day.classes])
         }
 
         async with self.session.client() as client:
-            exists = await client.execute_command('lpos', str(key), str(value))
-            list_length = await client.execute_command('llen', str(key))
+            exists = await client.execute_command('exists', str(key))
+            if exists:
+                await client.execute_command('del', str(key))
 
-            if isinstance(exists, int):
-                return
+            await client.execute_command('set', str(key), str(value))
 
-            if list_length >= settings.CLASSES_PER_DAY:
-                await client.execute_command('delete', str(key))
-
-            await client.execute_command('rpush', str(key), str(value))
-
-    async def _flush_db(self):
-        async with self.session.client() as client:
-            await client.execute_command('flushdb')
-
-    async def get(self, group_id: int, week_day_index: int, above_line: bool) -> List[ClassSchema]:
-        key = {
+    async def get(self, group_id: int, week_day_index: int, above_line: bool) -> DaySchema:
+        day_info = {
             'week_day_index': week_day_index,
             'above_line': above_line,
             'group_id': group_id
         }
 
         async with self.session.client() as client:
-            list_length = await client.execute_command('llen', str(key))
-            results = await client.execute_command('lrange', str(key), 0, list_length)
+            day_classes_raw = await client.execute_command('get', str(day_info))
+            day_classes_dict = ast.literal_eval(day_classes_raw)
+            day_info['classes'] = ast.literal_eval(day_classes_dict.get('classes'))
 
         classes = []
+        for class_raw in day_info.get('classes'):
+            string_dictionary = ast.literal_eval(class_raw)
+            dictionary_dictionary = ast.literal_eval(string_dictionary)
+            classes.append(ClassSchema(**dictionary_dictionary))
 
-        for result in results:
-            result_dict = ast.literal_eval(result)
-
-            class_object = ClassSchema(
-                week_day_index=week_day_index,
-                above_line=above_line,
-                group_id=group_id,
-                index=result_dict.get('index'),
-                text=result_dict.get('text'),
-                hyperlinks=result_dict.get("hyperlinks")
-            )
-            classes.append(class_object)
-
-        return classes
+        day_info['classes'] = classes
+        return DaySchema(**day_info)

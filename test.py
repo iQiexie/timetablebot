@@ -28,7 +28,7 @@ async def test():
 
     res = await crud.get(208, 2, True)
 
-    for re in res:
+    for re in res.classes:
         print(re)
 
 

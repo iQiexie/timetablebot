@@ -1,4 +1,4 @@
-from typing import Optional, List, Any
+from typing import Optional, List, Any, Union
 from pydantic import Field
 from refactor.backend.base.schema import BaseSchema
 
@@ -16,9 +16,6 @@ class MetaInfoSchema(BaseSchema):
 
 
 class ClassSchema(BaseSchema):
-    week_day_index: int
-    above_line: bool
-    group_id: int
     index: int  # какая пара по счёту в этом дне, начиная с 1
     text: Optional[Any] = Field(default=None)
     hyperlinks: Optional[Any] = Field(default=None)

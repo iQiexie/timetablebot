@@ -1,9 +1,7 @@
 from typing import List
 
-from refactor.backend.base.db import async_session
 from refactor.backend.base.utils import safe_pop, safe_get
 from refactor.backend.classes.schemas import ClassSchema, DaySchema, MetaInfoSchema
-from refactor.backend.google_api.crud import GoogleApiREDIS
 from refactor.backend.google_api.handlers import GoogleApiHandler
 
 
@@ -62,24 +60,28 @@ async def scrape_days(info: MetaInfoSchema) -> List[DaySchema]:
     return days
 
 
-async def scrape_classes(days: List[DaySchema], grade: int):
+async def scrape_classes(days: List[DaySchema]) -> List[DaySchema]:
     """ парсит сами пары. Добавляет их в бд """
-    classes = []
+    better_days = []
     for day in days:
+        class_schemas = []
+
         for index, lesson in enumerate(day.classes):
             if type(lesson) == list:
                 lesson = {'class': '', 'hyperlinks': ''}
+
             class_model = ClassSchema(
-                week_day_index=day.week_day_index,
-                above_line=day.above_line,
-                group_id=day.group_id + grade*100,
                 index=index + 1,
                 text=lesson.get("class"),
                 hyperlinks=lesson.get("hyperlinks")
             )
-            classes.append(class_model)
 
-    return classes
+            class_schemas.append(class_model)
+
+        day.classes = class_schemas
+        better_days.append(day)
+
+    return better_days
 
 
 async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_classes: list):
@@ -88,15 +90,15 @@ async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_
             class_column=column,
             hyperlinks=hyperlinks,
             grade=grade,
-            group_id=index + 1
+            group_id=index + 1 + grade*100
         ))
-        for _class in await scrape_classes(days, grade):
+        for _class in await scrape_classes(days):
             final_classes.append(_class)
 
     return final_classes
 
 
-async def scrape_spreadsheet():
+async def scrape_spreadsheet() -> List[DaySchema]:
     google = GoogleApiHandler()
     await google.init_services()
 
@@ -123,8 +125,8 @@ async def scrape_spreadsheet():
                     class_column=column,
                     hyperlinks=hyperlinks,
                     grade=grade,
-                    group_id=index + 1
+                    group_id=index + 1 + grade*100
                 ))
-                for _class in await scrape_classes(days, grade):
+                for _class in await scrape_classes(days):
                     final_classes.append(_class)
     return final_classes
