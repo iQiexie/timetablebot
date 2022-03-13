@@ -9,3 +9,9 @@ def get_logger(name: str, level=None):
     logger.setLevel(level=level or settings.logging_level)
 
     return logger
+
+
+def list_contains_str(message: str, triggers: list[str]) -> bool:
+    for trigger in triggers:
+        if trigger in message.lower():
+            return True

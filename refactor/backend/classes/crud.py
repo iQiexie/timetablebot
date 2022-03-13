@@ -52,7 +52,7 @@ class ClassesREDIS:
 
             await client.execute_command('set', str(key), str(value))
 
-    async def get(self, group_id: int, week_day_index: int, above_line: bool) -> DaySchema:
+    async def get(self, group_id: int, week_day_index: int, above_line: bool) -> DaySchema | None:
         day_info = {
             'week_day_index': week_day_index,
             'above_line': above_line,
@@ -61,6 +61,10 @@ class ClassesREDIS:
 
         async with self.session.client() as client:
             day_classes_raw = await client.execute_command('get', str(day_info))
+
+            if day_classes_raw is None:
+                return None
+
             day_classes_dict = ast.literal_eval(day_classes_raw)
             day_info['classes'] = ast.literal_eval(day_classes_dict.get('classes'))
 

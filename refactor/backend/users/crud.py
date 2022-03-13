@@ -22,14 +22,14 @@ class UserCRUD:
         async with self.base.transaction():
             return await self.base.insert(**kwargs)
 
-    async def get(self, service_name: str):
+    async def get(self, vk_id: int) -> User | None:
         async with self.base.transaction():
-            return await self.base.get_one(self.model.service_name == service_name)
+            return await self.base.get_one(self.model.vk_id == vk_id)
 
-    async def update(self, service_name: str, **kwargs):
+    async def update(self, vk_id: str, **kwargs):
         async with self.base.transaction():
-            return await self.base.update(self.model.service_name == service_name, **kwargs)
+            return await self.base.update(self.model.vk_id == vk_id, **kwargs)
 
-    async def delete(self, service_name: str):
+    async def delete(self, vk_id: str):
         async with self.base.transaction():
-            return await self.base.delete(self.model.service_name == service_name)
+            return await self.base.delete(self.model.vk_id == vk_id)

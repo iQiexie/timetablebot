@@ -1,4 +1,6 @@
 import enum
+from uuid import uuid4
+
 from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.functions import current_timestamp
@@ -35,10 +37,10 @@ class MessageIntent(str, enum.Enum):
 class User(Base, TimestampMixin):
     __tablename__ = "users"
 
-    uuid = Column(UUID, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
 
-    vk_id = Column(String(255))
-    group_index = Column(Integer)
+    vk_id = Column(Integer)
+    group_index = Column(Integer, nullable=True)
     ai_companion_enabled = Column(Boolean, default=False)
     last_activity = Column(DateTime, default=current_timestamp())
 
