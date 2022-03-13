@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from refactor.backend.base.crud import BaseCRUD
+from refactor.backend.base.decorators import pydantic_converter
 from refactor.backend.users.models import User, UserMessage
 from refactor.backend.users.schemas import UserSchema, UserMessageSchema
 
@@ -18,11 +19,16 @@ class UserCRUD:
         async with self.message_crud.transaction():
             await self.message_crud.insert(**kwargs)
 
+    async def user_exists(self, vk_id: int):
+        user = await self.get(vk_id)
+        return user is None
+
     async def create(self, **kwargs):
         async with self.base.transaction():
             return await self.base.insert(**kwargs)
 
-    async def get(self, vk_id: int) -> User | None:
+    @pydantic_converter
+    async def get(self, vk_id: int):
         async with self.base.transaction():
             return await self.base.get_one(self.model.vk_id == vk_id)
 

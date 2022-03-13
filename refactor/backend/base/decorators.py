@@ -7,6 +7,8 @@ def pydantic_converter(func):
 
         if hasattr(result, '__table__'):
             result_dict = dict((column.name, getattr(result, column.name)) for column in result.__table__.columns)
-            return args[0].schema(**result_dict)
+            final_result = args[0].schema(**result_dict)
+
+            return final_result
 
     return wrapper

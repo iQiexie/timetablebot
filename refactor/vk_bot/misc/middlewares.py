@@ -4,16 +4,22 @@ from vkbottle.bot import Message
 from refactor.backend.base.db import async_session
 from refactor.backend.users.crud import UserCRUD
 from refactor.vk_bot.misc.states import PickingState
+from refactor.vk_bot.misc.storages import context_storage
 
 db = UserCRUD(async_session)
 
 
-class UserExistsMiddleware(BaseMiddleware[Message]):
+class AuthMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:
+
         user = await db.get(self.event.peer_id)
+
         if user is None:
             await db.create(vk_id=self.event.peer_id)
 
+        user = await db.get(vk_id=self.event.peer_id)
+
+        self.send({'user': user})
 
 class GroupPickingMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:
@@ -28,4 +34,4 @@ class GroupPickingMiddleware(BaseMiddleware[Message]):
                 self.stop()
 
 
-middlewares = [GroupPickingMiddleware, UserExistsMiddleware]
+middlewares = [GroupPickingMiddleware, AuthMiddleware]

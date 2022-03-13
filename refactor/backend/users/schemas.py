@@ -6,11 +6,11 @@ from refactor.backend.users.models import MessageType, MessageIntent
 
 class UserSchema(BaseSchema):
     vk_id: str
-    group_index: int
+    group_index: int | None
     ai_companion_enabled: bool
     last_activity: datetime
 
 
 class UserMessageSchema(BaseSchema):
     message_type: MessageType
-    meesage_intent = MessageIntent
+    message_intent = MessageIntent

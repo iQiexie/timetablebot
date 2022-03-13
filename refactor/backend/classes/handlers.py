@@ -1,8 +1,8 @@
 from typing import List
 
-from refactor.backend.base.utils import safe_pop, safe_get
 from refactor.backend.classes.schemas import ClassSchema, DaySchema, MetaInfoSchema
 from refactor.backend.google_api.handlers import GoogleApiHandler
+from refactor.utils import safe_get, safe_pop
 
 
 async def _get_hyperlink(info: MetaInfoSchema, class_index: int):

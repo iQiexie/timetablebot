@@ -8,8 +8,8 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 from config import settings
-from refactor.backend.base.utils import safe_get_dict
 from refactor.backend.google_api.crud import GoogleApiREDIS
+from refactor.utils import safe_get_dict
 
 drive_service_args = ('drive', 'v2', ['https://www.googleapis.com/auth/drive'])
 sheets_service_args = ('sheets', 'v4', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
