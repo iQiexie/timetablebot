@@ -1,7 +1,8 @@
 # extracts data from google sheets columns and pretty prints it
 
-from SheetScraper import SheetScraper
 import datetime
+
+from refactor.vk_bot.blueprints.classes.legacy.SheetScraper import SheetScraper
 
 GET_TIME: dict = {
     0: '[09:00 - 10:30]:\n\n',
@@ -48,11 +49,10 @@ def isCurrentWeek_string(week: int) -> str:
 
 
 class ClassProcessor:
-    def __init__(self, group_index: int):
+    def __init__(self):
+        self.links = None
+        self.classes = None
         try:
-            ss = SheetScraper(group_index)
-            self.classes = ss.read_column()['values'][0]  # столбик с расписанием
-            self.links = ss.get_links()
             self.weekday = datetime.datetime.today().weekday()  # порядковый номер дня текущей недели
             self.lines_one_class_takes = 1  # количество линий, которые занимает одна пара (раньше 4 было)
             self.lines_one_day_takes = self.lines_one_class_takes * 10  # количество линий, которые занимает день
@@ -61,7 +61,15 @@ class ClassProcessor:
         except Exception as e:
             self.initialized = False
             self.not_initialized_reason = f"ClassProcessor failed to initialize due to: {e}"
+            import traceback
+            print(traceback.format_exc())
             print(f"ClassProcessor failed to initialize due to: {e}")
+
+    async def init(self, group_index: int):
+        ss = SheetScraper(group_index)
+        classes = await ss.read_column()
+        self.classes = classes['values'][0]  # столбик с расписанием
+        self.links = await ss.get_links()
 
     def get_today(self) -> str:
         return self.getByDay(self.weekday)

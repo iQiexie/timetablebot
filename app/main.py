@@ -6,8 +6,8 @@ from Assets.custom_fsm import FiniteStateMachine, ForWhat, State
 
 from Assets import Keyboards, Filters, Strings
 from Database import Database
-from ClassProcessor import ClassProcessor
-from SheetScraper import update_spreadsheet, delete_spreadsheet
+from refactor.vk_bot.blueprints.classes.legacy.ClassProcessor import ClassProcessor
+from refactor.vk_bot.blueprints.classes.legacy.SheetScraper import update_spreadsheet, delete_spreadsheet
 from AiHandler import Ai_Handler
 from Catchup import run_catchup
 

@@ -2,7 +2,7 @@ import json
 
 import vk_api
 from vk_api import ApiError
-from ClassProcessor import ClassProcessor
+from refactor.vk_bot.blueprints.classes.legacy.ClassProcessor import ClassProcessor
 from Database import Database
 
 MAIN_TOKEN = open('secret/tokenmain', 'r').read()  # домашка

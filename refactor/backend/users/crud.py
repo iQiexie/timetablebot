@@ -32,10 +32,10 @@ class UserCRUD:
         async with self.base.transaction():
             return await self.base.get_one(self.model.vk_id == vk_id)
 
-    async def update(self, vk_id: str, **kwargs):
+    async def update(self, vk_id: int, **kwargs):
         async with self.base.transaction():
             return await self.base.update(self.model.vk_id == vk_id, **kwargs)
 
-    async def delete(self, vk_id: str):
+    async def delete(self, vk_id: int):
         async with self.base.transaction():
             return await self.base.delete(self.model.vk_id == vk_id)

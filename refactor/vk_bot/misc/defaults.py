@@ -1,4 +1,4 @@
-DEFAULT_ANSWER_MESSAGE = 'Ок'
+DEFAULT_ANSWER_MESSAGE = '.'
 
 # week_day_names = {
 #     'MONDAY'

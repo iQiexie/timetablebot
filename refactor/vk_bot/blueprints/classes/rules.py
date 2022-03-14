@@ -45,3 +45,8 @@ class TomorrowClassesRule(ABCRule[BaseMessageMin]):
 class LegacySearchRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         return await check_payload(event, 'legacy search')
+
+
+class DownVoteRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'downvote')
