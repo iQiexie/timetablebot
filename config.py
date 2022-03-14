@@ -43,8 +43,8 @@ class Settings(BaseSettings):
     # MPGU_TOKEN: str = Field(env='MPGU_TOKEN')
 
     CLASSES_PER_DAY: int = Field(env='CLASSES_PER_DAY')
-
     LOGGING_LEVEL: str = Field(env='LOGGING_LEVEL')
+    ADMIN_VK_IDS: list[int] = Field(env='ADMIN_VK_IDS')
 
     @property
     def db_url(self):

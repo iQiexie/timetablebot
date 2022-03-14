@@ -1,4 +1,5 @@
 import logging
+from datetime import datetime
 from config import settings
 
 logging.basicConfig(level=settings.logging_level)
@@ -62,3 +63,7 @@ def smart_list_merge(first_list: list[str], second_list: list[str]) -> list[str]
             ultimate_list.append(super_smart_string)
 
     return ultimate_list
+
+
+def is_week_above(week: int) -> bool:
+    return week % 2 != 0

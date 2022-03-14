@@ -42,6 +42,16 @@ class TomorrowClassesRule(ABCRule[BaseMessageMin]):
         return payload or triggers
 
 
+class DaySelectionRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'sweek')
+
+
+class ByDayRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'by day')
+
+
 class LegacySearchRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         return await check_payload(event, 'legacy search')
@@ -50,3 +60,8 @@ class LegacySearchRule(ABCRule[BaseMessageMin]):
 class DownVoteRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         return await check_payload(event, 'downvote')
+
+
+class UpVoteRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'upvote')

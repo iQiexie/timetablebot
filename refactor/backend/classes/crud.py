@@ -1,6 +1,6 @@
 import ast
 import json
-from typing import List
+from datetime import datetime
 
 import aioredis
 from config import settings
@@ -21,14 +21,7 @@ class ClassesREDIS:
     async def reset_database(self):
         """ Перезаписывает дб с парами на новые. Вызывать раз в час """
 
-        # TODO либо придумать чё-нибудь с этим, либо короче высылать юзверу сообщение о том, что бд обновляется \
-        # TODO если запрос придёт в это время
-        # как вариант, можно не флашить дб, а поочерёдно удалять листы, когда обновляешь дб.
-        # но тогда надо из scrape_spreadhseet возвращать пары не просто одним большим списком, а по дням
-        # потому что по сути, один редис лист - один день
-
         day_schemas = await scrape_spreadsheet()
-
         for day_schema in day_schemas:
             await self._insert(day_schema)
 
@@ -51,6 +44,7 @@ class ClassesREDIS:
                 await client.execute_command('del', str(key))
 
             await client.execute_command('set', str(key), str(value))
+            await client.execute_command('set', 'uptime', str(datetime.now()))
 
     async def get(self, group_id: int, week_day_index: int, above_line: bool) -> DaySchema | None:
         day_info = {
@@ -76,3 +70,7 @@ class ClassesREDIS:
 
         day_info['classes'] = classes
         return DaySchema(**day_info)
+
+    async def get_uptime(self):
+        async with self.session.client() as client:
+            return await client.execute_command('get', 'uptime')

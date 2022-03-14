@@ -4,7 +4,9 @@ from app.Assets.Strings import DEFAULT_ANSWER_MESSAGE
 from refactor.backend.base.db import async_session
 from refactor.backend.users.crud import UserCRUD
 from refactor.backend.users.schemas import UserSchema
-from refactor.vk_bot.blueprints.settings.rules import GeneralRule, ChangeGroupRule
+from refactor.vk_bot.blueprints.classes.services import get_uptime
+from refactor.vk_bot.blueprints.general.keyboards import menu_keyboard
+from refactor.vk_bot.blueprints.settings.rules import SettingsRule, ChangeGroupRule, UptimeRule, ChatBotSettingsRule
 from refactor.vk_bot.blueprints.settings.keyboards import settings_keyboard
 from refactor.vk_bot.misc.states import PickingState
 
@@ -12,7 +14,7 @@ settings_bp = Blueprint()
 db = UserCRUD(async_session)
 
 
-@settings_bp.on.message(GeneralRule())
+@settings_bp.on.message(SettingsRule())
 async def send_settings_keyboard_handler(message: Message, user: UserSchema):
     text = (
                 f"Твоя/ваша группа: {user.group_index} \n\n"
@@ -44,11 +46,22 @@ async def group_picking_handler(message: Message):
             await message.answer("Врёшь, не проведёшь... Таких групп не существует")
             return
 
-        await message.answer(f"Группа выбрана. Она: {message.text}")
+        await message.answer(f"Группа выбрана. Она: {message.text}", keyboard=menu_keyboard())
         await settings_bp.state_dispenser.delete(message.peer_id)
         await db.update(message.peer_id, group_index=int(message.text))
     else:
         await message.answer(f"Напиши цифру, а не {message.text}")
 
+
+@settings_bp.on.message(UptimeRule())
+async def tomorrow_classes_filter(message: Message):
+    uptime = await get_uptime()
+    text = f'Расписание последний раз обновлялось в {uptime}'
+    await message.answer(text)
+
+
+@settings_bp.on.message(ChatBotSettingsRule())
+async def tomorrow_classes_filter(message: Message):
+    await message.answer(f"Виртуальный собеседник отдыхает")
 
 

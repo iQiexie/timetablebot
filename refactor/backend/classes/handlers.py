@@ -11,7 +11,7 @@ async def _get_hyperlink(info: MetaInfoSchema, class_index: int):
     else:
         hyperlink_index = 12 + class_index
 
-    links = await safe_get(info.hyperlinks, hyperlink_index)
+    links = safe_get(info.hyperlinks, hyperlink_index)
     hyperlinks = []
 
     try:

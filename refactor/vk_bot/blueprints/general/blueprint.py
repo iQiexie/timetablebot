@@ -1,9 +1,9 @@
 from vkbottle.bot import Blueprint, Message
 
-from app.Assets.Strings import DEFAULT_ANSWER_MESSAGE
 from refactor.backend.users.schemas import UserSchema
-from refactor.vk_bot.blueprints.general.keyboards import change_group_keyboard, menu_keyboard
-from refactor.vk_bot.blueprints.general.rules import MenuRule
+from refactor.vk_bot.blueprints.general.keyboards import change_group_keyboard, menu_keyboard, remove_keyboard
+from refactor.vk_bot.blueprints.general.rules import MenuRule, KillKeyboardRule
+from refactor.vk_bot.misc.defaults import DEFAULT_ANSWER_MESSAGE
 
 general_bp = Blueprint()
 
@@ -20,4 +20,9 @@ async def hello_handler(message: Message, user: UserSchema):
             '\n vk.com/@mpsu_schedule-vse-komandy-bota'
         )
         await message.answer(answer_message, keyboard=change_group_keyboard)
-    await message.answer(DEFAULT_ANSWER_MESSAGE, keyboard=menu_keyboard)
+    await message.answer(DEFAULT_ANSWER_MESSAGE, keyboard=menu_keyboard())
+
+
+@general_bp.on.message(KillKeyboardRule())
+async def hello_handler(message: Message):
+    await message.answer(message=DEFAULT_ANSWER_MESSAGE, keyboard=remove_keyboard)

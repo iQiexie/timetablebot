@@ -2,9 +2,10 @@ from vkbottle import ABCRule
 from vkbottle.tools.dev.mini_types.base import BaseMessageMin
 
 from refactor.utils import list_contains_str
+from refactor.vk_bot.blueprints.utils import check_payload
 
 
-class GeneralRule(ABCRule[BaseMessageMin]):
+class SettingsRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         triggers = [
             'настройки',
@@ -28,3 +29,13 @@ class ChangeGroupRule(ABCRule[BaseMessageMin]):
             return True
         elif list_contains_str(event.text, triggers):
             return True
+
+
+class UptimeRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'uptime')
+
+
+class ChatBotSettingsRule(ABCRule[BaseMessageMin]):
+    async def check(self, event: BaseMessageMin) -> bool:
+        return await check_payload(event, 'update ai')
