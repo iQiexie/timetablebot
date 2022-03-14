@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+data
+
 # C extensions
 *.so
 
@@ -86,6 +88,7 @@ profile_default/
 ipython_config.py
 
 # pyenv
+.env
 .python-version
 
 # pipenv
@@ -106,7 +109,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
