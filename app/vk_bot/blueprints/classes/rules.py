@@ -34,6 +34,7 @@ class TomorrowClassesRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         triggers = [
             'завтра',
+            'завтрашние',
         ]
 
         payload = await check_payload(event, 'tomorrow')
