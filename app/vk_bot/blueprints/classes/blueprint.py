@@ -14,7 +14,7 @@ from app.vk_bot.blueprints.classes.rules import (
     DownVoteRule,
     UpVoteRule,
     DaySelectionRule,
-    ByDayRule
+    ByDayRule, LegacySearchBlockRule
 )
 from app.vk_bot.defaults import DEFAULT_ANSWER_MESSAGE
 
@@ -94,3 +94,11 @@ async def legacy_search(message: Message, user: UserSchema):
     text = cp.getByDay(week_day_index=payload.get('week_day_index'), next_week=next_week)
 
     await message.answer(text)
+
+
+@classes_bp.on.message(LegacySearchBlockRule())
+async def legacy_search_block(message: Message):
+    """ Отправляет сообщение incompatible error """
+
+    await message.answer('Кнопки со старой версии бота больше не поддерживаются. Напиши "старт" или нажми "В меню"')
+
