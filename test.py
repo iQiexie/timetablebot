@@ -1,55 +1,30 @@
-from refactor.utils import smart_list_merge
-
-base_triggers = [
-    'пары',
-    'расписание',
-    'занятия',
-    'уроки',
-    'список',
-]
-
-
-triggers = [
-            'сегодня',
-            'сёдня',
-            'седня',
-            'сейчас',
-            'щас',
-        ]
-
-print(smart_list_merge(base_triggers, triggers))
 # import asyncio
-# import aioredis
-# import json
-# import ast
+# import glob
+# from pathlib import Path
 #
-# from config import settings
-# from refactor.backend.base.db import async_session
-# from refactor.backend.classes.crud import ClassesREDIS
-# from refactor.backend.classes.handlers import scrape_spreadsheet
+# from app.Database import Database
+# from app.backend.base.db import async_session
+# from app.backend.users.crud import UserCRUD
 #
-#
-# # async def test():
-# #     db = ClassesCRUD(async_session)
-# #     results = await scrape_spreadsheet()
-# #     # await db.empty_table()
-# #     for res in results:
-# #         await db.create(**res.dict())
-# #     res = await db.get(208, 2, False)
-# #     for r in res:
-# #         print(r)
-# from refactor.backend.classes.schemas import ClassSchema
-# from refactor.backend.google_api.handlers import GoogleApiHandler
+# path = Path(r"D:\Desktop\PycharmProjects\TimeTableBot\app\DATABASE\USERS")
+# users_raw = [str(pp) for pp in path.glob("*.db")]
+# users = []
 #
 #
-# async def test():
-#     crud = ClassesREDIS()
-#     await crud.reset_database()
+# async def run():
+#     for user in users_raw:
+#         user = user.split("""D:\\Desktop\\PycharmProjects\\TimeTableBot\\app\\DATABASE\\USERS\\""")[1]
+#         user_id = user.split('.')[0]
 #
-#     res = await crud.get(208, 2, True)
+#         db = Database(user_id)
+#         group = db.get_group_index()
 #
-#     for re in res.classes:
-#         print(re)
+#         db = UserCRUD(async_session)
+#         await db.create(
+#             vk_id=int(user_id),
+#             group_index=int(group)
+#         )
+#
+# asyncio.run(run())
 #
 #
-asyncio.run(test())

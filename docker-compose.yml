@@ -1,12 +1,12 @@
 version: "3"
 
 services:
-#  timetablebot:
-#    build: ./
-#    command: poetry run python driver.py
-#    container_name: timetablebot
-#    volumes:
-#        - ./app/DATABASE/USERS:/code/app/DATABASE/USERS
+  timetablebot:
+    build: ./
+    command: poetry run python main.py
+    container_name: timetablebot
+    volumes:
+        - ./data:/code/app/DATABASE/USERS
 
   dabatabse:
     image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
@@ -29,5 +29,5 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./reddis_cache:/reddis_cache
+      - ./data/redis:/data
     restart: always

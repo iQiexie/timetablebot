@@ -1,0 +1,29 @@
+from typing import Optional, List, Any, Union
+from pydantic import Field
+from app.backend.base.schema import BaseSchema
+
+
+class HyperlinkSchema(BaseSchema):
+    class_id: int | None
+    hyperlink: str | None
+
+
+class MetaInfoSchema(BaseSchema):
+    hyperlinks: List[dict] | None
+    class_column: List[str]
+    grade: int
+    group_id: int
+
+
+class ClassSchema(BaseSchema):
+    index: int  # какая пара по счёту в этом дне, начиная с 1
+    text: Optional[Any] = Field(default=None)
+    hyperlinks: Optional[Any] = Field(default=None)
+
+
+class DaySchema(BaseSchema):
+    week_day_index: int
+    above_line: bool
+    group_id: int
+    classes: List[Any]
+    hyperlinks: Optional[List[Any]] = Field(default=[])
