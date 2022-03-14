@@ -52,4 +52,4 @@ print(smart_list_merge(base_triggers, triggers))
 #         print(re)
 #
 #
-# asyncio.run(test())
+asyncio.run(test())

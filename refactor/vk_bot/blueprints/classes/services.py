@@ -113,5 +113,4 @@ def get_class_text(day: DaySchema, index: int):
 
 
 async def get_uptime():
-    await redis.reset_database()  # TODO УБРАТЬ!!!!!!!!!!!!!!!!!!!!!!
     return await redis.get_uptime()

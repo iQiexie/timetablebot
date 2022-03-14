@@ -3,7 +3,7 @@ version: "3"
 services:
 #  timetablebot:
 #    build: ./
-#    command: poetry run python main.py
+#    command: poetry run python driver.py
 #    container_name: timetablebot
 #    volumes:
 #        - ./app/DATABASE/USERS:/code/app/DATABASE/USERS
