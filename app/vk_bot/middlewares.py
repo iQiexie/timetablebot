@@ -10,7 +10,6 @@ db = UserCRUD(async_session)
 
 class AuthMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:
-
         user = await db.get(self.event.peer_id)
 
         if user is None:
@@ -19,6 +18,7 @@ class AuthMiddleware(BaseMiddleware[Message]):
         user = await db.get(vk_id=self.event.peer_id)
 
         self.send({'user': user})
+
 
 class GroupPickingMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:

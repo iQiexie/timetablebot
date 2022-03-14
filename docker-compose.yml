@@ -5,8 +5,11 @@ services:
     build: ./
     command: poetry run python main.py
     container_name: timetablebot
-    volumes:
-        - ./data:/code/app/DATABASE/USERS
+    depends_on:
+      - dabatabse
+      - redis
+    networks:
+      - timetableNetwork
 
   dabatabse:
     image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
@@ -21,13 +24,21 @@ services:
     restart: always
     ports:
       - "5432:5432"
+    networks:
+      - timetableNetwork
 
   redis:
     image: redis:alpine
-    container_name: redis_db
+    container_name: redis
     command: redis-server --appendonly yes
     ports:
       - "6379:6379"
     volumes:
       - ./data/redis:/data
-    restart: always
+    networks:
+      - timetableNetwork
+
+
+networks:
+  timetableNetwork:
+    external: true

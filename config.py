@@ -1,6 +1,4 @@
 import logging
-from typing import Optional
-
 from pydantic import BaseSettings, Field
 
 
@@ -35,12 +33,12 @@ class Settings(BaseSettings):
 
     google_secret: dict = Field(env="GOOGLE_SECRET")
     spreadsheet_original_id: str = Field(env="SPREADSHEET_ID")
-    spreadsheet_current_id: str = Field(default=None)
+    spreadsheet_current_id: str = Field(default=None)  # TODO DELETE
 
     RASPISANIE_TOKEN: str = Field(env='RASPISANIE_TOKEN')
     DOMASHKA_TOKEN: str = Field(env='DOMASHKA_TOKEN')
     TEST_TOKEN: str = Field(env='TEST_TOKEN')
-    # MPGU_TOKEN: str = Field(env='MPGU_TOKEN')
+    MPGU_TOKEN: str = Field(env='MPGU_TOKEN')
 
     CLASSES_PER_DAY: int = Field(env='CLASSES_PER_DAY')
     LOGGING_LEVEL: str = Field(env='LOGGING_LEVEL')
@@ -58,7 +56,6 @@ class Settings(BaseSettings):
 
     @property
     def redis_url(self):
-        print(self.REDIS_HOST)
         return generate_redis_url(host=self.REDIS_HOST, port=self.REDIS_PORT)
 
     @property
@@ -66,7 +63,6 @@ class Settings(BaseSettings):
         return generate_logging_level(level=self.LOGGING_LEVEL)
 
     class Config:
-        # TODO закомментить весь класс
         env_file = '.env'
         env_file_encoding = 'utf-8'
 
