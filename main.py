@@ -8,5 +8,5 @@ scheduler = AsyncIOScheduler(timezone="UTC", daemon=True)
 scheduler.add_job(redis.reset_database, 'interval', hours=1, max_instances=1)
 
 if __name__ == '__main__':
-    # start_production_bot()
-    start_stage_bot()
+    start_production_bot()
+    # start_stage_bot()
