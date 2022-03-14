@@ -8,6 +8,16 @@ from app.vk_bot.states import PickingState
 db = UserCRUD(async_session)
 
 
+class NoBotMiddleware(BaseMiddleware[Message]):
+    async def pre(self):
+        if self.event.peer_id > 2000000000:
+            text_mention = self.event.text.lower().startswith('бот ')
+            mention_mention = self.event.mention.text.startswith('@')
+            if not any([text_mention, mention_mention]):
+                print('Получено групповое сообщение, не относящееся к боту')
+                self.stop()
+
+
 class AuthMiddleware(BaseMiddleware[Message]):
     async def pre(self) -> None:
         user = await db.get(self.event.peer_id)
@@ -33,4 +43,4 @@ class GroupPickingMiddleware(BaseMiddleware[Message]):
                 self.stop()
 
 
-middlewares = [GroupPickingMiddleware, AuthMiddleware]
+middlewares = [GroupPickingMiddleware, AuthMiddleware, NoBotMiddleware]
