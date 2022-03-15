@@ -16,6 +16,7 @@ def menu_keyboard():
     menu.add(Text("Следующая неделя", payload={"cmd": "sweek", 'next': True}), color=KeyboardButtonColor.SECONDARY)
     menu.row()
     menu.add(Text("🛠 Настройки", payload={"cmd": "settings"}), color=KeyboardButtonColor.SECONDARY)
+    menu.row()
     menu.add(Text("Убрать клавиатуру", payload={"cmd": "suicide"}), color=KeyboardButtonColor.NEGATIVE)
 
     return menu
