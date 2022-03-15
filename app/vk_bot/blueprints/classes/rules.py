@@ -6,6 +6,7 @@ from app.vk_bot.blueprints.utils import check_payload
 
 base_triggers = [
     'пары',
+    'пары на',
     'расписание',
     'занятия',
     'уроки',
