@@ -1,6 +1,16 @@
 version: "3"
 
 services:
+  actualizer:
+    build: ./
+    command: poetry run python actualizer.py
+    container_name: actualizer
+    depends_on:
+      - dabatabse
+      - redis
+    networks:
+      - timetableNetwork
+
   timetablebot:
     build: ./
     command: poetry run python main.py
