@@ -8,5 +8,5 @@ redis = ClassesREDIS()
 
 
 @admin_bp.on.message(UpdateClassesDbRule())
-async def today_classes_filter(message: Message):
+async def today_classes_filter():
     await redis.reset_database()
