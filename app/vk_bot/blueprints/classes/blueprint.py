@@ -83,15 +83,21 @@ async def upvote(message: Message):
 async def legacy_search(message: Message, user: UserSchema):
     """ Ищет пары по тому же самому дню старым способом """
 
-    cp = ClassProcessor()
-    await cp.init(user.group_index)
+    try:
+        cp = ClassProcessor()
+        await cp.init(user.group_index)
+    except:
+        text = 'Старый поиск на данный момент не работает'
 
     payload = json.loads(message.payload)
 
     searching_week = datetime.today().isocalendar().week
     next_week = searching_week > payload.get('searching_week')
 
-    text = cp.getByDay(week_day_index=payload.get('week_day_index'), next_week=next_week)
+    try:
+        text = cp.getByDay(week_day_index=payload.get('week_day_index'), next_week=next_week)
+    except:
+        text = "Старый поиск на данный момент не работает"
 
     await message.answer(text)
 

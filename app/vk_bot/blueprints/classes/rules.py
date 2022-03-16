@@ -61,7 +61,10 @@ class LegacySearchRule(ABCRule[BaseMessageMin]):
 
 class LegacySearchBlockRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
-        return await check_payload(event, 'show day')
+        show_day = await check_payload(event, 'show day')
+        next_week = await check_payload(event, 'next week')
+        this_week = await check_payload(event, 'this week')
+        return show_day or next_week or this_week
 
 
 class DownVoteRule(ABCRule[BaseMessageMin]):
