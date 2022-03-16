@@ -16,6 +16,7 @@ class MenuRule(ABCRule[BaseMessageMin]):
             'start',
             'старт',
             'привет',
+            'расписание',
         ]
 
         payload = event.payload or 'None'
