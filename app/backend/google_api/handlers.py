@@ -24,8 +24,11 @@ class GoogleApiHandler:
     async def init_services(self):
         """ Обязательно нужно вызывать после каждой инициализации этого круда """
 
-        self.drive_service = await self.create_service(*drive_service_args)
-        self.sheets_service = await self.create_service(*sheets_service_args)
+        try:
+            self.drive_service = await self.create_service(*drive_service_args)
+            self.sheets_service = await self.create_service(*sheets_service_args)
+        except:
+            print(f"ERROR: FAILED TO INITIALIZE SERVICES")
 
     async def update_credentials(self):
         await self.redis.reset_database()
@@ -50,7 +53,10 @@ class GoogleApiHandler:
 
         return build(service_name, service_version, credentials=creds)
 
-    async def get_values(self, group_index: int) -> Tuple[Any, Any]:
+    async def get_values(self, group_index: int) -> Tuple[Any, Any] | None:
+        if self.sheets_service is None:
+            return None
+
         if group_index == 1:
             starts_with = 7
         else:
