@@ -12,10 +12,6 @@ from config import settings
 from app.backend.google_api.crud import GoogleApiREDIS
 from app.utils import safe_get_dict
 
-drive_service_args = ('drive', 'v2', ['https://www.googleapis.com/auth/drive'])
-sheets_service_args = ('sheets', 'v4', ['https://www.googleapis.com/auth/spreadsheets.readonly'])
-
-
 class GoogleApiHandler:
     def __init__(self):
         self.redis = GoogleApiREDIS()
@@ -25,8 +21,12 @@ class GoogleApiHandler:
     async def init_services(self):
         """ Обязательно нужно вызывать после каждой инициализации этого круда """
 
-        await asyncbg.call(self.create_service, *drive_service_args)
-        await asyncbg.call(self.create_service, *sheets_service_args)
+        await asyncbg.call(
+            self.create_service,
+            service_name='sheets',
+            service_version='v4',
+            scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
+        )
 
     async def update_credentials(self):
         await self.redis.reset_database()
