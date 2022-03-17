@@ -22,7 +22,7 @@ class GoogleApiHandler:
     async def init_services(self):
         """ Обязательно нужно вызывать после каждой инициализации этого круда """
 
-        await self.create_service(
+        self.sheets_service = await self.create_service(
             service_name='sheets',
             service_version='v4',
             scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -37,7 +37,6 @@ class GoogleApiHandler:
         return flow.run_local_server(port=randint(5, 1000))
 
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
-        print('ENTERED')
         creds = await self.redis.get(service_name)
 
         if creds is not None:
