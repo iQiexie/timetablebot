@@ -14,4 +14,4 @@ async def try_wrapper():
         print(f"Actualizer failed: {e}")
         traceback.print_exc()
 
-asyncio.run(try_wrapper())
+asyncio.run(redis.reset_database())
