@@ -98,7 +98,7 @@ async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_
     return final_classes
 
 
-async def scrape_spreadsheet() -> list[DaySchema] | None:
+async def scrape_spreadsheet() -> list[DaySchema]:
     google = GoogleApiHandler()
     await google.init_services()
 
@@ -109,7 +109,7 @@ async def scrape_spreadsheet() -> list[DaySchema] | None:
         result = await google.get_values(grade)
 
         if result is None:
-            return None
+            return []
 
         lessons, hyperlinks = result
         columns = lessons.get("values")
