@@ -12,6 +12,7 @@ from config import settings
 from app.backend.google_api.crud import GoogleApiREDIS
 from app.utils import safe_get_dict
 
+
 class GoogleApiHandler:
     def __init__(self):
         self.redis = GoogleApiREDIS()
@@ -21,8 +22,7 @@ class GoogleApiHandler:
     async def init_services(self):
         """ Обязательно нужно вызывать после каждой инициализации этого круда """
 
-        await asyncbg.call(
-            self.create_service,
+        await self.create_service(
             service_name='sheets',
             service_version='v4',
             scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
@@ -37,6 +37,7 @@ class GoogleApiHandler:
         return flow.run_local_server(port=randint(5, 1000))
 
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
+        print('ENTERED')
         creds = await self.redis.get(service_name)
 
         if creds is not None:

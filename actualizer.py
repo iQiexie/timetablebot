@@ -1,17 +1,23 @@
 import asyncio
-import time
-import traceback
+import multiprocessing as mp
+from multiprocessing import freeze_support
+
 from app.backend.classes.crud import ClassesREDIS
 
-redis = ClassesREDIS()
+
+async def run():
+    redis = ClassesREDIS()
+    await redis.reset_database()
 
 
-async def try_wrapper():
-    try:
-        await redis.reset_database()
-        await asyncio.sleep(3600)
-    except Exception as e:
-        print(f"Actualizer failed: {e}")
-        traceback.print_exc()
+def main():
+    freeze_support()
+    asyncio.run(run())
 
-asyncio.run(redis.reset_database())
+
+if __name__ == '__main__':
+    q = mp.Queue()
+    p = mp.Process(target=main)
+    p.start()
+    print(q.get())
+    p.join()
