@@ -7,7 +7,10 @@ from app.backend.classes.crud import ClassesREDIS
 
 async def run():
     redis = ClassesREDIS()
-    await redis.reset_database()
+
+    while True:
+        await redis.reset_database()
+        await asyncio.sleep(3600)
 
 
 def main():

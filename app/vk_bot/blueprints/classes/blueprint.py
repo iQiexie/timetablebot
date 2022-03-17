@@ -5,7 +5,6 @@ from vkbottle.bot import Blueprint, Message
 from config import settings
 from app.backend.users.schemas import UserSchema
 from app.vk_bot.blueprints.classes.keyboards import by_day_keyboard
-from app.vk_bot.blueprints.classes.legacy.ClassProcessor import ClassProcessor
 from app.vk_bot.blueprints.classes.services import send_classes
 from app.vk_bot.blueprints.classes.rules import (
     TodayClassesRule,
@@ -80,24 +79,10 @@ async def upvote(message: Message):
 
 
 @classes_bp.on.message(LegacySearchRule())
-async def legacy_search(message: Message, user: UserSchema):
+async def legacy_search(message: Message):
     """ Ищет пары по тому же самому дню старым способом """
 
-    try:
-        cp = ClassProcessor()
-        await cp.init(user.group_index)
-    except:
-        text = 'Старый поиск на данный момент не работает'
-
-    payload = json.loads(message.payload)
-
-    searching_week = datetime.today().isocalendar().week
-    next_week = searching_week > payload.get('searching_week')
-
-    try:
-        text = cp.getByDay(week_day_index=payload.get('week_day_index'), next_week=next_week)
-    except:
-        text = "Старый поиск на данный момент не работает"
+    text = "Старый поиск больше не поддерживается :)"
 
     await message.answer(text)
 
@@ -107,4 +92,3 @@ async def legacy_search_block(message: Message):
     """ Отправляет сообщение incompatible error """
 
     await message.answer('Кнопки со старой версии бота больше не поддерживаются. Напиши "старт" или нажми "В меню"')
-
