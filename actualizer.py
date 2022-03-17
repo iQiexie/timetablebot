@@ -1,5 +1,6 @@
 import asyncio
 import time
+import traceback
 from app.backend.classes.crud import ClassesREDIS
 
 redis = ClassesREDIS()
@@ -8,12 +9,9 @@ redis = ClassesREDIS()
 async def try_wrapper():
     try:
         await redis.reset_database()
-        time.sleep(3600)
+        await asyncio.sleep(3600)
     except Exception as e:
         print(f"Actualizer failed: {e}")
+        traceback.print_exc()
 
-    return try_wrapper()
-
-
-while True:
-    asyncio.run(try_wrapper())
+asyncio.run(try_wrapper())
