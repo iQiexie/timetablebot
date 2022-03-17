@@ -17,6 +17,7 @@ httpx = "^0.22.0"
 aioredis = "^2.0.1"
 vkbottle = "^4.2.1"
 APScheduler = "^3.9.1"
+asyncbg = "^0.8.0"
 
 [tool.poetry.dev-dependencies]
 

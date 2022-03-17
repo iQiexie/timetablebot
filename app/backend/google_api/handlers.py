@@ -2,6 +2,7 @@ import json
 from random import randint
 from typing import List, Tuple, Any
 
+import asyncbg
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -24,11 +25,8 @@ class GoogleApiHandler:
     async def init_services(self):
         """ Обязательно нужно вызывать после каждой инициализации этого круда """
 
-        try:
-            self.drive_service = await self.create_service(*drive_service_args)
-            self.sheets_service = await self.create_service(*sheets_service_args)
-        except:
-            print(f"ERROR: FAILED TO INITIALIZE SERVICES")
+        await asyncbg.call(self.create_service, *drive_service_args)
+        await asyncbg.call(self.create_service, *sheets_service_args)
 
     async def update_credentials(self):
         await self.redis.reset_database()

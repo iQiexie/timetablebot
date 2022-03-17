@@ -119,6 +119,14 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "asyncbg"
+version = "0.8.0"
+description = "Asyncio background tasks."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "asyncpg"
 version = "0.25.0"
 description = "An asyncio PostgreSQL driver"
@@ -742,7 +750,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "5e6c9da5d5aa6925f5a45fee9d20bae516b5413ccd619fe2237e5a66224e53f1"
+content-hash = "32eadaf289485814bcd5275eafe8a840d0d9c57e784b56debf463d16765a12e9"
 
 [metadata.files]
 aiofiles = [
@@ -846,6 +854,9 @@ apscheduler = [
 async-timeout = [
     {file = "async-timeout-4.0.2.tar.gz", hash = "sha256:2163e1640ddb52b7a8c80d0a67a08587e5d245cc9c553a74a847056bc2976b15"},
     {file = "async_timeout-4.0.2-py3-none-any.whl", hash = "sha256:8ca1e4fcf50d07413d66d1a5e416e42cfdf5851c981d679a09851a6853383b3c"},
+]
+asyncbg = [
+    {file = "asyncbg-0.8.0.tar.gz", hash = "sha256:ea192db845feb04991b4b1182b91faa24b2383698df5fc7b5a0362568d2e4534"},
 ]
 asyncpg = [
     {file = "asyncpg-0.25.0-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:bf5e3408a14a17d480f36ebaf0401a12ff6ae5457fdf45e4e2775c51cc9517d3"},
