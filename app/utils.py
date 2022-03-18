@@ -1,7 +1,11 @@
 import logging
+import pytz
 from config import settings
 
 logging.basicConfig(level=settings.logging_level)
+
+
+russian_tz = pytz.timezone('Europe/Moscow')
 
 
 def get_logger(name: str, level=None):

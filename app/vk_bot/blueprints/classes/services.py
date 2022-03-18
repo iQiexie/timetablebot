@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 from app.backend.classes.crud import ClassesREDIS
 from app.backend.classes.schemas import DaySchema
 from app.backend.users.schemas import UserSchema
-from app.utils import safe_get, is_week_above
+from app.utils import safe_get, is_week_above, russian_tz
 from vkbottle.bot import Message
 
 from app.vk_bot.blueprints.classes.keyboards import class_keyboard
@@ -13,7 +13,7 @@ redis = ClassesREDIS()
 
 
 async def send_classes(message: Message, user: UserSchema, week_day_index: int, next_week: bool = False):
-    searching_week = datetime.today().isocalendar().week + next_week
+    searching_week = datetime.now(russian_tz).today().isocalendar().week + next_week
     if week_day_index > 6:
         week_day_index -= 6
         searching_week += 1
@@ -49,8 +49,9 @@ def compose_message(day: DaySchema, payload: dict):
     above_line = payload.get("above_line")
     next_week = payload.get("next_week")
 
-    current_week = datetime.today().isocalendar().week
-    date = datetime.today() + timedelta(days=next_week * 7)
+    current_week = datetime.now(russian_tz).today().isocalendar().week
+    date = datetime.now(russian_tz).today() + timedelta(days=next_week * 7)
+    print(timedelta(days=next_week * 7))
 
     line_map = {
         True: 'Над чертой',

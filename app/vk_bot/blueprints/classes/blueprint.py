@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from vkbottle.bot import Blueprint, Message
 
+from app.utils import russian_tz
 from config import settings
 from app.backend.users.schemas import UserSchema
 from app.vk_bot.blueprints.classes.keyboards import by_day_keyboard
@@ -24,7 +25,7 @@ classes_bp = Blueprint()
 async def today_classes_filter(message: Message, user: UserSchema):
     """ Отправляет пары на сегодня """
 
-    week_day_index = datetime.today().isocalendar().weekday - 1
+    week_day_index = datetime.now(russian_tz).today().isocalendar().weekday - 1
 
     await send_classes(message, user, week_day_index)
 
@@ -33,7 +34,7 @@ async def today_classes_filter(message: Message, user: UserSchema):
 async def tomorrow_classes_filter(message: Message, user: UserSchema):
     """ Отправляет пары на завтра """
 
-    week_day_index = datetime.today().isocalendar().weekday
+    week_day_index = datetime.now(russian_tz).today().isocalendar().weekday
 
     await send_classes(message, user, week_day_index)
 
