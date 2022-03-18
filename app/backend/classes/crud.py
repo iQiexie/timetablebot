@@ -5,7 +5,6 @@ from datetime import datetime
 import aioredis
 from config import settings
 from app.backend.base.utils import RedisDatabases
-from app.backend.classes.handlers import scrape_spreadsheet
 from app.backend.classes.schemas import ClassSchema, DaySchema
 
 

@@ -1,8 +1,7 @@
 from vkbottle.bot import Blueprint, Message
-
 import multiprocessing as mp
 
-from app.utils import class_updater
+from app.vk_bot.actualizer_utils import class_updater
 from app.vk_bot.blueprints.admin.rules import UpdateClassesDbRule
 
 admin_bp = Blueprint()

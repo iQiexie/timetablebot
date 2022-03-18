@@ -1,7 +1,6 @@
 import multiprocessing as mp
 from time import sleep
-
-from app.utils import class_updater
+from app.vk_bot.actualizer_utils import class_updater
 
 if __name__ == '__main__':
     while True:
