@@ -78,15 +78,6 @@ async def upvote(message: Message):
     await message.answer("Обратная связь учтена. Спасибо 💖")
 
 
-@classes_bp.on.message(LegacySearchRule())
-async def legacy_search(message: Message):
-    """ Ищет пары по тому же самому дню старым способом """
-
-    text = "Старый поиск больше не поддерживается :)"
-
-    await message.answer(text)
-
-
 @classes_bp.on.message(LegacySearchBlockRule())
 async def legacy_search_block(message: Message):
     """ Отправляет сообщение incompatible error """

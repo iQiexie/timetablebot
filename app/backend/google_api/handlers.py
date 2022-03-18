@@ -2,7 +2,6 @@ import json
 from random import randint
 from typing import List, Tuple, Any
 
-import asyncbg
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -34,6 +33,7 @@ class GoogleApiHandler:
 
     @staticmethod
     async def _run_server(flow):
+        print('running server')
         return flow.run_local_server(port=randint(5, 1000))
 
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):

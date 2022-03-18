@@ -18,12 +18,11 @@ class ClassesREDIS:
             decode_responses=True
         )
 
-    async def reset_database(self):
+    async def reset_database(self, day_schemas: list[DaySchema]):
         """ Перезаписывает дб с парами на новые. Вызывать раз в час """
 
         print('updating database')
 
-        day_schemas = await scrape_spreadsheet()
         for day_schema in day_schemas:
             await self._insert(day_schema)
 
