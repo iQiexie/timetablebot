@@ -7,9 +7,7 @@ from app.utils import list_contains_str
 class UpdateClassesDbRule(ABCRule[BaseMessageMin]):
     async def check(self, event: BaseMessageMin) -> bool:
         triggers = [
-            'update classes'
-            'обнови пары'
-            'обновить пары'
+            'rgkerjglkerlgjer'
         ]
 
         return list_contains_str(event.text, triggers)

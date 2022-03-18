@@ -8,10 +8,12 @@ admin_bp = Blueprint()
 
 
 @admin_bp.on.message(UpdateClassesDbRule())
-async def today_classes_filter(message: Message):
+async def admin(message: Message):
+    print('ok')
+    await message.answer('added task')
     q = mp.Queue()
     p = mp.Process(target=class_updater)
     p.start()
     print(q.get())
     p.join()
-    await message.answer('added task')
+    await message.answer('finished task')
