@@ -49,9 +49,11 @@ def compose_message(day: DaySchema, payload: dict):
     above_line = payload.get("above_line")
     next_week = payload.get("next_week")
 
+    current_week_day_index = datetime.now(russian_tz).today().today().weekday()
+    timedelta_days = abs(current_week_day_index - week_day_index) + next_week * 7
+
     current_week = datetime.now(russian_tz).today().isocalendar().week
-    date = datetime.now(russian_tz).today() + timedelta(days=next_week * 7)
-    print(timedelta(days=next_week * 7))
+    date = datetime.now(russian_tz).today() + timedelta(days=timedelta_days)
 
     line_map = {
         True: 'Над чертой',

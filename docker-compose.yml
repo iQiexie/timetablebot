@@ -1,25 +1,25 @@
 version: "3"
 
 services:
-  actualizer:
-    build: ./
-    command: poetry run python actualizer.py
-    container_name: actualizer
-    depends_on:
-      - dabatabse
-      - redis
-    networks:
-      - timetableNetwork
+ actualizer:
+   build: ./
+   command: poetry run python actualizer.py
+   container_name: actualizer
+   depends_on:
+     - dabatabse
+     - redis
+   networks:
+     - timetableNetwork
 
-  timetablebot:
-    build: ./
-    command: poetry run python main.py
-    container_name: timetablebot
-    depends_on:
-      - dabatabse
-      - redis
-    networks:
-      - timetableNetwork
+ timetablebot:
+   build: ./
+   command: poetry run python main.py
+   container_name: timetablebot
+   depends_on:
+     - dabatabse
+     - redis
+   networks:
+     - timetableNetwork
 
   dabatabse:
     image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
