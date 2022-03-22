@@ -1,7 +1,7 @@
 version: "3"
 
 services:
- actualizer:
+  actualizer:
    build: ./
    command: poetry run python actualizer.py
    container_name: actualizer
@@ -11,7 +11,7 @@ services:
    networks:
      - timetableNetwork
 
- timetablebot:
+  timetablebot:
    build: ./
    command: poetry run python main.py
    container_name: timetablebot
