@@ -15,7 +15,7 @@ redis = ClassesREDIS()
 async def send_classes(message: Message, user: UserSchema, week_day_index: int, next_week: bool = False):
     searching_week = datetime.now(russian_tz).today().isocalendar().week + next_week
     if week_day_index > 6:
-        week_day_index -= 6
+        week_day_index -= 7
         searching_week += 1
 
     above_line = is_week_above(searching_week)
