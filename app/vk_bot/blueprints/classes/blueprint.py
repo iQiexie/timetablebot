@@ -36,7 +36,12 @@ async def tomorrow_classes_filter(message: Message, user: UserSchema):
 
     week_day_index = datetime.now(russian_tz).today().isocalendar().weekday
 
-    await send_classes(message, user, week_day_index)
+    if week_day_index > 6:
+        next_week = True
+    else:
+        next_week = False
+
+    await send_classes(message, user, week_day_index, next_week)
 
 
 @classes_bp.on.message(ByDayRule())

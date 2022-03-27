@@ -50,7 +50,7 @@ def compose_message(day: DaySchema, payload: dict):
     next_week = payload.get("next_week")
 
     current_week_day_index = datetime.now(russian_tz).today().today().weekday()
-    timedelta_days = abs(current_week_day_index - week_day_index) + next_week * 7
+    timedelta_days = (week_day_index + next_week * 7) - current_week_day_index
 
     current_week = datetime.now(russian_tz).today().isocalendar().week
     date = datetime.now(russian_tz).today() + timedelta(days=timedelta_days)
