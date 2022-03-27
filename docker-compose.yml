@@ -33,7 +33,7 @@ services:
       - ./data/postgres:/var/lib/postgresql/data
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - timetableNetwork
 
@@ -42,7 +42,7 @@ services:
     container_name: redis
     command: redis-server --appendonly yes
     ports:
-      - "6379:6379"
+      - "2281:6379"
     volumes:
       - ./data/redis:/data
     networks:
