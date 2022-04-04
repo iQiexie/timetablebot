@@ -55,10 +55,7 @@ class GoogleApiHandler:
         if self.sheets_service is None:
             return None
 
-        if group_index == 1:
-            starts_with = 7
-        else:
-            starts_with = 12
+        starts_with = 7
 
         values = self.sheets_service.spreadsheets().values().get(
             spreadsheetId=settings.spreadsheet_original_id,
