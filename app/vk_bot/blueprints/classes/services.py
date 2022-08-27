@@ -35,7 +35,7 @@ async def send_classes(message: Message, user: UserSchema, week_day_index: int, 
         await message.answer(text, keyboard=change_group_keyboard)
 
     elif day is None:
-        text = 'Я не нашёл пары на сегодня, прости((( \n\nМогу попробовать поиск старым способом'
+        text = "Расписание ещё не вывесили"
         await message.answer(text, keyboard=class_keyboard(payload))
 
     else:
@@ -99,7 +99,8 @@ def compose_message(day: DaySchema, payload: dict):
         f'\n{footer_header}\n'
     )
 
-    return message
+    return "Расписание ещё не вывесили"
+    # return message
 
 
 def get_class_text(day: DaySchema, index: int):
