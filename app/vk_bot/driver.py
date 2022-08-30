@@ -7,7 +7,7 @@ from app.vk_bot.middlewares import middlewares
 
 def start_production_bot():
     bot = Bot(settings.DOMASHKA_TOKEN)
-    apis = (API(settings.DOMASHKA_TOKEN), API(settings.RASPISANIE_TOKEN), API(settings.MPGU_TOKEN))
+    apis = (API(settings.DOMASHKA_TOKEN), API(settings.RASPISANIE_TOKEN))
 
     [bp.load(bot) for bp in blueprints]
     [bot.labeler.message_view.register_middleware(middleware) for middleware in middlewares]
