@@ -16,7 +16,7 @@ def start_production_bot():
 
 
 def start_stage_bot():
-    bot = Bot(settings.DOMASHKA_TOKEN)
+    bot = Bot(settings.TEST_TOKEN)
     apis = (API(settings.TEST_TOKEN),)
 
     [bp.load(bot) for bp in blueprints]

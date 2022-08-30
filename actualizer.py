@@ -1,13 +1,14 @@
-import multiprocessing as mp
-from time import sleep
-from app.vk_bot.actualizer_utils import class_updater
+import asyncio
 
-if __name__ == '__main__':
-    while True:
-        q = mp.Queue()
-        p = mp.Process(target=class_updater)
-        p.start()
-        print(q.get())
-        p.join()
+from app.backend.classes.crud import ClassesREDIS
+from app.backend.classes.handlers import scrape_spreadsheet
 
-        sleep(3600)
+redis = ClassesREDIS()
+
+
+async def update():
+    day_schemas = await scrape_spreadsheet()
+    await redis.reset_database(day_schemas)
+
+
+asyncio.run(update())

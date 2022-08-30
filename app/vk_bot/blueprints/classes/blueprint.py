@@ -24,9 +24,7 @@ classes_bp = Blueprint()
 @classes_bp.on.message(TodayClassesRule())
 async def today_classes_filter(message: Message, user: UserSchema):
     """ Отправляет пары на сегодня """
-
     week_day_index = datetime.now(russian_tz).today().isocalendar().weekday - 1
-
     await send_classes(message, user, week_day_index)
 
 

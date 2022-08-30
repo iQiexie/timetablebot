@@ -5,6 +5,8 @@ services:
    build: ./
    command: poetry run python actualizer.py
    container_name: actualizer
+   env_file:
+     - .env
    depends_on:
      - dabatabse
      - redis
@@ -15,6 +17,8 @@ services:
    build: ./
    command: poetry run python main.py
    container_name: timetablebot
+   env_file:
+     - .env
    depends_on:
      - dabatabse
      - redis
