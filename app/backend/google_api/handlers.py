@@ -1,5 +1,4 @@
 import json
-from random import randint
 from typing import List, Tuple, Any
 
 from google.auth.transport.requests import Request
@@ -31,19 +30,17 @@ class GoogleApiHandler:
         await self.redis.reset_database()
         await self.init_services()
 
-    @staticmethod
-    async def _run_server(flow):
-        print('running server')
-        return flow.run_local_server(port=randint(5, 1000))
-
     async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
         creds = await self.redis.get(service_name)
 
         if creds is not None:
             creds = Credentials.from_authorized_user_info(info=json.loads(creds), scopes=scopes)
         else:
-            flow = InstalledAppFlow.from_client_config(settings.google_secret, scopes)
-            creds = await self._run_server(flow)
+            flow = InstalledAppFlow.from_client_config(
+                settings.google_secret,
+                scopes,
+            )
+            creds = flow.run_local_server(host='localhost', port=1234)
             await self.redis.create(service_name=service_name, credentials=str(creds.to_json()))
 
         if any((creds.valid, creds.expired, creds.refresh_token)):
@@ -57,16 +54,21 @@ class GoogleApiHandler:
 
         starts_with = 7
 
+        if group_index != 3:
+            range_str = f"{group_index} курс!D{starts_with}:AE68"
+        else:
+            range_str = f"{group_index} курс !D{starts_with}:AE68"
+
         values = self.sheets_service.spreadsheets().values().get(
             spreadsheetId=settings.spreadsheet_original_id,
             majorDimension='COLUMNS',
-            range=f"{group_index} курс!D{starts_with}:AD253"
+            range=range_str
         ).execute()
 
         hyperlinks_raw = self.sheets_service.spreadsheets().get(
             spreadsheetId=settings.spreadsheet_original_id,
             fields="sheets(data(rowData(values(hyperlink))))",
-            ranges=f"{group_index} курс!D{starts_with}:AD253"
+            ranges=range_str
         ).execute()
         hyperlinks = hyperlinks_raw.get('sheets')[0].get("data")[0]
 

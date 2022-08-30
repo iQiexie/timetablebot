@@ -98,13 +98,57 @@ async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_
     return final_classes
 
 
+async def parse_5th_grade(columns, hyperlinks, grade, final_classes):
+    for i in range(0, len(columns)):
+        index = i + 5
+        column = columns[i]
+
+        days = await scrape_days(
+            MetaInfoSchema(
+                class_column=column,
+                hyperlinks=hyperlinks,
+                grade=grade,
+                group_id=index + 1 + grade * 100
+            )
+        )
+
+        for _class in await scrape_classes(days):
+            final_classes.append(_class)
+
+    return final_classes
+
+
+async def parse_3rd_grade(columns, hyperlinks, grade, final_classes):
+    for i in range(len(columns)):
+        if i < 10:
+            index = i
+            column = columns[i]
+        else:
+            index = i + 1
+            column = columns[i]
+
+        days = await scrape_days(
+            MetaInfoSchema(
+                class_column=column,
+                hyperlinks=hyperlinks,
+                grade=grade,
+                group_id=index + 1 + grade * 100
+            )
+        )
+
+        for _class in await scrape_classes(days):
+            final_classes.append(_class)
+
+    return final_classes
+
+
 async def scrape_spreadsheet() -> list[DaySchema]:
     google = GoogleApiHandler()
     await google.init_services()
 
     final_classes = []
 
-    for grade in range(1, 5):
+    for grade in range(1, 6):
         print(grade)
         result = await google.get_values(grade)
 
@@ -114,24 +158,13 @@ async def scrape_spreadsheet() -> list[DaySchema]:
         lessons, hyperlinks = result
         columns = lessons.get("values")
 
-        if grade != 2:
-            final_classes = await _scrape_spreadsheet(columns, hyperlinks, grade, final_classes)
+        if grade == 5:
+            # костыль для 5 курса, где группы начинаются с 506
+            final_classes = await parse_5th_grade(columns, hyperlinks, grade, final_classes)
+        elif grade == 3:
+            # костыль для пропущенного столбика 310 группы
+            final_classes = await parse_3rd_grade(columns, hyperlinks, grade, final_classes)
         else:
-            # костыль для пропущенного столбика 210 группы
-            for i in range(len(columns)):
-                if i < 9:
-                    index = i
-                    column = columns[i]
-                else:
-                    index = i+1
-                    column = columns[i]
+            final_classes = await _scrape_spreadsheet(columns, hyperlinks, grade, final_classes)
 
-                days = await scrape_days(MetaInfoSchema(
-                    class_column=column,
-                    hyperlinks=hyperlinks,
-                    grade=grade,
-                    group_id=index + 1 + grade*100
-                ))
-                for _class in await scrape_classes(days):
-                    final_classes.append(_class)
     return final_classes
