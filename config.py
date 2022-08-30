@@ -43,6 +43,7 @@ class Settings(BaseSettings):
     CLASSES_PER_DAY: int = Field(env='CLASSES_PER_DAY')
     LOGGING_LEVEL: str = Field(env='LOGGING_LEVEL')
     ADMIN_VK_IDS: list[int] = Field(env='ADMIN_VK_IDS')
+    ACTUALIZER_TIMEOUT: int = Field(env='ACTUALIZER_TIMEOUT')
 
     @property
     def db_url(self):
