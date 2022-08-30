@@ -12,7 +12,7 @@ async def update():
 
 
 scheduler = AsyncIOScheduler(timezone='UTC', daemon=True)
-scheduler.add_job(update, 'interval', seconds=30)
+scheduler.add_job(update, 'interval', hours=1)
 scheduler.start()
 
 asyncio.get_event_loop().run_forever()

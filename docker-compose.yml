@@ -12,6 +12,10 @@ services:
      - redis
    networks:
      - timetableNetwork
+   logging:
+      driver: "json-file"
+      options:
+          max-size: "2048m"
 
   timetablebot:
    build: ./
@@ -24,6 +28,10 @@ services:
      - redis
    networks:
      - timetableNetwork
+   logging:
+      driver: "json-file"
+      options:
+          max-size: "2048m"
 
   dabatabse:
     image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
@@ -40,6 +48,10 @@ services:
       - "5433:5432"
     networks:
       - timetableNetwork
+   logging:
+      driver: "json-file"
+      options:
+          max-size: "1024m"
 
   redis:
     image: redis:alpine
@@ -51,6 +63,10 @@ services:
       - ./data/redis:/data
     networks:
       - timetableNetwork
+   logging:
+      driver: "json-file"
+      options:
+          max-size: "1024m"
 
 
 networks:
