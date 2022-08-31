@@ -49,7 +49,7 @@ async def group_picking_handler(message: Message):
             await message.answer()
             return
 
-        await message.answer(f"Группа выбрана. Она: {message.text}", keyboard=menu_keyboard())
+        await message.answer(f"Выбрана группа: {message.text}", keyboard=menu_keyboard())
         await settings_bp.state_dispenser.delete(message.peer_id)
         await db.update(message.peer_id, group_index=int(message.text))
     else:
