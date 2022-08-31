@@ -25,4 +25,8 @@ async def hello_handler(message: Message, user: UserSchema):
 
 @general_bp.on.message(KillKeyboardRule())
 async def hello_handler(message: Message):
-    await message.answer(message=DEFAULT_ANSWER_MESSAGE, keyboard=remove_keyboard)
+    text = (
+        'Чтобы вернуть клавиатуру, напиши боту "Старт", "Начать" или "Привет"\n\n'
+        'В случае с группами, напишите боту "Бот старт", "Бот начать" или "Бот привет"'
+    )
+    await message.answer(message=text, keyboard=remove_keyboard)
