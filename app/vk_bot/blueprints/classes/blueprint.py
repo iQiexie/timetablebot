@@ -67,7 +67,7 @@ async def downvote(message: Message, user):
     """ Отправляет админу о некорректной паре """
 
     text = (
-        f'Пользователю: @id{user.vk_id}\n\n'
+        f'Пользователю: https://vk.com/gim206763355?sel={user.vk_id}\n\n'
         f'Пришли невалидные пары:\n\n'
         f'{message.payload}'
     )
