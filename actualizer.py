@@ -12,6 +12,9 @@ async def update():
     await redis.reset_database(day_schemas)
 
 
+loop = asyncio.get_event_loop()
+loop.run_until_complete(update())
+
 scheduler = AsyncIOScheduler(timezone='UTC', daemon=True)
 scheduler.add_job(update, 'interval', seconds=settings.ACTUALIZER_TIMEOUT)
 scheduler.start()

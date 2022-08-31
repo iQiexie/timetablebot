@@ -44,6 +44,7 @@ class Settings(BaseSettings):
     LOGGING_LEVEL: str = Field(env='LOGGING_LEVEL')
     ADMIN_VK_IDS: list[int] = Field(env='ADMIN_VK_IDS')
     ACTUALIZER_TIMEOUT: int = Field(env='ACTUALIZER_TIMEOUT')
+    PRODUCTION: bool = Field(env="PRODUCTION")
 
     @property
     def db_url(self):

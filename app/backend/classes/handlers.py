@@ -29,8 +29,14 @@ async def _scrape_days(info: MetaInfoSchema, start_week: int) -> List[List[dict]
     """  start_week == 0 - над чертой; start_week == 1 - под чертой. """
     classes = []
     for index in range(start_week, len(info.class_column), 2):
+        if info.grade == 1 and index > 26 - 7:  # TEMP. УДАЛИТЬ, КОГДА ЗАКОНЧИТСЯ ЗНАКОМСТВО С БИБЛОТЕКОЙ
+            index += 1  # TEMP. УДАЛИТЬ, КОГДА ЗАКОНЧИТСЯ ЗНАКОМСТВО С БИБЛОТЕКОЙ
+
+        if index >= len(info.class_column):  # TEMP. УДАЛИТЬ, КОГДА ЗАКОНЧИТСЯ ЗНАКОМСТВО С БИБЛОТЕКОЙ
+            continue  # TEMP. УДАЛИТЬ, КОГДА ЗАКОНЧИТСЯ ЗНАКОМСТВО С БИБЛОТЕКОЙ
+
         classes.append({
-            "class": info.class_column[index],
+            "class": info.class_column[index] + f"\n\nindex: {index}",
             "hyperlinks": await _get_hyperlink(info, index)
         })
     day_classes = []
