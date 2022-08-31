@@ -30,7 +30,7 @@ async def send_settings_keyboard_handler(message: Message, user: UserSchema):
 @settings_bp.on.message(ChangeGroupRule())
 async def group_picking_handler(message: Message):
     state = PickingState.PICKING_GROUP
-    error_message = 'Принимаются ответы только в цифрах от 100 до 500'
+    error_message = 'Принимаются ответы только в цифрах от 100 до 600'
 
     await settings_bp.state_dispenser.set(message.peer_id, state, error=error_message)
     await message.answer('Напиши номер своей группы')
@@ -42,7 +42,11 @@ async def group_picking_handler(message: Message):
 
     if is_digit:
         if int(message.text) < 99 or int(message.text) > 700:
-            await message.answer("Врёшь, не проведёшь... Таких групп не существует")
+            text = (
+                "Врёшь, не проведёшь... Таких групп не существует"
+                "\n\nПринимаются цифры от 100 до 600"
+            )
+            await message.answer()
             return
 
         await message.answer(f"Группа выбрана. Она: {message.text}", keyboard=menu_keyboard())

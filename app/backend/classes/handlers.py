@@ -36,7 +36,7 @@ async def _scrape_days(info: MetaInfoSchema, start_week: int) -> List[List[dict]
             continue  # todo TEMP. УДАЛИТЬ, КОГДА ЗАКОНЧИТСЯ ЗНАКОМСТВО С БИБЛОТЕКОЙ
 
         classes.append({
-            "class": info.class_column[index] + f"\n\nindex: {index}",
+            "class": info.class_column[index],
             "hyperlinks": await _get_hyperlink(info, index)
         })
     day_classes = []
