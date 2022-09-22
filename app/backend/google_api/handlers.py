@@ -53,6 +53,8 @@ class GoogleApiHandler:
             return None
 
         starts_with = 7
+        if group_index == 1:
+            starts_with = 6
 
         if group_index != 3:
             range_str = f"{group_index} курс!D{starts_with}:AE68"
