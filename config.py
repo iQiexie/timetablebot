@@ -22,6 +22,10 @@ def generate_logging_level(level):
 
 
 class Settings(BaseSettings):
+    class Config:
+        env_file = '.env.stage'
+        env_file_encoding = 'utf-8'
+
     DB_USER: str = Field(env="DB_USER")
     DB_PASSWORD: str = Field(env="DB_PASSWORD")
     DB_PORT: int = Field(env="DB_PORT")
