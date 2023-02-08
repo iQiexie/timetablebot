@@ -86,11 +86,19 @@ async def scrape_classes(days: List[DaySchema]) -> List[DaySchema]:
 
 async def _scrape_spreadsheet(columns: str, hyperlinks: list, grade: int, final_classes: list):
     for index, column in enumerate(columns):
+        group_id = index + 1 + grade*100
+
+        exceptions_map = {
+            127: 128
+        }
+
+        group_id = exceptions_map.get(group_id, group_id)
+
         days = await scrape_days(MetaInfoSchema(
             class_column=column,
             hyperlinks=hyperlinks,
             grade=grade,
-            group_id=index + 1 + grade*100
+            group_id=group_id
         ))
         for _class in await scrape_classes(days):
             final_classes.append(_class)
