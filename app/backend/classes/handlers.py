@@ -120,22 +120,26 @@ async def parse_5th_grade(columns, hyperlinks, grade, final_classes):
 
 async def parse_3rd_grade(columns, hyperlinks, grade, final_classes):
     for i in range(len(columns)):
-        if i < 10:
-            index = i
-            column = columns[i]
+        column = columns[i]
+
+        if i < 9:
+            # пропускаем 310
+            group_id = i + 1 + (grade*100)
+        elif i < 13:
+            # пропускаем 315
+            group_id = i + 2 + (grade * 100)
         else:
-            index = i + 1
-            column = columns[i]
+            group_id = i + 3 + (grade * 100)
 
         days = await scrape_days(
             MetaInfoSchema(
                 class_column=column,
                 hyperlinks=hyperlinks,
                 grade=grade,
-                group_id=index + 1 + grade * 100
+                group_id=group_id
             )
         )
-
+        
         for _class in await scrape_classes(days):
             final_classes.append(_class)
 

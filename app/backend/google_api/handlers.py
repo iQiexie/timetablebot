@@ -52,14 +52,15 @@ class GoogleApiHandler:
         if self.sheets_service is None:
             return None
 
-        starts_with = 7
-        if group_index == 1:
-            starts_with = 6
+        group_map = {
+            1: '1 курс!D7:AD68',
+            2: '2 курс!D7:AD67',
+            3: '3 курс!D7:S67',
+            4: '4 курс!D7:T67',
+            5: '5 курс!D7:I67',
+        }
 
-        if group_index != 3:
-            range_str = f"{group_index} курс!D{starts_with}:AE68"
-        else:
-            range_str = f"{group_index} курс !D{starts_with}:AE68"
+        range_str = group_map.get(group_index)
 
         values = self.sheets_service.spreadsheets().values().get(
             spreadsheetId=settings.spreadsheet_original_id,
