@@ -53,4 +53,4 @@ message = (
 
 for i in peer_ids:
     time.sleep(1)
-    send_message(message=message, peer_ids=[i])
+    # send_message(message=message, peer_ids=[i])

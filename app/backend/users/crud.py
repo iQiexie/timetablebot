@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.backend.base.crud import BaseCRUD
 from app.backend.base.decorators import pydantic_converter
@@ -39,3 +41,13 @@ class UserCRUD:
     async def delete(self, vk_id: int):
         async with self.base.transaction():
             return await self.base.delete(self.model.vk_id == vk_id)
+
+    async def mark_last_activity(self, vk_id: str):
+        try:
+            async with self.base.transaction():
+                sql = f"update users set last_activity = '{datetime.now()}' where vk_id = {vk_id}"
+                print(f"\n\n{sql=}\n\n")
+                await self.base.session.execute(sql)
+                await self.base.session.commit()
+        except Exception as e:
+            print(f'mark_last_activity failed due to {e=}. {vk_id=}')

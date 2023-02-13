@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 from vkbottle.bot import Blueprint, Message
 
+from app.backend.base.db import async_session
+from app.backend.users.crud import UserCRUD
 from app.utils import russian_tz
 from config import settings
 from app.backend.users.schemas import UserSchema
@@ -19,11 +21,13 @@ from app.vk_bot.blueprints.classes.rules import (
 from app.vk_bot.defaults import DEFAULT_ANSWER_MESSAGE
 
 classes_bp = Blueprint()
+db = UserCRUD(async_session)
 
 
 @classes_bp.on.message(TodayClassesRule())
 async def today_classes_filter(message: Message, user: UserSchema):
     """ Отправляет пары на сегодня """
+    await db.mark_last_activity(vk_id=user.vk_id)
     week_day_index = datetime.now(russian_tz).today().isocalendar().weekday - 1
     await send_classes(message, user, week_day_index)
 
@@ -31,6 +35,7 @@ async def today_classes_filter(message: Message, user: UserSchema):
 @classes_bp.on.message(TomorrowClassesRule())
 async def tomorrow_classes_filter(message: Message, user: UserSchema):
     """ Отправляет пары на завтра """
+    await db.mark_last_activity(vk_id=user.vk_id)
 
     week_day_index = datetime.now(russian_tz).today().isocalendar().weekday
 
@@ -45,6 +50,7 @@ async def tomorrow_classes_filter(message: Message, user: UserSchema):
 @classes_bp.on.message(ByDayRule())
 async def find_by_day(message: Message, user: UserSchema):
     """ Отправляет пары по указанному дню недели """
+    await db.mark_last_activity(vk_id=user.vk_id)
 
     payload = json.loads(message.payload)
     week_day_index = payload.get('day')
@@ -56,6 +62,7 @@ async def find_by_day(message: Message, user: UserSchema):
 @classes_bp.on.message(DaySelectionRule())
 async def day_selection(message: Message):
     """ Отправляет клавиатуру с выбором дня """
+    await db.mark_last_activity(vk_id=message.peer_id)
 
     payload = json.loads(message.payload)
     next_week = payload.get('next')
@@ -65,6 +72,7 @@ async def day_selection(message: Message):
 @classes_bp.on.message(DownVoteRule())
 async def downvote(message: Message, user):
     """ Отправляет админу о некорректной паре """
+    await db.mark_last_activity(vk_id=user.vk_id)
 
     text = (
         f'Пользователю: https://vk.com/gim206763355?sel={user.vk_id}\n\n'
@@ -78,6 +86,7 @@ async def downvote(message: Message, user):
 @classes_bp.on.message(UpVoteRule())
 async def upvote(message: Message):
     """ Ничего не делает, просто высылает фидбек юзверу """
+    await db.mark_last_activity(vk_id=message.peer_id)
 
     await message.answer("Обратная связь учтена. Спасибо 💖")
 
@@ -85,5 +94,6 @@ async def upvote(message: Message):
 @classes_bp.on.message(LegacySearchBlockRule())
 async def legacy_search_block(message: Message):
     """ Отправляет сообщение incompatible error """
+    await db.mark_last_activity(vk_id=message.peer_id)
 
     await message.answer('Кнопки со старой версии бота больше не поддерживаются. Напиши "старт" или нажми "В меню"')
