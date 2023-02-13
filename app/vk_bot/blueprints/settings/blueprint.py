@@ -41,6 +41,11 @@ async def group_picking_handler(message: Message):
     is_digit = message.text.isdigit()
 
     if is_digit:
+
+        if int(message.text) in [310, 127]:
+            await message.answer("такой группы не существует")
+            return
+
         if int(message.text) < 99 or int(message.text) > 700:
             text = (
                 "Врёшь, не проведёшь... Таких групп не существует"
