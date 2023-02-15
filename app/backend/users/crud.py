@@ -46,7 +46,6 @@ class UserCRUD:
         try:
             async with self.base.transaction():
                 sql = f"update users set last_activity = '{datetime.now()}' where vk_id = {vk_id}"
-                print(f"\n\n{sql=}\n\n")
                 await self.base.session.execute(sql)
                 await self.base.session.commit()
         except Exception as e:
