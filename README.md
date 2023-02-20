@@ -33,7 +33,7 @@ https://vk.com/mpsu_schedule
 ### Сдедующие запуски:
 
 1. Запускаем приложуху `docker-compose --env-file .env up --build`
-3. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
+2. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
 
 
 ## Contribute
@@ -45,6 +45,8 @@ https://vk.com/mpsu_schedule
 Новые ВК блупринты должны быть импортированы тут `app.vk_bot.blueprints.__init__.py`
 
 Новые ВК клавиатуры должны быть импортированы тут `app.vk_bot.keyboards.__init.py`
+
+Обновляем пары вручную `ENV_LOC=.env.routine ROUTINE=ACTUALIZE python main.py`
 
 
 - `.env` - production envs

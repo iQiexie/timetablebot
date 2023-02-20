@@ -46,18 +46,18 @@ class DaySchema(BaseModel):
         prettify = lambda x: x.replace("-", " - ").replace(".", ":")  # noqa
         wrap = lambda x: f"\n{x}\n" if x else ""  # noqa
 
-        return f"""
-        [{prettify(ClassesEnum.FIRST_CLASS)}]:
-        {wrap(self.first_class)}
-        [{prettify(ClassesEnum.SECOND_CLASS)}]:
-        {wrap(self.second_class)}
-        [{prettify(ClassesEnum.THIRD_CLASS)}]:
-        {wrap(self.third_class)}
-        [{prettify(ClassesEnum.FOURTH_CLASS)}]:
-        {wrap(self.fourth_class)}
-        [{prettify(ClassesEnum.FIFTH_CLASS)}]:        
-        {wrap(self.fifth_class)}
-        """
+        return (
+            f"[{prettify(ClassesEnum.FIRST_CLASS)}]:\n\n"
+            f"{wrap(self.first_class)}\n\n"
+            f"[{prettify(ClassesEnum.SECOND_CLASS)}]:\n\n"
+            f"{wrap(self.second_class)}\n\n"
+            f"[{prettify(ClassesEnum.THIRD_CLASS)}]:\n\n"
+            f"{wrap(self.third_class)}\n\n"
+            f"[{prettify(ClassesEnum.FOURTH_CLASS)}]:\n\n"
+            f"{wrap(self.fourth_class)}\n\n"
+            f"[{prettify(ClassesEnum.FIFTH_CLASS)}]:\n\n"
+            f"{wrap(self.fifth_class)}\n\n"
+        )
 
 
 class SheetUri(BaseModel):
