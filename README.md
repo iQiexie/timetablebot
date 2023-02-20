@@ -21,29 +21,19 @@ https://vk.com/mpsu_schedule
 
 ### Первый раз:
 
-##### Инициализируем приложение
-
-1. Запускаем приложуху `docker-compose --env-file ./.env up --build`
-2. Ждём 3-4 секунды и накатываем миграции `docker exec -t timetablebot-python alembic upgrade head`
-
-##### Настраиваем гугл аккаунт
-
-1. Обновляем пары вручную `docker exec -t -e ENV_LOC=.env.routine -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
-2. Переходим по ссылке из логов и входим в свой гугл аккаунт
-3. Копируем юрл из браузера, на которую нас перекинуло
-4. Открываем новый терминал и запускаем команду `docker exec -t timetablebot-python curl "скопированный юрл"` (ЮРЛ ВСТАВЛЯЕМ ВНУТРИ КАВЫЧЕК!)
-5. Переходим в первый терминал и убеждаемся, что парсинг выполнился
-
-##### Настраиваем рутины
-
-1. Запускаем команду `(crontab -l 2>/dev/null; echo "$(cat crontab)") | crontab -`
+1. Запускаем приложуху `docker-compose --env-file .env up --build`
+2. Обновляем пары вручную `docker exec -t -e ENV_LOC=.env.routine -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
+3. Переходим по ссылке из логов и входим в свой гугл аккаунт
+4. Копируем юрл из браузера, на которую нас перекинуло
+5. Открываем новый терминал и запускаем команду `docker exec -t timetablebot-python curl "скопированный юрл"` (ЮРЛ ВСТАВЛЯЕМ ВНУТРИ КАВЫЧЕК!)
+6. Переходим в первый терминал и убеждаемся, что парсинг выполнился
+7. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
 
 
 ### Сдедующие запуски:
 
-1. Запускаем приложуху `docker-compose --env-file ./.env up --build`
-2. Ждём 3-4 секунды и накатываем миграции `docker exec -t timetablebot-python alembic upgrade head`
-3. Запускаем команду `(crontab -l 2>/dev/null; echo "$(cat crontab)") | crontab -`
+1. Запускаем приложуху `docker-compose --env-file .env up --build`
+3. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
 
 
 ## Contribute
