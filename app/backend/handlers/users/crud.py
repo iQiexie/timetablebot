@@ -1,11 +1,14 @@
 from datetime import datetime
+from typing import List
 from typing import Optional
 
 from sqlalchemy import select
+from sqlalchemy import text
 from sqlalchemy import update
 
 from app.backend.db.base_crud import BaseCRUD
 from app.backend.handlers.users.models import User
+from app.backend.handlers.users.models import UsersActivity
 
 
 class UserCRUD(BaseCRUD[User]):
@@ -33,12 +36,21 @@ class UserCRUD(BaseCRUD[User]):
         return await self.get(vk_id=vk_id)
 
     async def mark_last_activity(self, vk_id: str):
-        # TODO refactor
+        sql = update(User).where(User.vk_id == vk_id).values(last_activity=datetime.now())
+        await self.session.execute(sql)
+        await self.session.commit()
 
-        try:
-            # sql = f"update users set last_activity = '{datetime.now()}' where vk_id = {vk_id}"
-            sql = update(User).where(User.vk_id == vk_id).values(last_activity=datetime.now())
-            await self.session.execute(sql)
-            await self.session.commit()
-        except Exception as e:
-            print(f"mark_last_activity failed due to {e=}. {vk_id=}")
+    async def get_daily_users(self) -> int:
+        sql = text("SELECT count(*) FROM users WHERE last_activity >= NOW() - INTERVAL '1 day'")
+        query = await self.session.execute(sql)
+        return query.scalar_one_or_none()
+
+    async def get_daily_users_by_day(self) -> List[UsersActivity]:
+        sql = select(UsersActivity)
+        query = await self.session.execute(sql)
+        return list(query.scalars())
+
+    async def record_daily_users(self):
+        count = await self.get_daily_users()
+        self.session.add(UsersActivity(user_count=count))
+        await self.session.commit()

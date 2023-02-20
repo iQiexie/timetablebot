@@ -22,3 +22,14 @@ class User(TimestampMixin, Base):
     group_index: Mapped[int] = Column(Integer)
     ai_companion_enabled: Mapped[bool] = Column(Boolean, default=False)
     last_activity: Mapped[datetime] = Column(DateTime, default=current_timestamp())
+
+
+class UsersActivity(Base):
+    __tablename__ = "users_activity"
+
+    id: Mapped[int] = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    date: Mapped[datetime] = Column(DateTime, default=current_timestamp())
+    user_count: Mapped[int] = Column(Integer, nullable=False)
+
+    def __str__(self):
+        return f'{self.date.strftime("%d.%m.%Y %H:%M")}: {self.user_count}\n'
