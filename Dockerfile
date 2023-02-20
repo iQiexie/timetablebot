@@ -1,27 +1,9 @@
-FROM python:3.10.1-bullseye
+FROM python:3.10-bullseye
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-ARG YOUR_ENV
+WORKDIR /app
+COPY . .
 
-ENV YOUR_ENV=${YOUR_ENV} \
-  PYTHONFAULTHANDLER=1 \
-  PYTHONUNBUFFERED=1 \
-  PYTHONHASHSEED=random \
-  PIP_NO_CACHE_DIR=off \
-  PIP_DISABLE_PIP_VERSION_CHECK=on \
-  PIP_DEFAULT_TIMEOUT=100 \
-  POETRY_VERSION=1.1.6
-
-# System deps:
-RUN pip install "poetry==$POETRY_VERSION"
-
-# Copy only requirements to cache them in docker layer
-WORKDIR /code
-COPY poetry.lock pyproject.toml /code/
-
-# Project initialization:
-RUN poetry config virtualenvs.create false \
-  && poetry install $(test "$YOUR_ENV" == production && echo "--no-dev") --no-interaction --no-ansi
-
-# Creating folders, and files for a project:
-COPY . /code
-WORKDIR /code
+RUN pip install pipenv
+RUN pipenv install --system

@@ -1,33 +1,14 @@
-## Стек
+New models are imported here `app.backend.db.__init__.py`  (For alembic detection)
 
-- Language: python
-- Data validator: pydantic
-- Database: postgres
-- Database ORM: sqlalchemy
-- Migration tool: alembic
-- Cache database: redis
-- Cache database framework: aioredis
-- Вконтакте framework: vkbottle
+New vk_bot middlewares are imported here `app.vk_bot.middlewares.__init__.py`
 
-## Деплой
+New vk_bot blueprints are imported here `app.vk_bot.blueprints.__init__.py`
 
-- `docker network create timetableNetwork`
-- `docker-compose up --build`
-- Ctrl+c
-- `docker network connect timetableNetwork timetablebot`
-- `docker network connect timetableNetwork dabatabse`
-- `docker network connect timetableNetwork redis`
+New vk_bot keyboards are imported here `app.vk_bot.keyboards.__init.py`
 
-- Копируем ip `docker network inspect -f '{{range.IPAM.Config}}{{.Gateway}}{{end}}' timetableNetwork`
-- Вставляем в .env: `DB_HOST=скопированный айпи`; `REDIS_HOST=скопированный айпи`
-- `docker-compose up --build`
+.env - production envs
+.env.local - local envs for development
+.env.routine - envs for cron on production server
 
-Для первого запуска нужно выполнить следующие действия:
-- Перейти по ссылке, которая появилась в терминале (скопировать её полностью)
-- Авторизоваться через гугл аккаунт
-- Скопировать самую последнюю ссылку, которая начинается с localhost
-- Выполнить команду `docker exec actualizer curl "скопированная ссылка"`
-- Выполнить команду `docker exec timetablebot alembic upgrade head`
 
-~~### Важно!!! Для запуска из пайчарма, в хосте надо обратно поменять на localhost, а то не будет подключаться~~
-
+run actualize command: `ENV_LOC=.env.routine ROUTINE=ACTUALIZE python main.py`

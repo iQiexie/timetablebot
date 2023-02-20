@@ -1,8 +1,11 @@
-from app.vk_bot.driver import start_production_bot, start_stage_bot
-from config import settings
+import os
+import asyncio
+
+from app.backend.handlers.classes.main import update_classes
+from app.vk_bot.driver import run
 
 if __name__ == '__main__':
-    if settings.PRODUCTION:
-        start_production_bot()
+    if os.getenv('ROUTINE') == 'ACTUALIZE':
+        asyncio.run(update_classes())
     else:
-        start_stage_bot()
+        run()

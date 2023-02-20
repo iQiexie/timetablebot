@@ -1,25 +1,33 @@
-from config import settings
-from vkbottle import Bot, run_multibot, API
+from typing import Iterable
 
-from app.vk_bot.blueprints.binding import blueprints
+from app.vk_bot.blueprints import blueprints
 from app.vk_bot.middlewares import middlewares
+from vkbottle import API
+from vkbottle import Bot
+from vkbottle import run_multibot
+
+from config import settings
 
 
-def start_production_bot():
-    bot = Bot(settings.DOMASHKA_TOKEN)
-    apis = (API(settings.DOMASHKA_TOKEN), API(settings.RASPISANIE_TOKEN))
+def start_bot(bot: Bot, apis: Iterable[API]):
+    for blueprint in blueprints:
+        blueprint.load(bot)
 
-    [bp.load(bot) for bp in blueprints]
-    [bot.labeler.message_view.register_middleware(middleware) for middleware in middlewares]
-
-    run_multibot(bot, apis=apis)
-
-
-def start_stage_bot():
-    bot = Bot(settings.TEST_TOKEN)
-    apis = (API(settings.TEST_TOKEN),)
-
-    [bp.load(bot) for bp in blueprints]
-    [bot.labeler.message_view.register_middleware(middleware) for middleware in middlewares]
+    for middleware in middlewares:
+        bot.labeler.message_view.register_middleware(middleware)
 
     run_multibot(bot, apis=apis)
+
+# main.py:
+
+
+def run():
+    if settings.PRODUCTION:
+        bot = Bot(settings.VK_DOMASHKA_TOKEN)
+        apis = (API(settings.VK_DOMASHKA_TOKEN), API(settings.VK_RASPISANIE_TOKEN))
+    else:
+        bot = Bot(settings.VK_KPKPKP_TOKEN)
+        apis = (API(settings.VK_KPKPKP_TOKEN),)
+
+    start_bot(bot=bot, apis=apis)
+
