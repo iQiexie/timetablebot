@@ -1,3 +1,7 @@
+# Бот-расписание для моего университета
+
+https://vk.com/mpsu_schedule
+
 ## Стек
 
 - Data validation: pydantic
