@@ -23,7 +23,7 @@ https://vk.com/mpsu_schedule
 
 ##### Инициализируем приложение
 
-1. Запускаем приложуху `docker-compose up --build -d`
+1. Запускаем приложуху `docker-compose --env-file ./.env up --build`
 2. Ждём 3-4 секунды и накатываем миграции `docker exec -t timetablebot-python alembic upgrade head`
 
 ##### Настраиваем гугл аккаунт
@@ -41,7 +41,7 @@ https://vk.com/mpsu_schedule
 
 ### Сдедующие запуски:
 
-1. Запускаем приложуху `docker-compose up --build -d`
+1. Запускаем приложуху `docker-compose --env-file ./.env up --build`
 2. Ждём 3-4 секунды и накатываем миграции `docker exec -t timetablebot-python alembic upgrade head`
 3. Запускаем команду `(crontab -l 2>/dev/null; echo "$(cat crontab)") | crontab -`
 
