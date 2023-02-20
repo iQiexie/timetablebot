@@ -36,8 +36,9 @@ services:
 
   timetablebot-python:
     build: ./
-    command: alembic upgrade head && python main.py
     container_name: timetablebot-python
+    command: >
+      sh -c "alembic upgrade head && python main.py"
     env_file:
       - .env
     depends_on:
