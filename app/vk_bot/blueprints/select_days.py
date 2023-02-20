@@ -11,12 +11,12 @@ from config import settings
 blueprint = Blueprint()
 
 
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=['sweek']))
+@blueprint.on.message(ContainsTriggerRule(payload_triggers=["sweek"]))
 async def day_selection(message: Message):
-    """ Отправляет клавиатуру с выбором дня """
+    """Отправляет клавиатуру с выбором дня"""
 
     payload = json.loads(message.payload)
-    next_week = payload.get('next')
+    next_week = payload.get("next")
 
     if next_week:
         keyboard = next_week_keyboard

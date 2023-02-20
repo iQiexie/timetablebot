@@ -6,8 +6,7 @@ from config import settings
 class ClassesREDIS:
     def __init__(self):
         self.session = aioredis.from_url(
-            url=f'{settings.REDIS_URL}{settings.REDIS_CLS_DB}',
-            decode_responses=True
+            url=f"{settings.REDIS_URL}{settings.REDIS_CLS_DB}", decode_responses=True
         )
 
     async def replace_classes(self, classes: dict):
@@ -19,7 +18,7 @@ class ClassesREDIS:
         for key, value in classes.items():
             pipeline.set(key, value)
 
-        pipeline.set('last_updated', str(datetime.now()))
+        pipeline.set("last_updated", str(datetime.now()))
 
         await pipeline.execute()
 
@@ -41,4 +40,4 @@ class ClassesREDIS:
         return results
 
     async def get(self, key: str) -> str:
-        return await self.session.execute_command('get', str(key))
+        return await self.session.execute_command("get", str(key))

@@ -11,11 +11,11 @@ class Settings(BaseSettings):
     POSTGRES_PORT: str = Field(default="5432")
     POSTGRES_DB: str = Field(default="db")
 
-    REDIS_HOST: str = Field(default='localhost')
-    REDIS_PORT: str = Field(default='6379')
-    REDIS_CREDS_DB: str = Field(default='0')
-    REDIS_CLS_DB: str = Field(default='1')
-    REDIS_SEP: str = Field(default=':')
+    REDIS_HOST: str = Field(default="localhost")
+    REDIS_PORT: str = Field(default="6379")
+    REDIS_CREDS_DB: str = Field(default="0")
+    REDIS_CLS_DB: str = Field(default="1")
+    REDIS_SEP: str = Field(default=":")
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
@@ -24,15 +24,14 @@ class Settings(BaseSettings):
     VK_RASPISANIE_TOKEN: str
     VK_KPKPKP_TOKEN: str
     VK_ADMIN_IDS: list[int]
-    VK_EMPTY_MESSAGE: str = Field(default='.')
+    VK_EMPTY_MESSAGE: str = Field(default=".")
 
     PRODUCTION: bool = Field(default=False)
     NOT_EXISTING_GROUPS: list[int] = Field(default=[310, 127])
 
     class Config:
-        env_file = os.getenv('ENV_LOC', '.env')
-        env_file_encoding = 'utf-8'
-
+        env_file = os.getenv("ENV_LOC", ".env")
+        env_file_encoding = "utf-8"
 
     @property
     def POSTGRES_URL(self):

@@ -8,7 +8,7 @@ def get_column_url(column: SheetValue) -> str:
     for format_runs in column.text_format_runs or []:
         if not format_runs.format.link:
             continue
-            
+
         if url := format_runs.format.link.uri:
             return url
 
@@ -20,13 +20,13 @@ async def scrape_spreadsheet() -> dict:
     final_classes = []
 
     for grade in range(1, 6):
-        print(f'Parsing grade: {grade}')
+        print(f"Parsing grade: {grade}")
         sheet = await google.read_sheet(grade)
 
         group_indexes = {}
-        week_days = ('ПОНЕДЕЛЬНИК', 'ВТОРНИК', 'СРЕДА', 'ЧЕТВЕРГ', 'ПЯТНИЦА', 'СУББОТА')
+        week_days = ("ПОНЕДЕЛЬНИК", "ВТОРНИК", "СРЕДА", "ЧЕТВЕРГ", "ПЯТНИЦА", "СУББОТА")
         durations = DURATIONS_MAP.keys()
-        line_positions = ('НАД', 'ПОД')
+        line_positions = ("НАД", "ПОД")
 
         classes = {}
         last_week_day = None
@@ -41,7 +41,7 @@ async def scrape_spreadsheet() -> dict:
                 column_value = column.formatted_value
                 column_url = get_column_url(column)
 
-                ending_values = ('А.В. Кузнецов', 'В.В. Товаренко')
+                ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
 
                 if not column_value or column_value in ending_values:
                     continue
@@ -50,26 +50,31 @@ async def scrape_spreadsheet() -> dict:
                     last_week_day = column_value.upper()
 
                 if column_value in durations:
-                    if column_value == '16.00-17-30':
-                        column_value = '16.00-17.30'
+                    if column_value == "16.00-17-30":
+                        column_value = "16.00-17.30"
                     last_duration = column_value
 
                 if column_value.upper() in line_positions:
                     last_line_position = column_value
-                    last_cords = compose_key(last_week_day, last_line_position, last_duration, str(row_index))
+                    last_cords = compose_key(
+                        last_week_day,
+                        last_line_position,
+                        last_duration,
+                        str(row_index),
+                    )
 
                 # indexing groups
                 if column_value.isdigit():
                     # index - index of column that contains related group classes
                     group_indexes[int(column_value)] = index
-                    group_indexes[f'index;{index}'] = int(column_value)
+                    group_indexes[f"index;{index}"] = int(column_value)
 
                 if index in group_indexes.values() and last_cords:
-                    group_number = group_indexes[f'index;{index}']
+                    group_number = group_indexes[f"index;{index}"]
                     full_cords = compose_key(str(group_number), last_cords)
 
                     if column_url:
-                        classes[full_cords] = column_value + f'\n\nСсылка: {column_url}'
+                        classes[full_cords] = column_value + f"\n\nСсылка: {column_url}"
                     else:
                         classes[full_cords] = column_value
 

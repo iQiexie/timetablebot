@@ -12,7 +12,7 @@ class ContainsTriggerRule(ABCRule[BaseMessageMin]):
         payload_triggers: Optional[List[str]] = None,
     ):
         if not triggers and not payload_triggers:
-            raise AttributeError('Specify triggers or/and payload_triggers')
+            raise AttributeError("Specify triggers or/and payload_triggers")
 
         self.triggers = triggers or []
         self.payload_triggers = payload_triggers or []
@@ -22,7 +22,7 @@ class ContainsTriggerRule(ABCRule[BaseMessageMin]):
             if trigger in event.text.lower():
                 return True
 
-        payload = event.payload or 'None'
+        payload = event.payload or "None"
         for payload_trigger in self.payload_triggers:
             if payload_trigger in payload:
                 return True

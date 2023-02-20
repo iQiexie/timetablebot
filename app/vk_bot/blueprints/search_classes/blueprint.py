@@ -16,7 +16,7 @@ from app.vk_bot.rules.contains_trigger import ContainsTriggerRule
 blueprint = Blueprint()
 
 
-@blueprint.on.message(ContainsTriggerRule(TODAY_CLASSES_TRIGGERS, ['today']))
+@blueprint.on.message(ContainsTriggerRule(TODAY_CLASSES_TRIGGERS, ["today"]))
 async def today_classes_filter(message: Message, user: UserSchema):
     if not await group_index_set(message=message, user=user):
         return
@@ -28,11 +28,11 @@ async def today_classes_filter(message: Message, user: UserSchema):
         searching_date=searching_date,
     )
 
-    keyboard = compose_feedback_keyboard({'grp': user.group_index, 'srf': str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)
 
 
-@blueprint.on.message(ContainsTriggerRule(TOMORROW_CLASSES_TRIGGERS, ['tomorrow']))
+@blueprint.on.message(ContainsTriggerRule(TOMORROW_CLASSES_TRIGGERS, ["tomorrow"]))
 async def tomorrow_classes_filter(message: Message, user: UserSchema):
     if not await group_index_set(message=message, user=user):
         return
@@ -44,19 +44,19 @@ async def tomorrow_classes_filter(message: Message, user: UserSchema):
         searching_date=searching_date,
     )
 
-    keyboard = compose_feedback_keyboard({'grp': user.group_index, 'srf': str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)
 
 
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=['by day']))
+@blueprint.on.message(ContainsTriggerRule(payload_triggers=["by day"]))
 async def find_by_week_day(message: Message, user: UserSchema):
-    """ Отправляет пары по указанному дню недели """
+    """Отправляет пары по указанному дню недели"""
 
     payload = json.loads(message.payload)
-    next_week = payload.get('next')
-    searching_week_day = payload.get('day')
+    next_week = payload.get("next")
+    searching_week_day = payload.get("day")
     current_week_day = datetime.now().isocalendar().weekday
-    
+
     if searching_week_day > current_week_day:
         delta = searching_week_day - current_week_day
     elif searching_week_day == current_week_day:
@@ -74,5 +74,5 @@ async def find_by_week_day(message: Message, user: UserSchema):
         searching_date=searching_date,
     )
 
-    keyboard = compose_feedback_keyboard({'grp': user.group_index, 'srf': str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)

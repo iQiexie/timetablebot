@@ -19,7 +19,7 @@ def get_week_line_position(week_index: int) -> LinePositionEnum:
 
 async def get_last_updated() -> str:
     classes_redis = ClassesREDIS()
-    return await classes_redis.get('last_updated')
+    return await classes_redis.get("last_updated")
 
 
 async def update_classes():
@@ -34,23 +34,23 @@ async def find_day(
     line_position: Optional[LinePositionEnum] = None,
     searching_class: Optional[ClassesEnum] = None,
 ) -> DaySchema:
-    """ searching_class returns whole DayScheme with only the required searching_class """
+    """searching_class returns whole DayScheme with only the required searching_class"""
 
     classes_redis = ClassesREDIS()
 
     if not week_day and (line_position or searching_class):
-        raise ValueError('week_day must be specified')
+        raise ValueError("week_day must be specified")
 
     if not line_position and searching_class:
-        raise ValueError('line_position must be specified')
+        raise ValueError("line_position must be specified")
 
     keys = [group_number, week_day, line_position, searching_class]
     classes_query = compose_key(*filter(None, keys))
     result = await classes_redis.get_partial_match(classes_query)
-    
+
     if not result:
         return DaySchema()
-    
+
     return DaySchema(**result)
 
 

@@ -21,12 +21,12 @@ class GoogleAPI:
         self.sheets_service = None
 
     async def init_services(self):
-        """ Обязательно нужно вызывать после каждой инициализации этого круда """
+        """Обязательно нужно вызывать после каждой инициализации этого круда"""
 
         self.sheets_service = await self.create_service(
-            service_name='sheets',
-            service_version='v4',
-            scopes=['https://www.googleapis.com/auth/spreadsheets.readonly']
+            service_name="sheets",
+            service_version="v4",
+            scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
         )
 
     async def update_credentials(self):
@@ -43,7 +43,7 @@ class GoogleAPI:
                 settings.GOOGLE_SECRET,
                 scopes,
             )
-            creds = flow.run_local_server(host='localhost', port=1234)
+            creds = flow.run_local_server(host="localhost", port=1234)
             await self.redis.create(service_name=service_name, credentials=str(creds.to_json()))
 
         if any((creds.valid, creds.expired, creds.refresh_token)):
@@ -53,15 +53,19 @@ class GoogleAPI:
 
     async def read_sheet(self, group_index: int) -> Sheet:
         if self.sheets_service is None:
-            raise RuntimeError('Sheets service is not initialized')
+            raise RuntimeError("Sheets service is not initialized")
 
-        range_str = f'{group_index} курс'  # literal sheet's name
+        range_str = f"{group_index} курс"  # literal sheet's name
 
-        values = self.sheets_service.spreadsheets().get(
-            spreadsheetId=settings.SPREADSHEET_ID,
-            fields="sheets/data/rowData/values(hyperlink,formattedValue,textFormatRuns/format/link/uri)",
-            ranges=range_str,
-        ).execute()
-        
-        sheet = Sheet.parse_obj(values['sheets'][0]['data'][0])
+        values = (
+            self.sheets_service.spreadsheets()
+            .get(
+                spreadsheetId=settings.SPREADSHEET_ID,
+                fields="sheets/data/rowData/values(hyperlink,formattedValue,textFormatRuns/format/link/uri)",
+                ranges=range_str,
+            )
+            .execute()
+        )
+
+        sheet = Sheet.parse_obj(values["sheets"][0]["data"][0])
         return sheet

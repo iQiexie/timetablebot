@@ -18,8 +18,6 @@ def start_bot(bot: Bot, apis: Iterable[API]):
 
     run_multibot(bot, apis=apis)
 
-# main.py:
-
 
 def run():
     if settings.PRODUCTION:
@@ -30,4 +28,3 @@ def run():
         apis = (API(settings.VK_KPKPKP_TOKEN),)
 
     start_bot(bot=bot, apis=apis)
-

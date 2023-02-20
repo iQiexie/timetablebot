@@ -18,4 +18,4 @@ class AuthMiddleware(BaseMiddleware[Message]):
                 user = await users.create(vk_id=self.event.peer_id)
 
         await users.mark_last_activity(vk_id=self.event.peer_id)
-        self.send({'user': UserSchema.from_orm(user)})
+        self.send({"user": UserSchema.from_orm(user)})

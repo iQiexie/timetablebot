@@ -41,4 +41,4 @@ class UserCRUD(BaseCRUD[User]):
             await self.session.execute(sql)
             await self.session.commit()
         except Exception as e:
-            print(f'mark_last_activity failed due to {e=}. {vk_id=}')
+            print(f"mark_last_activity failed due to {e=}. {vk_id=}")

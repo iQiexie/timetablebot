@@ -9,12 +9,12 @@ from pydantic.utils import GetterDict
 from app.backend.handlers.classes.enums import ClassesEnum
 
 DURATIONS_MAP = {
-    "9.00-10.30": 'first_class',
-    "10.40-12.10": 'second_class',
-    "12.40-14.10": 'third_class',
-    "14.20-16.00": 'fourth_class',
-    "16.00-17-30": 'fifth_class',
-    "16.00-17.30": 'fifth_class',
+    "9.00-10.30": "first_class",
+    "10.40-12.10": "second_class",
+    "12.40-14.10": "third_class",
+    "14.20-16.00": "fourth_class",
+    "16.00-17-30": "fifth_class",
+    "16.00-17.30": "fifth_class",
 }
 
 
@@ -36,15 +36,15 @@ class DaySchema(BaseModel):
         result = {}
 
         for key, value in values.items():
-            group_number, week_day, line, duration, row = key.split(':')
+            group_number, week_day, line, duration, row = key.split(":")
             field = DURATIONS_MAP.get(duration)
             result[field] = value
 
         return result
 
     def __str__(self):
-        prettify = lambda x: x.replace('-', ' - ').replace('.', ':')  # noqa
-        wrap = lambda x: f'\n{x}\n' if x else ''  # noqa
+        prettify = lambda x: x.replace("-", " - ").replace(".", ":")  # noqa
+        wrap = lambda x: f"\n{x}\n" if x else ""  # noqa
 
         return f"""
         [{prettify(ClassesEnum.FIRST_CLASS)}]:
@@ -73,8 +73,8 @@ class TextFormatRuns(BaseModel):
 
 
 class SheetValue(BaseModel):
-    formatted_value: Optional[str] = Field(alias='formattedValue')
-    text_format_runs: Optional[List[TextFormatRuns]] = Field(alias='textFormatRuns')
+    formatted_value: Optional[str] = Field(alias="formattedValue")
+    text_format_runs: Optional[List[TextFormatRuns]] = Field(alias="textFormatRuns")
 
 
 class SheetRows(BaseModel):

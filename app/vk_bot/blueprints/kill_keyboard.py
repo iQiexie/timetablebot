@@ -7,7 +7,7 @@ from app.vk_bot.rules.contains_trigger import ContainsTriggerRule
 blueprint = Blueprint()
 
 
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=['suicide']))
+@blueprint.on.message(ContainsTriggerRule(payload_triggers=["suicide"]))
 async def kill_keyboard(message: Message):
     text = (
         'Чтобы вернуть клавиатуру, напиши боту "Старт", "Начать" или "Привет"\n\n'

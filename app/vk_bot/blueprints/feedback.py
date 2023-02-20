@@ -8,14 +8,14 @@ from config import settings
 blueprint = Blueprint()
 
 
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=['downvote']))
+@blueprint.on.message(ContainsTriggerRule(payload_triggers=["downvote"]))
 async def downvote(message: Message, user: UserSchema):
-    """ Отправляет админу о некорректной паре """
+    """Отправляет админу о некорректной паре"""
 
     text = (
-        f'Пользователю: https://vk.com/gim206763355?sel={user.vk_id} '
-        f'Пришли невалидные пары. \n\nКонтекст:\n'
-        f'{message.payload}'
+        f"Пользователю: https://vk.com/gim206763355?sel={user.vk_id} "
+        f"Пришли невалидные пары. \n\nКонтекст:\n"
+        f"{message.payload}"
     )
 
     answer_text = (
@@ -32,8 +32,8 @@ async def downvote(message: Message, user: UserSchema):
     await message.answer(answer_text)
 
 
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=['upvote']))
+@blueprint.on.message(ContainsTriggerRule(payload_triggers=["upvote"]))
 async def upvote(message: Message):
-    """ Ничего не делает, просто высылает фидбек юзверу """
+    """Ничего не делает, просто высылает фидбек юзверу"""
 
     await message.answer("Обратная связь учтена. Спасибо 💖")

@@ -30,12 +30,12 @@ def compose_header(
     week_order = "Эта неделя" if current_week == week_index else "Следующая неделя"
 
     return (
-        '('
-        f'{week_day.title()}, '
-        f'{line_position.title()} чертой, '
-        f'{week_order}, '
+        "("
+        f"{week_day.title()}, "
+        f"{line_position.title()} чертой, "
+        f"{week_order}, "
         f'{date.strftime("%d.%m.%Y")}'
-        ')'
+        ")"
     )
 
 

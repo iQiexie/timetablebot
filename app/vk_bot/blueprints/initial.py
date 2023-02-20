@@ -9,29 +9,29 @@ from config import settings
 blueprint = Blueprint()
 
 MENU_TRIGGERS = [
-    'меню',
-    'в меню',
-    'главное меню',
-    'начать',
-    'покежь клаву',
-    'клава',
-    'start',
-    'старт',
-    'привет',
-    'расписание',
+    "меню",
+    "в меню",
+    "главное меню",
+    "начать",
+    "покежь клаву",
+    "клава",
+    "start",
+    "старт",
+    "привет",
+    "расписание",
 ]
 
 
-@blueprint.on.message(ContainsTriggerRule(triggers=MENU_TRIGGERS, payload_triggers=['main menu']))
+@blueprint.on.message(ContainsTriggerRule(triggers=MENU_TRIGGERS, payload_triggers=["main menu"]))
 async def hello_handler(message: Message = None, user: UserSchema = None):
     new_user = user.group_index is None
 
     if new_user:
         answer_message = (
             'Привет! Для начала работы с ботом тебе нужно написать "Старт" или "Начать", '
-            'а потом тебе нужно поменять свою группу через настройки.'
-            '\n\nСписок команд:'
-            '\n vk.com/@mpsu_schedule-vse-komandy-bota'
+            "а потом тебе нужно поменять свою группу через настройки."
+            "\n\nСписок команд:"
+            "\n vk.com/@mpsu_schedule-vse-komandy-bota"
         )
         await message.answer(answer_message, keyboard=change_group_keyboard)
 

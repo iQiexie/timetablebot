@@ -8,8 +8,7 @@ from config import settings
 class GoogleApiREDIS:
     def __init__(self):
         self.session = aioredis.from_url(
-            url=f'{settings.REDIS_URL}{settings.REDIS_CREDS_DB}',
-            decode_responses=True
+            url=f"{settings.REDIS_URL}{settings.REDIS_CREDS_DB}", decode_responses=True
         )
 
     async def create(self, service_name: str, credentials: str):
@@ -23,4 +22,4 @@ class GoogleApiREDIS:
 
     async def reset_database(self):
         async with self.session.client() as client:
-            await client.execute_command('flushdb')
+            await client.execute_command("flushdb")
