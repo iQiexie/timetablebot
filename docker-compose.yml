@@ -29,16 +29,16 @@ services:
      options:
        max-size: "100m"
 
-#  timetablebot-python:
-#    build: ./
-#    command: python main.py
-#    container_name: timetablebot-python
-#    env_file:
-#      - .env
-#    depends_on:
-#      - timetable-postgres
-#      - timetable-redis
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "2048m"
+  timetablebot-python:
+    build: ./
+    command: python main.py
+    container_name: timetablebot-python
+    env_file:
+      - .env
+    depends_on:
+      - timetable-postgres
+      - timetable-redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"

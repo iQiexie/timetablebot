@@ -1,0 +1,1 @@
+0 * * * * docker exec -t -e ENV_LOC=.env.routine -e ROUTINE=ACTUALIZE timetablebot-python python main.py

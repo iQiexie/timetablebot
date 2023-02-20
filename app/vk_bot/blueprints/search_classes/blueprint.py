@@ -52,6 +52,9 @@ async def tomorrow_classes_filter(message: Message, user: UserSchema):
 async def find_by_week_day(message: Message, user: UserSchema):
     """Отправляет пары по указанному дню недели"""
 
+    if not await group_index_set(message=message, user=user):
+        return
+
     payload = json.loads(message.payload)
     next_week = payload.get("next")
     searching_week_day = payload.get("day")

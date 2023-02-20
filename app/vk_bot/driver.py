@@ -1,11 +1,11 @@
 from typing import Iterable
 
-from app.vk_bot.blueprints import blueprints
-from app.vk_bot.middlewares import middlewares
 from vkbottle import API
 from vkbottle import Bot
 from vkbottle import run_multibot
 
+from app.vk_bot.blueprints import blueprints
+from app.vk_bot.middlewares import middlewares
 from config import settings
 
 

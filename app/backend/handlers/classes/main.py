@@ -36,6 +36,9 @@ async def find_day(
 ) -> DaySchema:
     """searching_class returns whole DayScheme with only the required searching_class"""
 
+    if not group_number.isdigit():
+        raise AttributeError(f'group_number is not number: {group_number=}')
+
     classes_redis = ClassesREDIS()
 
     if not week_day and (line_position or searching_class):
