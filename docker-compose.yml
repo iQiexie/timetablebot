@@ -1,74 +1,44 @@
 version: "3"
 
 services:
-  actualizer:
-   build: ./
-   command: poetry run python actualizer.py
-   container_name: actualizer
-   env_file:
-     - .env
-   depends_on:
-     - dabatabse
-     - redis
-   networks:
-     - timetableNetwork
-   logging:
-     driver: "json-file"
-     options:
-       max-size: "2048m"
-
-  timetablebot:
-   build: ./
-   command: poetry run python main.py
-   container_name: timetablebot
-   env_file:
-     - .env
-   depends_on:
-     - dabatabse
-     - redis
-   networks:
-     - timetableNetwork
-   logging:
-     driver: "json-file"
-     options:
-       max-size: "2048m"
-
-  dabatabse:
-    image: "postgres:${POSTGRES_VERSION:-13.5-alpine3.14}"
-    container_name: dabatabse
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: db
-      PGDATA: /var/lib/postgresql/data/pgdata
+  timetable-postgres:
+    image: "postgres:13"
+    container_name: timetable-postgres
+    env_file:
+      - .env
     volumes:
       - ./data/postgres:/var/lib/postgresql/data
     restart: always
     ports:
-      - "5433:5432"
-    networks:
-      - timetableNetwork
+      - "5432:5432"
     logging:
      driver: "json-file"
      options:
-       max-size: "1024m"
+       max-size: "100m"
 
-  redis:
+  timetable-redis:
     image: redis:alpine
-    container_name: redis
+    container_name: timetable-redis
     command: redis-server --appendonly yes
     ports:
-      - "2281:6379"
+      - "6379:6379"
     volumes:
       - ./data/redis:/data
-    networks:
-      - timetableNetwork
     logging:
      driver: "json-file"
      options:
-       max-size: "1024m"
+       max-size: "100m"
 
-
-networks:
-  timetableNetwork:
-    external: true
+  timetablebot-python:
+    build: ./
+    command: python main.py
+    container_name: timetablebot-python
+    env_file:
+      - .env
+    depends_on:
+      - timetable-postgres
+      - timetable-redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"
