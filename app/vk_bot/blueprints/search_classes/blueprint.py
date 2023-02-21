@@ -60,12 +60,10 @@ async def find_by_week_day(message: Message, user: UserSchema):
     searching_week_day = payload.get("day")
     current_week_day = datetime.now().isocalendar().weekday
 
-    if searching_week_day > current_week_day:
-        delta = searching_week_day - current_week_day
-    elif searching_week_day == current_week_day:
+    if searching_week_day == current_week_day:
         delta = 0
     else:
-        delta = current_week_day - searching_week_day
+        delta = searching_week_day - current_week_day
 
     searching_date = datetime.now() + timedelta(days=delta)
 
