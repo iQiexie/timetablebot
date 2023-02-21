@@ -56,7 +56,7 @@ class DaySchema(BaseModel):
             f"[{prettify(ClassesEnum.FOURTH_CLASS)}]:\n\n"
             f"{wrap(self.fourth_class)}\n\n"
             f"[{prettify(ClassesEnum.FIFTH_CLASS)}]:\n\n"
-            f"{wrap(self.fifth_class)}\n\n"
+            f"{wrap(self.fifth_class)}\n"
         )
 
 

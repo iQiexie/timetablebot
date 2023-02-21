@@ -61,4 +61,4 @@ async def compose_classes(
         date=searching_date,
     )
 
-    return f"{header} \n\n {classes} {header}"
+    return f"{header}\n\n{classes}\n{header}"

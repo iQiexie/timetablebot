@@ -38,7 +38,7 @@ async def scrape_spreadsheet() -> dict:
                 continue
 
             for index, column in enumerate(row.values):
-                column_value = column.formatted_value
+                column_value = column.formatted_value.strip() if column.formatted_value else None
                 column_url = get_column_url(column)
 
                 ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
@@ -55,7 +55,7 @@ async def scrape_spreadsheet() -> dict:
                     last_duration = column_value
 
                 if column_value.upper() in line_positions:
-                    last_line_position = column_value
+                    last_line_position = column_value.upper()
                     last_cords = compose_key(
                         last_week_day,
                         last_line_position,
@@ -72,7 +72,6 @@ async def scrape_spreadsheet() -> dict:
                 if index in group_indexes.values() and last_cords:
                     group_number = group_indexes[f"index;{index}"]
                     full_cords = compose_key(str(group_number), last_cords)
-
                     if column_url:
                         classes[full_cords] = column_value + f"\n\nСсылка: {column_url}"
                     else:
