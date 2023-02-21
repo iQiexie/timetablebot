@@ -19,7 +19,7 @@ async def scrape_spreadsheet() -> dict:
 
     final_classes = []
 
-    for grade in range(1, 6):
+    for grade in range(1, 2):
         print(f"Parsing grade: {grade}")
         sheet = await google.read_sheet(grade)
 
@@ -38,13 +38,15 @@ async def scrape_spreadsheet() -> dict:
                 continue
 
             for index, column in enumerate(row.values):
-                column_value = column.formatted_value.strip() if column.formatted_value else None
+                column_value = column.formatted_value
                 column_url = get_column_url(column)
 
                 ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
 
                 if not column_value or column_value in ending_values:
                     continue
+
+                column_value = column_value.strip()
 
                 if column_value.upper() in week_days:
                     last_week_day = column_value.upper()
