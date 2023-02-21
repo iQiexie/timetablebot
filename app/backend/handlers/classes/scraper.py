@@ -19,7 +19,7 @@ async def scrape_spreadsheet() -> dict:
 
     final_classes = []
 
-    for grade in range(1, 2):
+    for grade in range(1, 6):
         print(f"Parsing grade: {grade}")
         sheet = await google.read_sheet(grade)
 
