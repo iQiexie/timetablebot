@@ -16,6 +16,7 @@ class Settings(BaseSettings):
     REDIS_CREDS_DB: str = Field(default="0")
     REDIS_CLS_DB: str = Field(default="1")
     REDIS_SEP: str = Field(default=":")
+    REDIS_PASSWORD: str = Field(default="root")
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict

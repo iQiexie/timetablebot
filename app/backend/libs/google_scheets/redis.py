@@ -8,7 +8,9 @@ from config import settings
 class GoogleApiREDIS:
     def __init__(self):
         self.session = aioredis.from_url(
-            url=f"{settings.REDIS_URL}{settings.REDIS_CREDS_DB}", decode_responses=True
+            url=f"{settings.REDIS_URL}{settings.REDIS_CREDS_DB}",
+            decode_responses=True,
+            password=settings.REDIS_PASSWORD,
         )
 
     async def create(self, service_name: str, credentials: str):

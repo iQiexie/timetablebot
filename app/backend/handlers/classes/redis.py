@@ -6,7 +6,9 @@ from config import settings
 class ClassesREDIS:
     def __init__(self):
         self.session = aioredis.from_url(
-            url=f"{settings.REDIS_URL}{settings.REDIS_CLS_DB}", decode_responses=True
+            url=f"{settings.REDIS_URL}{settings.REDIS_CLS_DB}",
+            decode_responses=True,
+            password=settings.REDIS_PASSWORD,
         )
 
     async def replace_classes(self, classes: dict):
