@@ -2,6 +2,9 @@ from datetime import datetime
 from typing import List
 from typing import Optional
 
+from sqlalchemy import RowMapping
+from sqlalchemy import and_
+from sqlalchemy import func
 from sqlalchemy import select
 from sqlalchemy import text
 from sqlalchemy import update
@@ -44,6 +47,17 @@ class UserCRUD(BaseCRUD[User]):
         sql = text("SELECT count(*) FROM users WHERE last_activity >= NOW() - INTERVAL '1 day'")
         query = await self.session.execute(sql)
         return query.scalar_one_or_none()
+
+    async def get_usercount_by_grade(self) -> RowMapping:
+        first_grade = select(func.count()).select_from(User).where(and_(User.group_index > 100, User.group_index < 200)).label('Первый курс')
+        second_grade = select(func.count()).select_from(User).where(and_(User.group_index > 200, User.group_index < 300)).label('Второй курс')
+        third_grade = select(func.count()).select_from(User).where(and_(User.group_index > 300, User.group_index < 400)).label('Третий курс')
+        fourth_grade = select(func.count()).select_from(User).where(and_(User.group_index > 400, User.group_index < 500)).label('Четвёртый курс')
+        fifth_grade = select(func.count()).select_from(User).where(and_(User.group_index > 500, User.group_index < 600)).label('Пятый курс')
+
+        stmt = select(first_grade, second_grade, third_grade, fourth_grade, fifth_grade)
+        query = await self.session.execute(stmt)
+        return query.mappings().first()
 
     async def get_daily_users_by_day(self) -> List[UsersActivity]:
         sql = select(UsersActivity)

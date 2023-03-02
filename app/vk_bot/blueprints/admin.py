@@ -26,3 +26,11 @@ async def admin(message: Message):
         result += str(row)
 
     await message.answer(f'{result}')
+
+
+@blueprint.on.message(ContainsTriggerRule(['count by grades']))
+async def admin(message: Message):
+    async with async_session() as session:
+        result = await UserCRUD(session=session).get_usercount_by_grade()
+
+    await message.answer(f'{result}')
