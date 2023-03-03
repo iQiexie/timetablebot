@@ -34,17 +34,17 @@ services:
      options:
        max-size: "100m"
 
-#  timetablebot-python:
-#    build: ./
-#    container_name: timetablebot-python
-#    command: >
-#      sh -c "alembic upgrade head && python main.py"
-#    env_file:
-#      - .env
-#    depends_on:
-#      - timetable-postgres
-#      - timetable-redis
-#    logging:
-#      driver: "json-file"
-#      options:
-#        max-size: "2048m"
+  timetablebot-python:
+    build: ./
+    container_name: timetablebot-python
+    command: >
+      sh -c "alembic upgrade head && python main.py"
+    env_file:
+      - .env
+    depends_on:
+      - timetable-postgres
+      - timetable-redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "2048m"

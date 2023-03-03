@@ -1,3 +1,4 @@
+import json
 from typing import List
 from typing import Optional
 
@@ -19,10 +20,11 @@ class ContainsTriggerRule(ABCRule[BaseMessageMin]):
 
     async def check(self, event: BaseMessageMin) -> bool:
         for trigger in self.triggers:
-            if trigger in event.text.lower():
+            if event.text.lower().startswith(trigger):
                 return True
 
-        payload = event.payload or "None"
+        payload = event.payload or json.dumps({'cmd': 'NoneDefault'})
         for payload_trigger in self.payload_triggers:
-            if payload_trigger in payload:
+            cmd = json.loads(payload).get('cmd')
+            if cmd.startswith(payload_trigger):
                 return True

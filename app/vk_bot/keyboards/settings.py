@@ -11,7 +11,8 @@ settings_keyboard.add(
 )
 settings_keyboard.row()
 settings_keyboard.add(
-    Text("🙊 Виртуальный собеседник", payload={"cmd": "toggle chatbot"}),
+    # Text("🙊 Виртуальный собеседник", payload={"cmd": "toggle chatbot"}),
+    Text("📈 Статистика", payload={"cmd": "statistics"}),
     color=KeyboardButtonColor.PRIMARY,
 )
 settings_keyboard.row()

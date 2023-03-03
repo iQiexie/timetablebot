@@ -1,6 +1,7 @@
 from datetime import datetime
 from typing import List
 from typing import Optional
+from typing import Sequence
 
 from sqlalchemy import RowMapping
 from sqlalchemy import and_
@@ -58,6 +59,15 @@ class UserCRUD(BaseCRUD[User]):
         stmt = select(first_grade, second_grade, third_grade, fourth_grade, fifth_grade)
         query = await self.session.execute(stmt)
         return query.mappings().first()
+
+    async def get_usercount_by_groups(self) -> Sequence[RowMapping]:
+        stmt = text(
+            "select u.group_index, count(*) from users u "
+            "group by u.group_index order by u.group_index"
+        )
+
+        query = await self.session.execute(stmt)
+        return query.mappings().all()
 
     async def get_daily_users_by_day(self) -> List[UsersActivity]:
         sql = select(UsersActivity)
