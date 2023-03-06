@@ -9,7 +9,6 @@ from config import settings
 blueprint = Blueprint()
 
 MENU_TRIGGERS = [
-    "меню",
     "в меню",
     "главное меню",
     "начать",
@@ -17,8 +16,6 @@ MENU_TRIGGERS = [
     "клава",
     "start",
     "старт",
-    "привет",
-    "расписание",
 ]
 
 

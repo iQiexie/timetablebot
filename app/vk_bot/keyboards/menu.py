@@ -11,6 +11,7 @@ menu_keyboard.add(
     Text("Следующая неделя", {"cmd": "sweek", "next": True}), KeyboardButtonColor.SECONDARY
 )
 menu_keyboard.row()
+menu_keyboard.add(Text("🤖 ChatGPT", {"cmd": "chatgpt"}), KeyboardButtonColor.POSITIVE)
 menu_keyboard.add(Text("🛠 Настройки", {"cmd": "settings"}), KeyboardButtonColor.SECONDARY)
 menu_keyboard.row()
 menu_keyboard.add(Text("Убрать клавиатуру", {"cmd": "suicide"}), KeyboardButtonColor.NEGATIVE)

@@ -5,8 +5,9 @@ from vkbottle import Bot
 from vkbottle import run_multibot
 
 from app.vk_bot.blueprints import blueprints
+from app.vk_bot.bots import current_apis
+from app.vk_bot.bots import current_bot
 from app.vk_bot.middlewares import middlewares
-from config import settings
 
 
 def start_bot(bot: Bot, apis: Iterable[API]):
@@ -20,11 +21,4 @@ def start_bot(bot: Bot, apis: Iterable[API]):
 
 
 def run():
-    if settings.PRODUCTION:
-        bot = Bot(settings.VK_DOMASHKA_TOKEN)
-        apis = (API(settings.VK_DOMASHKA_TOKEN), API(settings.VK_RASPISANIE_TOKEN))
-    else:
-        bot = Bot(settings.VK_KPKPKP_TOKEN)
-        apis = (API(settings.VK_KPKPKP_TOKEN),)
-
-    start_bot(bot=bot, apis=apis)
+    start_bot(bot=current_bot, apis=current_apis)

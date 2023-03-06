@@ -50,7 +50,9 @@ def _convert_history(history: OrderedDict[str, str]) -> List[UserMessage]:
 
 
 async def start_chat(
-    vk_id: int, redis: ChatGptREDIS, conversation_opener: str = None,
+    vk_id: int,
+    redis: ChatGptREDIS,
+    conversation_opener: str = None,
 ) -> Optional[str]:
     history = await redis.get_history(vk_id=vk_id)
     if history:

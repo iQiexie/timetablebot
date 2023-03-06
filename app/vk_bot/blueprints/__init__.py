@@ -6,6 +6,7 @@ from app.vk_bot.blueprints.select_days import blueprint as select_days_blueprint
 from app.vk_bot.blueprints.feedback import blueprint as feedback_blueprint
 from app.vk_bot.blueprints.settings.blueprint import blueprint as settings_blueprint
 from app.vk_bot.blueprints.statistics import blueprint as statistics_blueprint
+from app.vk_bot.blueprints.chat_gpt.blueprint import blueprint as gpt_blueprint
 
 blueprints = [
     admin_blueprint,
@@ -16,4 +17,5 @@ blueprints = [
     feedback_blueprint,
     settings_blueprint,
     statistics_blueprint,
+    gpt_blueprint,
 ]
