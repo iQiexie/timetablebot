@@ -13,17 +13,14 @@ from config import settings
 
 async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
     headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {settings.CHAT_GPT_TOKEN}'
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {settings.CHAT_GPT_TOKEN}",
     }
 
     payload = dict(
         url="https://api.openai.com/v1/chat/completions",
         headers=headers,
-        json={
-            "model": "gpt-3.5-turbo",
-            "messages": [msg.dict() for msg in messages]
-        }
+        json={"model": "gpt-3.5-turbo", "messages": [msg.dict() for msg in messages]},
     )
 
     async with aiohttp.ClientSession() as session:
@@ -52,16 +49,18 @@ def _convert_history(history: OrderedDict[str, str]) -> List[UserMessage]:
     return result
 
 
-async def start_chat(vk_id: int, redis: ChatGptREDIS, conversation_opener: str = None) -> Optional[str]:
+async def start_chat(
+    vk_id: int, redis: ChatGptREDIS, conversation_opener: str = None,
+) -> Optional[str]:
     history = await redis.get_history(vk_id=vk_id)
     if history:
         return None
 
-    resp = await _send_request([UserMessage(role='system', content=initial_system_message)])
+    resp = await _send_request([UserMessage(role="system", content=initial_system_message)])
     await _save_response(vk_id=vk_id, reply=resp, redis=redis, prompt="initial")
 
     message = conversation_opener or "Привет"
-    resp = await _send_request([UserMessage(role='user', content=message)])
+    resp = await _send_request([UserMessage(role="user", content=message)])
     message = await _save_response(vk_id=vk_id, prompt=message, reply=resp, redis=redis)
     return message
 
@@ -73,7 +72,7 @@ async def send_message(vk_id: int, message: str) -> str:
 
     history_raw = await redis.get_history(vk_id=vk_id)
     history = _convert_history(history=history_raw)
-    history.append(UserMessage(role='user', content=message))
+    history.append(UserMessage(role="user", content=message))
 
     resp = await _send_request(history)
     message = await _save_response(vk_id=vk_id, prompt=message, reply=resp, redis=redis)

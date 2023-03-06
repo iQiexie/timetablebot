@@ -50,11 +50,36 @@ class UserCRUD(BaseCRUD[User]):
         return query.scalar_one_or_none()
 
     async def get_usercount_by_grade(self) -> RowMapping:
-        first_grade = select(func.count()).select_from(User).where(and_(User.group_index > 100, User.group_index < 200)).label('Первый курс')
-        second_grade = select(func.count()).select_from(User).where(and_(User.group_index > 200, User.group_index < 300)).label('Второй курс')
-        third_grade = select(func.count()).select_from(User).where(and_(User.group_index > 300, User.group_index < 400)).label('Третий курс')
-        fourth_grade = select(func.count()).select_from(User).where(and_(User.group_index > 400, User.group_index < 500)).label('Четвёртый курс')
-        fifth_grade = select(func.count()).select_from(User).where(and_(User.group_index > 500, User.group_index < 600)).label('Пятый курс')
+        first_grade = (
+            select(func.count())
+            .select_from(User)
+            .where(and_(User.group_index > 100, User.group_index < 200))
+            .label("Первый курс")
+        )
+        second_grade = (
+            select(func.count())
+            .select_from(User)
+            .where(and_(User.group_index > 200, User.group_index < 300))
+            .label("Второй курс")
+        )
+        third_grade = (
+            select(func.count())
+            .select_from(User)
+            .where(and_(User.group_index > 300, User.group_index < 400))
+            .label("Третий курс")
+        )
+        fourth_grade = (
+            select(func.count())
+            .select_from(User)
+            .where(and_(User.group_index > 400, User.group_index < 500))
+            .label("Четвёртый курс")
+        )
+        fifth_grade = (
+            select(func.count())
+            .select_from(User)
+            .where(and_(User.group_index > 500, User.group_index < 600))
+            .label("Пятый курс")
+        )
 
         stmt = select(first_grade, second_grade, third_grade, fourth_grade, fifth_grade)
         query = await self.session.execute(stmt)
