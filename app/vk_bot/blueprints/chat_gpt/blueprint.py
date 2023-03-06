@@ -26,9 +26,13 @@ async def start_chat_gpt(message: Message, user: UserSchema):
         hello_text,
         keyboard=get_gpt_keyboard(state=ChatGptStates.WAITING_FOR_ANSWER),
     )
-    result = await start_chat(
-        vk_id=int(user.vk_id), redis=redis, conversation_opener=f"Привет! Меня зовут {name}"
-    )
+
+    try:
+        result = await start_chat(
+            vk_id=int(user.vk_id), redis=redis, conversation_opener=f"Привет! Меня зовут {name}"
+        )
+    except Exception as e:
+        result = str(e)
 
     answer = result or "Чем могу помочь?"
 
@@ -45,5 +49,9 @@ async def stop_chat_gpt(message: Message, user: UserSchema):
 @blueprint.on.message(state=ChatGptStates.CHATTING)
 async def chat(message: Message, user: UserSchema):
     await message.answer(dummy_answer, keyboard=get_gpt_keyboard(ChatGptStates.WAITING_FOR_ANSWER))
-    response = await send_message(vk_id=int(user.vk_id), message=message.text)
+
+    try:
+        response = await send_message(vk_id=int(user.vk_id), message=message.text)
+    except Exception as e:
+        response = str(e)
     await message.answer(response, keyboard=get_gpt_keyboard(ChatGptStates.CHATTING))
