@@ -1,5 +1,5 @@
 from vkbottle.bot import Blueprint, Message
-
+import traceback
 from app.backend.handlers.users.schemes import UserSchema
 from app.vk_bot.keyboards.change_group import change_group_keyboard
 from app.vk_bot.keyboards.menu import menu_keyboard
@@ -35,6 +35,6 @@ async def hello_handler(message: Message = None, user: UserSchema = None):
     try:
         await blueprint.state_dispenser.delete(message.peer_id)
     except Exception as e:
-        await message.answer(message=str(e), keyboard=menu_keyboard)
+        traceback.print_exc()
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=menu_keyboard)
