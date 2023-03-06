@@ -15,7 +15,7 @@ statistics_keyboard.add(
     color=KeyboardButtonColor.PRIMARY,
 )
 statistics_keyboard.add(
-    Text("🎓 Группам", payload={"cmd": "group_usercount"}),
+    Text("🎓 По Группам", payload={"cmd": "group_usercount"}),
     color=KeyboardButtonColor.PRIMARY,
 )
 statistics_keyboard.row()

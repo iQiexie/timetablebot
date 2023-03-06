@@ -13,13 +13,15 @@ class Settings(BaseSettings):
 
     REDIS_HOST: str = Field(default="localhost")
     REDIS_PORT: str = Field(default="6379")
-    REDIS_CREDS_DB: str = Field(default="0")
-    REDIS_CLS_DB: str = Field(default="1")
     REDIS_SEP: str = Field(default=":")
     REDIS_PASSWORD: str = Field(default="root")
+    REDIS_CREDS_DB: str = Field(default="0")
+    REDIS_CLS_DB: str = Field(default="1")
+    REDIS_GTP_DB: str = Field(default="2")
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
+    CHAT_GPT_TOKEN: str
 
     VK_DOMASHKA_TOKEN: str
     VK_RASPISANIE_TOKEN: str
