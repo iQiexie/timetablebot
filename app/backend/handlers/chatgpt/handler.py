@@ -30,11 +30,21 @@ async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
             try:
                 response = ChatGPTResponse.parse_obj(resp_json)
             except Exception:
-                response_txt = (
-                    f"{resp_json=}\n\nК сожалению, ChatGPT не смог ответить на твой запрос. "
-                    f"Попробуй отправить его снова. Прости за неудобства. "
-                    f"Эта фича находится ещё в бете"
-                )
+                message = resp_json.get("error", resp_json).get('message', resp_json)
+
+                if 'Rate limit reached' in message:
+                    response_txt = (
+                        "К сожалению, ChatGPT не может сейчас выполнить твой запрос. "
+                        "На текущий момент для этого бота действует ограничение в 20 запросов в "
+                        "минуту. Я работаю над его обходом.\n\n"
+                        "Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
+                    )
+                else:
+                    response_txt = (
+                        f"{resp_json=}\n\nК сожалению, ChatGPT не смог ответить на твой запрос. "
+                        f"Попробуй отправить его снова. Прости за неудобства. "
+                        f"Эта фича находится ещё в бете"
+                    )
 
                 response = ChatGPTResponse(
                     id='1',

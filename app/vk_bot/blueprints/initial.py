@@ -32,4 +32,9 @@ async def hello_handler(message: Message = None, user: UserSchema = None):
         )
         await message.answer(answer_message, keyboard=change_group_keyboard)
 
+    try:
+        await blueprint.state_dispenser.delete(message.peer_id)
+    except Exception as e:
+        await message.answer(message=str(e), keyboard=menu_keyboard)
+
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=menu_keyboard)
