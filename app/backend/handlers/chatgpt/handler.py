@@ -5,6 +5,7 @@ from typing import Optional
 import aiohttp
 
 from app.backend.handlers.chatgpt.redis import ChatGptREDIS
+from app.backend.handlers.chatgpt.schemes import ChatGPTChoice
 from app.backend.handlers.chatgpt.schemes import ChatGPTResponse
 from app.backend.handlers.chatgpt.schemes import UserMessage
 from app.backend.handlers.chatgpt.strings import initial_system_message
@@ -25,7 +26,25 @@ async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
 
     async with aiohttp.ClientSession() as session:
         async with session.post(**payload) as resp:
-            return ChatGPTResponse.parse_obj(await resp.json())
+            resp_json = await resp.json()
+            try:
+                response = ChatGPTResponse.parse_obj(resp_json)
+            except Exception:
+                response_txt = (
+                    f"{resp_json=}\n\nК сожалению, ChatGPT не смог ответить на твой запрос. "
+                    f"Попробуй отправить его снова. Прости за неудобства. "
+                    f"Эта фича находится ещё в бете"
+                )
+
+                response = ChatGPTResponse(
+                    id='1',
+                    object="test",
+                    created=1,
+                    model="mdoel",
+                    choices=[ChatGPTChoice(message=UserMessage(role="assistant", content=response_txt))]
+                )
+
+        return response
 
 
 async def _save_response(vk_id: int, prompt: str, reply: ChatGPTResponse, redis: ChatGptREDIS):

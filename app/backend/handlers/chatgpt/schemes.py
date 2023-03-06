@@ -30,5 +30,5 @@ class ChatGPTResponse(BaseModel):
     object: str
     created: int
     model: str
-    usage: ChatGPTUsageData
+    usage: Optional[ChatGPTUsageData]
     choices: List[ChatGPTChoice]
