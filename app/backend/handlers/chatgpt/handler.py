@@ -12,6 +12,36 @@ from app.backend.handlers.chatgpt.strings import initial_system_message
 from config import settings
 
 
+def _translate_errors(message: str) -> ChatGPTResponse:
+    if 'Rate limit reached' in message:
+        response_txt = (
+            "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
+            "На текущий момент для этого бота действует ограничение в 20 запросов в "
+            "минуту. Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
+        )
+    elif "This model's maximum context length" in message:
+        response_txt = (
+            "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
+            "Сообщение, которое сгенерировал ChatGPT оказалось слишком длинным( "
+            "Попробуй спросить у него что-нибудь другое или переформулировать запрос"
+        )
+    else:
+        response_txt = (
+            "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
+            f'Причина: {message}'
+        )
+
+    return ChatGPTResponse(
+                    id='1',
+                    object="test",
+                    created=1,
+                    model="mdoel",
+                    choices=[
+                        ChatGPTChoice(message=UserMessage(role="assistant", content=response_txt))
+                    ]
+                )
+
+
 async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
     headers = {
         "Content-Type": "application/json",
@@ -29,30 +59,9 @@ async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
             resp_json = await resp.json()
             try:
                 response = ChatGPTResponse.parse_obj(resp_json)
-            except Exception:
+            except:  # noqa
                 message = resp_json.get("error", resp_json).get('message', resp_json)
-
-                if 'Rate limit reached' in message:
-                    response_txt = (
-                        "К сожалению, ChatGPT не может сейчас выполнить твой запрос. "
-                        "На текущий момент для этого бота действует ограничение в 20 запросов в "
-                        "минуту. Я работаю над его обходом.\n\n"
-                        "Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
-                    )
-                else:
-                    response_txt = (
-                        f"{resp_json=}\n\nК сожалению, ChatGPT не смог ответить на твой запрос. "
-                        f"Попробуй отправить его снова. Прости за неудобства. "
-                        f"Эта фича находится ещё в бете"
-                    )
-
-                response = ChatGPTResponse(
-                    id='1',
-                    object="test",
-                    created=1,
-                    model="mdoel",
-                    choices=[ChatGPTChoice(message=UserMessage(role="assistant", content=response_txt))]
-                )
+                response = _translate_errors(message=message)
 
         return response
 
