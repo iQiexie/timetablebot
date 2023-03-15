@@ -23,7 +23,9 @@ def _translate_errors(message: str) -> ChatGPTResponse:
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
             "Сообщение, которое сгенерировал ChatGPT оказалось слишком длинным( "
-            "Попробуй спросить у него что-нибудь другое или переформулировать запрос"
+            "Попробуй спросить у него что-нибудь другое или переформулировать запрос\n\n"
+            "Такое часто случается из-за долгого диалога с ChatGPT. Попробуй удалить диалог, нажав "
+            "на соответствующую кнопочку в меню"
         )
     else:
         response_txt = (
@@ -85,6 +87,11 @@ def _convert_history(history: OrderedDict[str, str]) -> List[UserMessage]:
         result.append(UserMessage(role=role, content=message))
 
     return result
+
+
+async def delete_context(vk_id: int):
+    redis = ChatGptREDIS()
+    await redis.delete_history(vk_id=vk_id)
 
 
 async def start_chat(

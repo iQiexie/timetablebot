@@ -1,5 +1,5 @@
 import collections
-from datetime import datetime
+
 import aioredis
 
 from app.backend.redis.base_redis import BaseRedis
@@ -31,3 +31,8 @@ class ChatGptREDIS(BaseRedis):
         r = await self.get_partial_match(key_pattern=f"{vk_id}:INDEX")
         od = collections.OrderedDict(sorted(r.items()))
         return od
+
+    async def delete_history(self, vk_id: int):
+        keys = await self.session.keys(f"{vk_id}:*")
+        if keys:
+            await self.session.delete(*keys)
