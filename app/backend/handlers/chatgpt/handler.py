@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from enum import Enum
 from typing import List
 from typing import Optional
 
@@ -12,14 +13,21 @@ from app.backend.handlers.chatgpt.strings import initial_system_message
 from config import settings
 
 
+class TranslationStatusesEnum(str, Enum):
+    default = 'test'
+    context_length = 'context_length'
+
+
 def _translate_errors(message: str) -> ChatGPTResponse:
     if 'Rate limit reached' in message:
+        status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
             "На текущий момент для этого бота действует ограничение в 20 запросов в "
             "минуту. Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
         )
     elif "This model's maximum context length" in message:
+        status = TranslationStatusesEnum.context_length
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
             "Сообщение, которое сгенерировал ChatGPT оказалось слишком длинным( "
@@ -28,6 +36,7 @@ def _translate_errors(message: str) -> ChatGPTResponse:
             "на соответствующую кнопочку в меню"
         )
     else:
+        status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
             f'Причина: {message}'
@@ -35,7 +44,7 @@ def _translate_errors(message: str) -> ChatGPTResponse:
 
     return ChatGPTResponse(
                     id='1',
-                    object="test",
+                    object=status,
                     created=1,
                     model="mdoel",
                     choices=[
@@ -122,5 +131,10 @@ async def send_message(vk_id: int, message: str) -> str:
     history.append(UserMessage(role="user", content=message))
 
     resp = await _send_request(history)
+
+    if resp.object == TranslationStatusesEnum.context_length:
+        await delete_context(vk_id=vk_id)
+        return await send_message(vk_id=vk_id, message=message)
+
     message = await _save_response(vk_id=vk_id, prompt=message, reply=resp, redis=redis)
     return message

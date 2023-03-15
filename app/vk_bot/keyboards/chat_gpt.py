@@ -35,7 +35,7 @@ def get_gpt_keyboard(state: ChatGptStates):
     )
     gpt_keyboard.row()
     gpt_keyboard.add(
-        Text("🗑 Удалить диалог c ChatGPT", {"cmd": "gpt delete"}),
+        Text("🗑 Забыть диалог c ChatGPT", {"cmd": "gpt delete"}),
         KeyboardButtonColor.PRIMARY,
     )
     gpt_keyboard.row()
