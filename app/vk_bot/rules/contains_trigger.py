@@ -25,6 +25,6 @@ class ContainsTriggerRule(ABCRule[BaseMessageMin]):
 
         payload = event.payload or json.dumps({"cmd": "NoneDefault"})
         for payload_trigger in self.payload_triggers:
-            cmd = json.loads(payload).get("cmd")
+            cmd = json.loads(payload).get("cmd") or "NoneDefault"
             if cmd.startswith(payload_trigger):
                 return True
