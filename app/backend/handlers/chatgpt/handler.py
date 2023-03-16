@@ -19,7 +19,7 @@ class TranslationStatusesEnum(str, Enum):
 
 
 def _translate_errors(message: str) -> ChatGPTResponse:
-    if 'Rate limit reached' in message:
+    if 'Rate limit reached' in message or 'That model is currently overloaded with' in message:
         status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
