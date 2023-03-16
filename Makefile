@@ -30,5 +30,3 @@ stop:
 	docker-compose -f $(COMPOSE_FILE_LOCAL) down
 actualize:
 	ROUTINE=ACTUALIZE ENV_FILE=$(ENV_FILE_LOCAL) python main.py
-report:
-	ROUTINE=REPORT ENV_FILE=$(ENV_FILE_LOCAL) python main.py

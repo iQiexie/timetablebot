@@ -15,12 +15,12 @@ https://vk.com/mpsu_schedule
 
 ## Deploy
 
-Сначала создаём файлики: `.env`, `.env.local` и прописываем там всё в соответствии с `.env.example`
+Сначала создаём файлики: `deploy/.env`, `deploy/.env.local` и прописываем там всё в соответствии с `deploy/.env.example`
 
 ### Первый раз:
 
-1. Запускаем приложуху `make deploy`
-2. Обновляем пары вручную `docker exec -t -e ENV_LOC=deploy/.env -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
+1. Запускаем приложение `make deploy`
+2. Обновляем пары вручную `docker exec -t -e ENV_FILE=deploy/.env -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
 3. Переходим по ссылке из логов и входим в свой гугл аккаунт
 4. Копируем юрл из браузера, на которую нас перекинуло
 5. Открываем новый терминал и запускаем команду `docker exec -t timetablebot-python curl "скопированный юрл"` (ЮРЛ ВСТАВЛЯЕМ ВНУТРИ КАВЫЧЕК!)
@@ -29,7 +29,7 @@ https://vk.com/mpsu_schedule
 
 ### Сдедующие запуски:
 
-1. Запускаем приложуху `make deploy`
+1. Запускаем приложение `make deploy`
 
 
 ## Contribute
@@ -54,6 +54,4 @@ https://vk.com/mpsu_schedule
 ## TODO:
 
 - [ ] CI/CD
-- [ ] Dockerize crotab
-- [ ] Different docker filed for prod and dev
-- [ ] prod and local envs, remove routine envs
+- [ ] Парсинг для учителей
