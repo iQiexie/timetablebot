@@ -19,12 +19,19 @@ class TranslationStatusesEnum(str, Enum):
 
 
 def _translate_errors(message: str) -> ChatGPTResponse:
-    if 'Rate limit reached' in message or 'That model is currently overloaded with' in message:
+    if 'Rate limit reached' in message:
         status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
             "На текущий момент для этого бота действует ограничение в 20 запросов в "
             "минуту. Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
+        )
+    elif 'That model is currently overloaded with other requests' in message:
+        status = TranslationStatusesEnum.default
+        response_txt = (
+            "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
+            "Сервера компании OpenAI (которая создала ChatGPT) на данный момент, к сожалению, "
+            "перегружены. Попробуй повторить свой запрос позже, минут через 30-40"
         )
     elif "This model's maximum context length" in message:
         status = TranslationStatusesEnum.context_length
@@ -122,6 +129,7 @@ async def start_chat(
 
 
 async def send_message(vk_id: int, message: str) -> str:
+    print(f'Sending to ChatGPT message: {message}')
     redis = ChatGptREDIS()
     if initial := await start_chat(vk_id=vk_id, redis=redis):
         return initial
