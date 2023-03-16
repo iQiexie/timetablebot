@@ -31,7 +31,7 @@ def _translate_errors(message: str) -> ChatGPTResponse:
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
             "Сервера компании OpenAI (которая создала ChatGPT) на данный момент, к сожалению, "
-            "перегружены. Попробуй повторить свой запрос позже, минут через 30-40"
+            "перегружены. Попробуй повторить свой запрос позже, минут через 5-10"
         )
     elif "This model's maximum context length" in message:
         status = TranslationStatusesEnum.context_length
