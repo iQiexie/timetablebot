@@ -33,6 +33,7 @@ async def hello_handler(message: Message = None, user: UserSchema = None):
         await message.answer(answer_message, keyboard=change_group_keyboard)
 
     try:
+        print(f"\n\n{await blueprint.state_dispenser.get(message.peer_id)=}\n\n")
         await blueprint.state_dispenser.delete(message.peer_id)
     except Exception as e:
         traceback.print_exc()

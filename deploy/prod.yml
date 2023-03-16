@@ -1,0 +1,47 @@
+version: "3"
+
+services:
+  timetable-postgres:
+    image: "postgres:13"
+    container_name: timetable-postgres-prod
+    env_file:
+      - .env
+    volumes:
+      - ../data/postgres_prod:/var/lib/postgresql/data
+    restart: always
+    ports:
+      - "5432:5432"
+    logging:
+     driver: "json-file"
+     options:
+       max-size: "100m"
+
+  timetable-redis:
+    image: redis:alpine
+    container_name: timetable-redis-prod
+    env_file:
+      - .env
+    command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../data/redis_prod:/data
+    logging:
+     driver: "json-file"
+     options:
+       max-size: "100m"
+
+  timetablebot-python:
+    build: ..  # relative path to Dockerfile in the parent directory
+    container_name: timetablebot-python
+    command: >
+      sh -c "service cron start && alembic upgrade head && python main.py"
+    env_file:
+      - .env
+    depends_on:
+      - timetable-postgres
+      - timetable-redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"

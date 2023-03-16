@@ -15,25 +15,21 @@ https://vk.com/mpsu_schedule
 
 ## Deploy
 
-Сначала создаём файлики: `.env`, `.env.routine` и прописываем там всё в соответствии с `.env.example`
-
-Главное отличие `.env` от `.env.routine` в том, что в `.env.routine` - IP бд (localhost), а в `.env` - названия контейнеров (timetable-postgres) 
+Сначала создаём файлики: `.env`, `.env.local` и прописываем там всё в соответствии с `.env.example`
 
 ### Первый раз:
 
 1. Запускаем приложуху `make deploy`
-2. Обновляем пары вручную `docker exec -t -e ENV_LOC=.env.routine -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
+2. Обновляем пары вручную `docker exec -t -e ENV_LOC=deploy/.env -e ROUTINE=ACTUALIZE timetablebot-python python main.py`
 3. Переходим по ссылке из логов и входим в свой гугл аккаунт
 4. Копируем юрл из браузера, на которую нас перекинуло
 5. Открываем новый терминал и запускаем команду `docker exec -t timetablebot-python curl "скопированный юрл"` (ЮРЛ ВСТАВЛЯЕМ ВНУТРИ КАВЫЧЕК!)
 6. Переходим в первый терминал и убеждаемся, что парсинг выполнился
-7. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
 
 
 ### Сдедующие запуски:
 
 1. Запускаем приложуху `make deploy`
-2. Настраиваем рутины `echo "$(cat crontab)" | crontab -`
 
 
 ## Contribute
@@ -46,12 +42,14 @@ https://vk.com/mpsu_schedule
 
 Новые ВК клавиатуры должны быть импортированы тут `app.vk_bot.keyboards.__init.py`
 
-Обновляем пары вручную `ENV_LOC=.env.routine ROUTINE=ACTUALIZE python main.py`
+Обновляем пары вручную `make actualize`
 
+Запускаем локально: `make run`
 
-- `.env` - production envs
-- `.env.local` - local envs for development
-- `.env.routine` - envs for cron on production server
+Останавливаем локально: `make stop`
+
+- `.env` - продовые переменные окружения
+- `.env.local` - переменные окружения для разработки
 
 ## TODO:
 

@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     NOT_EXISTING_GROUPS: list[int] = Field(default=[310, 127])
 
     class Config:
-        env_file = os.getenv("ENV_LOC", ".env")
+        env_file = os.getenv("ENV_FILE", "deploy/.env")
         env_file_encoding = "utf-8"
 
     @property

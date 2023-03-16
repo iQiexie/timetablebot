@@ -5,9 +5,11 @@ services:
     image: "postgres:13"
     container_name: timetable-postgres
     env_file:
-      - ENV_FILE_PLACEHOLDER
+      - .env.local
+    environment:
+      PGDATA: /var/lib/postgresql/data
     volumes:
-      - ./data/postgres:/var/lib/postgresql/data
+      - ../data/postgres:/var/lib/postgresql/data
     restart: always
     ports:
       - "5432:5432"
@@ -20,12 +22,12 @@ services:
     image: redis:alpine
     container_name: timetable-redis
     env_file:
-      - ENV_FILE_PLACEHOLDER
+      - .env.local
     command: redis-server --appendonly yes --requirepass "${REDIS_PASSWORD}"
     ports:
       - "6379:6379"
     volumes:
-      - ./data/redis:/data
+      - ../data/redis:/data
     logging:
      driver: "json-file"
      options:

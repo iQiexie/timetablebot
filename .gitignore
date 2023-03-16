@@ -1,7 +1,7 @@
 .idea
-.env
+deploy/.env
 .venv
-.env.local
+deploy/.env.local
 .env.routine
 .pyc
 __pycache__
@@ -9,5 +9,5 @@ __pycache__
 files/*
 test.py
 data
-deploy/.env
-deploy/.env.local
+./deploy/.env
+./deploy/.env.local

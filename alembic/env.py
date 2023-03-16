@@ -1,7 +1,10 @@
 from logging.config import fileConfig
+from time import sleep
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+from sqlalchemy.exc import OperationalError
+
 from app.backend.db import Base
 from alembic import context
 
@@ -66,16 +69,21 @@ def run_migrations_online() -> None:
         poolclass=pool.NullPool,
     )
 
-    with connectable.connect() as connection:
-        context.configure(
-            connection=connection,
-            target_metadata=target_metadata,
-            compare_type=True,
-            file_template="%%(year)s_%%(month)02d_%%(day)02d_%%(hour)02d%%(minute)02d_%%(slug)s",
-        )
+    try:
+        with connectable.connect() as connection:
+            context.configure(
+                connection=connection,
+                target_metadata=target_metadata,
+                compare_type=True,
+                file_template="%%(year)s_%%(month)02d_%%(day)02d_%%(hour)02d%%(minute)02d_%%(slug)s",
+            )
 
-        with context.begin_transaction():
-            context.run_migrations()
+            with context.begin_transaction():
+                context.run_migrations()
+    except OperationalError:
+        print(f'Cannot connect to database, retrying connection url={settings.POSTGRES_URL}')
+        sleep(3)
+        run_migrations_online()
 
 
 if context.is_offline_mode():
