@@ -9,4 +9,5 @@ __pycache__
 files/*
 test.py
 data
-prod.yml
+deploy/.env
+deploy/.env.local
