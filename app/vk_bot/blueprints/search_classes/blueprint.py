@@ -57,14 +57,14 @@ async def tomorrow_classes_filter(message: Message, user: UserSchema):
 async def find_by_week_day(message: Message, user: UserSchema):
     """Отправляет пары по указанному дню недели"""
 
-    if not await group_index_set(message=message, user=user):
-        return
-
     payload = json.loads(message.payload)
     next_week = payload.get("next")
     searching_week_day = payload.get("day")
     pattern = payload.get("match")
     current_week_day = datetime.now().isocalendar().weekday
+
+    if not pattern and not await group_index_set(message=message, user=user):
+        return
 
     if searching_week_day == current_week_day:
         delta = 0
@@ -90,8 +90,8 @@ async def find_by_week_day(message: Message, user: UserSchema):
 async def pattern_search(message: Message):
     greeting = (
         "Добро пожаловать в поиск по шаблону. В этом разделе можно найти все пары, "
-        "в тексте которых содержится твой запрос (шаблон) \n\n"
-        "Например, если ты напишешь имя (или чать имени) преподавателя, а бот отправит тебе его "
+        "в названии которых содержится твой запрос (шаблон) \n\n"
+        "Например, если ты напишешь имя (или часть имени) преподавателя, то бот отправит тебе его "
         "расписание"
     )
 
