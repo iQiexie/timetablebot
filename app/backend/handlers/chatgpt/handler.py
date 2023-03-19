@@ -78,6 +78,7 @@ async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
                 message = resp_json.get("error", resp_json).get("message", resp_json)
                 response = _translate_errors(message=message)
 
+        print(f'Got response from ChatGPT: {response}')
         return response
 
 
