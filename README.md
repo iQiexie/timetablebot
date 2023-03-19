@@ -40,9 +40,7 @@ https://vk.com/mpsu_schedule
 
 Новые ВК блупринты должны быть импортированы тут `app.vk_bot.blueprints.__init__.py`
 
-Новые ВК клавиатуры должны быть импортированы тут `app.vk_bot.keyboards.__init.py`
-
-Обновляем пары вручную `make actualize`
+Обновляем пары вручную (локально) `make actualize`
 
 Запускаем локально: `make run`
 
@@ -54,5 +52,8 @@ https://vk.com/mpsu_schedule
 ## TODO:
 
 - [ ] CI/CD
-- [ ] Парсинг для учителей
 - [ ] Сделать так, чтобы сообщения от ChatGPT присылались как сообщение-ответ (с ссылкой на промпт)
+- [ ] Нормальная рассылка новостей
+- [ ] Пофиксить баг с ```2023-03-16 17:50:19.184 UTC [312] FATAL:  password authentication failed for user "postgres"
+2023-03-16 17:50:19.184 UTC [312] DETAIL:  Password does not match for user "postgres".
+        Connection matched pg_hba.conf line 99: "host all all all md5"``` при `make deploy` 

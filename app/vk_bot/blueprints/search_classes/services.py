@@ -5,7 +5,6 @@ from vkbottle.bot import Message
 from app.backend.handlers.classes.enums import LinePositionEnum
 from app.backend.handlers.classes.enums import WEEK_DAYS_NUMBERED
 from app.backend.handlers.classes.enums import WeekDaysEnum
-from app.backend.handlers.classes.handler import find_by_value
 from app.backend.handlers.classes.handler import find_day
 from app.backend.handlers.classes.handler import get_week_line_position
 from app.backend.handlers.users.schemes import UserSchema
