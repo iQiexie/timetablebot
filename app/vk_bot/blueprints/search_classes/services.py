@@ -5,8 +5,9 @@ from vkbottle.bot import Message
 from app.backend.handlers.classes.enums import LinePositionEnum
 from app.backend.handlers.classes.enums import WEEK_DAYS_NUMBERED
 from app.backend.handlers.classes.enums import WeekDaysEnum
-from app.backend.handlers.classes.main import find_day
-from app.backend.handlers.classes.main import get_week_line_position
+from app.backend.handlers.classes.handler import find_by_value
+from app.backend.handlers.classes.handler import find_day
+from app.backend.handlers.classes.handler import get_week_line_position
 from app.backend.handlers.users.schemes import UserSchema
 from app.vk_bot.keyboards.change_group import change_group_keyboard
 
@@ -42,6 +43,7 @@ def compose_header(
 async def compose_classes(
     group_index: str,
     searching_date: datetime,
+    pattern: str = None,
 ):
     week_day_index = searching_date.isocalendar().weekday  # пор. номер искомого дня недели
     week_index = searching_date.isocalendar().week  # порядковый номер искомой недели
@@ -52,6 +54,7 @@ async def compose_classes(
         group_number=group_index,
         week_day=week_day,
         line_position=line_position,
+        pattern=pattern
     )
 
     header = compose_header(
@@ -61,4 +64,9 @@ async def compose_classes(
         date=searching_date,
     )
 
-    return f"{header}\n\n{classes}\n{header}"
+    result = f"{header}\n\n{classes}\n{header}"
+
+    if pattern:
+        result += f'\n\n\nВнимание! Это результат поиска по запросу "{pattern}"'
+
+    return result

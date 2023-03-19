@@ -1,5 +1,5 @@
 from app.backend.db.deps import async_session
-from app.backend.handlers.classes.main import update_classes
+from app.backend.handlers.classes.handler import update_classes
 from app.backend.handlers.users.crud import UserCRUD
 
 

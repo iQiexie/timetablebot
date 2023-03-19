@@ -33,13 +33,12 @@ async def find_day(
     week_day: Optional[WeekDaysEnum] = None,
     line_position: Optional[LinePositionEnum] = None,
     searching_class: Optional[ClassesEnum] = None,
+    pattern: str = None,
 ) -> DaySchema:
     """searching_class returns whole DayScheme with only the required searching_class"""
 
     if not group_number.isdigit():
         raise AttributeError(f"group_number is not number: {group_number=}")
-
-    classes_redis = ClassesREDIS()
 
     if not week_day and (line_position or searching_class):
         raise ValueError("week_day must be specified")
@@ -47,9 +46,23 @@ async def find_day(
     if not line_position and searching_class:
         raise ValueError("line_position must be specified")
 
-    keys = [group_number, week_day, line_position, searching_class]
-    classes_query = compose_key(*filter(None, keys))
-    result = await classes_redis.get_partial_match(classes_query)
+    result = None
+    classes_redis = ClassesREDIS()
+
+    if not pattern:
+        keys = [group_number, week_day, line_position, searching_class]
+        classes_query = compose_key(*filter(None, keys))
+        result = await classes_redis.get_partial_match(classes_query)
+    if pattern:
+        keys = [week_day, line_position, searching_class]
+        classes_query = compose_key(*filter(None, keys))
+
+        result = dict(display_group=True)
+        classes = await classes_redis.get_by_value(pattern=pattern)
+
+        for key, value in classes.items():
+            if classes_query in key:
+                result[key] = value
 
     if not result:
         return DaySchema()
@@ -71,20 +84,7 @@ async def find_week(group_number: str, line_position: LinePositionEnum) -> List[
     return days
 
 
-"""
-Examples:
-1. Query week
+async def find_by_value(pattern: str):
+    classes_redis = ClassesREDIS()
+    return await classes_redis.get_by_value(pattern=pattern)
 
-res = await find_week(group_number='317', line_position=LinePositionEnum.BELOW)
-    for index, day in enumerate(res):
-        print(f'{index + 1}: {day}')
-        
-        
-2. Query specific day
-res = await find_day(
-    group_number='318',
-    week_day=WeekDaysEnum.THURSDAY,
-    line_position=LinePositionEnum.ABOVE,
-)
-
-"""

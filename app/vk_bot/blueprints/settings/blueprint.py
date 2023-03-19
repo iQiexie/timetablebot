@@ -4,7 +4,7 @@ from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
 from app.backend.db.deps import async_session
-from app.backend.handlers.classes.main import get_last_updated
+from app.backend.handlers.classes.handler import get_last_updated
 from app.backend.handlers.users.crud import UserCRUD
 from app.backend.handlers.users.schemes import UserSchema
 from app.vk_bot.blueprints.settings.states import ChangingGroupStates

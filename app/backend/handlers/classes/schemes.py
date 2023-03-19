@@ -24,21 +24,42 @@ DURATIONS_MAP = {
 # эти продолжительности ещё используются в app.backend.handlers.classes.enums
 
 
+class ClassSchema(BaseModel):
+    value: str
+    group: int
+    display_group: bool
+
+    def __str__(self):
+        if not self.display_group:
+            return self.value
+
+        return f'Группа: {self.group}\n\n{self.value}'
+
+
 class DaySchema(BaseModel):
-    first_class: Optional[str]
-    second_class: Optional[str]
-    third_class: Optional[str]
-    fourth_class: Optional[str]
-    fifth_class: Optional[str]
+    first_class: Optional[ClassSchema]
+    second_class: Optional[ClassSchema]
+    third_class: Optional[ClassSchema]
+    fourth_class: Optional[ClassSchema]
+    fifth_class: Optional[ClassSchema]
 
     @root_validator(pre=True)
     def parse_grades(cls, values: GetterDict):
         result = {}
+        display_group = values.get('display_group', False)
 
         for key, value in values.items():
+            values = key.split(":")
+            if len(values) != 5:  # if not redis key
+                continue
+
             group_number, week_day, line, duration, row = key.split(":")
             field = DURATIONS_MAP.get(duration)
-            result[field] = value
+            result[field] = ClassSchema(
+                value=value,
+                group=group_number,
+                display_group=display_group
+            )
 
         return result
 
