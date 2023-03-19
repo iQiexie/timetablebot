@@ -34,7 +34,7 @@ class ClassesREDIS(BaseRedis):
     async def get_by_value(self, pattern: str) -> dict[str, str]:
         key_value_pairs = dict()
 
-        keys = await self.session.keys(pattern='*')
+        keys = await self.session.keys(pattern="*")
         values = await self.session.mget(keys=[*keys])
         for key, value in zip(keys, values):
             if pattern.casefold() in value.casefold():

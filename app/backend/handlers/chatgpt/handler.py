@@ -14,19 +14,19 @@ from config import settings
 
 
 class TranslationStatusesEnum(str, Enum):
-    default = 'test'
-    context_length = 'context_length'
+    default = "test"
+    context_length = "context_length"
 
 
 def _translate_errors(message: str) -> ChatGPTResponse:
-    if 'Rate limit reached' in message:
+    if "Rate limit reached" in message:
         status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
             "На текущий момент для этого бота действует ограничение в 20 запросов в "
             "минуту. Попробуй подождать минуту и повторить запрос снова, спасибо за понимание"
         )
-    elif 'That model is currently overloaded with other requests' in message:
+    elif "That model is currently overloaded with other requests" in message:
         status = TranslationStatusesEnum.default
         response_txt = (
             "К сожалению, ChatGPT не может сейчас выполнить твой запрос.\n\n"
@@ -45,19 +45,16 @@ def _translate_errors(message: str) -> ChatGPTResponse:
     else:
         status = TranslationStatusesEnum.default
         response_txt = (
-            "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n"
-            f'Причина: {message}'
+            "К сожалению, ChatGPT не может сейчас выполнить твой запрос. \n\n" f"Причина: {message}"
         )
 
     return ChatGPTResponse(
-                    id='1',
-                    object=status,
-                    created=1,
-                    model="mdoel",
-                    choices=[
-                        ChatGPTChoice(message=UserMessage(role="assistant", content=response_txt))
-                    ]
-                )
+        id="1",
+        object=status,
+        created=1,
+        model="mdoel",
+        choices=[ChatGPTChoice(message=UserMessage(role="assistant", content=response_txt))],
+    )
 
 
 async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
@@ -78,7 +75,7 @@ async def _send_request(messages: list[UserMessage]) -> ChatGPTResponse:
             try:
                 response = ChatGPTResponse.parse_obj(resp_json)
             except:  # noqa
-                message = resp_json.get("error", resp_json).get('message', resp_json)
+                message = resp_json.get("error", resp_json).get("message", resp_json)
                 response = _translate_errors(message=message)
 
         return response
@@ -129,7 +126,7 @@ async def start_chat(
 
 
 async def send_message(vk_id: int, message: str) -> str:
-    print(f'Sending to ChatGPT message: {message}')
+    print(f"Sending to ChatGPT message: {message}")
     redis = ChatGptREDIS()
     if initial := await start_chat(vk_id=vk_id, redis=redis):
         return initial

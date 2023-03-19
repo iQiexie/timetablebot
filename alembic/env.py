@@ -81,7 +81,7 @@ def run_migrations_online() -> None:
             with context.begin_transaction():
                 context.run_migrations()
     except OperationalError:
-        print(f'Cannot connect to database, retrying connection url={settings.POSTGRES_URL}')
+        print(f"Cannot connect to database, retrying connection url={settings.POSTGRES_URL}")
         sleep(3)
         run_migrations_online()
 

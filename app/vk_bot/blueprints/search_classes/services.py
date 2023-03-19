@@ -54,7 +54,7 @@ async def compose_classes(
         group_number=group_index,
         week_day=week_day,
         line_position=line_position,
-        pattern=pattern
+        pattern=pattern,
     )
 
     header = compose_header(

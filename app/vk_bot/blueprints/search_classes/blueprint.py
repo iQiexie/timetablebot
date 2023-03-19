@@ -96,14 +96,14 @@ async def pattern_search(message: Message):
     )
 
     await message.answer(greeting)
-    await message.answer('Напиши мне свой запрос, а потом выбери нужный день')
+    await message.answer("Напиши мне свой запрос, а потом выбери нужный день")
     await blueprint.state_dispenser.set(message.peer_id, ClassStates.WAITING_FOR_PATTERN)
 
 
 @blueprint.on.message(state=ClassStates.WAITING_FOR_PATTERN)
 async def search_by_pattern(message: Message):
     keyboard = compose_detailed_menu(pattern=message.text)
-    await message.answer('Готово, теперь выбери нужную неделю и день', keyboard=keyboard)
+    await message.answer("Готово, теперь выбери нужную неделю и день", keyboard=keyboard)
     await blueprint.state_dispenser.delete(message.peer_id)
 
 
@@ -125,7 +125,7 @@ async def day_selection(message: Message):
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["detailed"]))
 async def detailed_search(message: Message):
-    """ Отправляет клавиатуру с выбором недели и паттерн поиском """
+    """Отправляет клавиатуру с выбором недели и паттерн поиском"""
     payload = json.loads(message.payload)
     pattern = payload.get("match")
 

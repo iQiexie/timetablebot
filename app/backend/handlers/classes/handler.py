@@ -87,4 +87,3 @@ async def find_week(group_number: str, line_position: LinePositionEnum) -> List[
 async def find_by_value(pattern: str):
     classes_redis = ClassesREDIS()
     return await classes_redis.get_by_value(pattern=pattern)
-

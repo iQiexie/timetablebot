@@ -33,7 +33,7 @@ class ClassSchema(BaseModel):
         if not self.display_group:
             return self.value
 
-        return f'Группа: {self.group}\n\n{self.value}'
+        return f"Группа: {self.group}\n\n{self.value}"
 
 
 class DaySchema(BaseModel):
@@ -46,7 +46,7 @@ class DaySchema(BaseModel):
     @root_validator(pre=True)
     def parse_grades(cls, values: GetterDict):
         result = {}
-        display_group = values.get('display_group', False)
+        display_group = values.get("display_group", False)
 
         for key, value in values.items():
             values = key.split(":")
@@ -58,7 +58,7 @@ class DaySchema(BaseModel):
             result[field] = ClassSchema(
                 value=value,
                 group=group_number,
-                display_group=display_group
+                display_group=display_group,
             )
 
         return result
