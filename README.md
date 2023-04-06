@@ -34,6 +34,8 @@ https://vk.com/mpsu_schedule
 
 ## Contribute
 
+Устанавливаем пре-коммит хуки `pre-commit install`
+
 Новые БД модели должны быть импортированы тут `app.backend.db.__init__.py`  (Для совместимости с алембиком)
 
 Новые ВК мидлвари должны быть импортированы тут `app.vk_bot.middlewares.__init__.py`
