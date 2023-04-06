@@ -28,8 +28,8 @@ class ChatGptREDIS(BaseRedis):
         await pipeline.reset()
 
     async def get_history(self, vk_id: int):
-        r = await self.get_partial_match(key_pattern=f"{vk_id}:INDEX")
-        od = collections.OrderedDict(sorted(r.items()))
+        result = await self.get_partial_match(key_pattern=f"{vk_id}:INDEX")
+        od = collections.OrderedDict(sorted(result.items()))
         return od
 
     async def delete_history(self, vk_id: int):
