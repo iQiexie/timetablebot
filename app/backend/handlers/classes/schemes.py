@@ -12,7 +12,7 @@ DURATIONS_MAP = {
     "9.00-10.30": "first_class",
     "10.40-12.10": "second_class",
     "12.40-14.10": "third_class",
-    "14.20-16.00": "fourth_class",
+    "14.20-15.50": "fourth_class",
     "16.00-17-30": "fifth_class",
     "16.00-17.30": "fifth_class",
 }
