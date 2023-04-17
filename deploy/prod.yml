@@ -10,7 +10,7 @@ services:
       - ../data/postgres_prod:/var/lib/postgresql/data
     restart: always
     ports:
-      - "5432:5432"
+      - "2213:5432"
     logging:
      driver: "json-file"
      options:
