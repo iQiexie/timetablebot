@@ -5,7 +5,7 @@ class ClassesEnum(str, Enum):
     FIRST_CLASS = "9.00-10.30"
     SECOND_CLASS = "10.40-12.10"
     THIRD_CLASS = "12.40-14.10"
-    FOURTH_CLASS = "14.20-16.00"
+    FOURTH_CLASS = "14.20-15.00"
     FIFTH_CLASS = "16.00-17.30"
 
 
