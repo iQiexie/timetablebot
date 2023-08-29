@@ -30,7 +30,7 @@ class Settings(BaseSettings):
     VK_EMPTY_MESSAGE: str = Field(default=".")
 
     PRODUCTION: bool = Field(default=False)
-    NOT_EXISTING_GROUPS: list[int] = Field(default=[310, 127])
+    NOT_EXISTING_GROUPS: list[int] = Field(default=[410, 227])
 
     class Config:
         env_file = os.getenv("ENV_FILE", "deploy/.env")
