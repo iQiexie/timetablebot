@@ -16,7 +16,7 @@ migrations:
 migrate:
 	ENV_FILE=$(ENV_FILE_LOCAL) alembic upgrade head
 deploy:
-	docker-compose -f $(COMPOSE_FILE_PROD) --env-file $(ENV_FILE_PROD) up --build
+	docker-compose -f $(COMPOSE_FILE_PROD) --env-file $(ENV_FILE_PROD) up --build -d
 logs:
 	docker logs timetablebot-python -f
 run:
@@ -31,4 +31,4 @@ run:
 stop:
 	docker-compose -f $(COMPOSE_FILE_LOCAL) down
 actualize:
-	ROUTINE=ACTUALIZE ENV_FILE=$(ENV_FILE_LOCAL) python main.py
+	docker exec timetablebot-python ROUTINE=ACTUALIZE ENV_FILE=$(ENV_FILE_LOCAL) python main.py
