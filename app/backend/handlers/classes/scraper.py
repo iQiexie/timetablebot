@@ -51,9 +51,14 @@ async def scrape_spreadsheet() -> dict:
                 if column_value.upper() in week_days:
                     last_week_day = column_value.upper()
 
-                if column_value in durations:
-                    if column_value == "16.00-17-30":
-                        column_value = "16.00-17.30"
+                if column_value.replace(" ", "") in durations:
+                    column_value = column_value.replace(" ", "")
+                    column_value = {
+                        "16.00-17-30": "16.00-17.30",
+                        "17:00-18:30": "17.00-18.30",
+                        "18:40-20:10": "18.40-20.10",
+                    }.get(column_value, column_value)
+
                     last_duration = column_value
 
                 if column_value.upper() in line_positions:

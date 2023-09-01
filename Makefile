@@ -31,4 +31,4 @@ run:
 stop:
 	docker-compose -f $(COMPOSE_FILE_LOCAL) down
 actualize:
-	docker exec timetablebot-python ROUTINE=ACTUALIZE ENV_FILE=$(ENV_FILE_LOCAL) python main.py
+	ROUTINE=ACTUALIZE ENV_FILE=$(ENV_FILE_PROD) python main.py

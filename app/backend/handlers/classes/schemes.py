@@ -13,8 +13,12 @@ DURATIONS_MAP = {
     "10.40-12.10": "second_class",
     "12.40-14.10": "third_class",
     "14.20-16.00": "fourth_class",
-    "16.00-17-30": "fifth_class",
     "16.00-17.30": "fifth_class",
+    "17.00-18.30": "fifth_class2",
+    "18.40-20.10": "sixth_class",
+    "17:00-18:30": "fifth_class2",
+    "18:40-20:10": "sixth_class",
+    "16.00-17-30": "fifth_class",
 }
 
 
@@ -42,6 +46,8 @@ class DaySchema(BaseModel):
     third_class: Optional[ClassSchema]
     fourth_class: Optional[ClassSchema]
     fifth_class: Optional[ClassSchema]
+    fifth_class2: Optional[ClassSchema]
+    sixth_class: Optional[ClassSchema]
 
     @root_validator(pre=True)
     def parse_grades(cls, values: GetterDict):
@@ -67,7 +73,7 @@ class DaySchema(BaseModel):
         prettify = lambda x: x.replace("-", " - ").replace(".", ":")  # noqa
         wrap = lambda x: f"\n{x}\n" if x else ""  # noqa
 
-        return (
+        text = (
             f"[{prettify(ClassesEnum.FIRST_CLASS)}]:\n\n"
             f"{wrap(self.first_class)}\n\n"
             f"[{prettify(ClassesEnum.SECOND_CLASS)}]:\n\n"
@@ -79,6 +85,14 @@ class DaySchema(BaseModel):
             f"[{prettify(ClassesEnum.FIFTH_CLASS)}]:\n\n"
             f"{wrap(self.fifth_class)}\n"
         )
+
+        if self.fifth_class2:
+            text += f"[{prettify(ClassesEnum.FIFTH_CLASS2)}]:\n\n" f"{wrap(self.fifth_class2)}\n"
+
+        if self.sixth_class:
+            text += f"[{prettify(ClassesEnum.SIXTH_CLASS)}]:\n\n" f"{wrap(self.sixth_class)}\n"
+
+        return text
 
 
 class SheetUri(BaseModel):

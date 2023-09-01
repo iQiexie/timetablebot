@@ -7,6 +7,8 @@ class ClassesEnum(str, Enum):
     THIRD_CLASS = "12.40-14.10"
     FOURTH_CLASS = "14.20-16.00"
     FIFTH_CLASS = "16.00-17.30"
+    FIFTH_CLASS2 = "17:00-18:30"
+    SIXTH_CLASS = "18:40-20:10"
 
 
 class WeekDaysEnum(str, Enum):
