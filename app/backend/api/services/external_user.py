@@ -32,6 +32,14 @@ class ExternalUserService:
             )
 
             if existing_user:
+                existing_user = await self.repo.update_external_user(
+                    vk_id=data.vk_id,
+                    telegram_id=data.telegram_id,
+                    first_name=data.first_name,
+                    last_name=data.last_name,
+                    username=data.username,
+                )
+                await t.commit()
                 return existing_user
 
             result = await self.repo.create_external_user(
