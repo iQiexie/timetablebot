@@ -10,7 +10,7 @@ from config import settings
 
 security_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl=f"{settings.BACKEND_BASE_URL}/v1/security/token",
+    tokenUrl=f"{settings.BACKEND_BASE_URL_SWAGGER}/v1/security/token",
 )
 
 

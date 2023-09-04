@@ -28,3 +28,6 @@ class SheetRows(BaseModel):
 
 class Sheet(BaseModel):
     row_data: List[SheetRows] = Field(alias="rowData")
+
+    class Config:
+        allow_population_by_field_name = True

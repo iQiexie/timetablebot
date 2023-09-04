@@ -36,7 +36,7 @@ def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
         last_duration = None
         last_cords = None
 
-        for row_index, row in enumerate(sheet.rowData):
+        for row_index, row in enumerate(sheet.row_data):
             if not row.values:
                 continue
 

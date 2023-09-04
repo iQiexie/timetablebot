@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     ADMIN_SECRET_KEY: str
 
     BACKEND_BASE_URL: str
+    BACKEND_BASE_URL_SWAGGER: str
+
     JWT_SECRET: str
     SECRET_EXPIRATION_TIME: int
     SECRET_MEASUREMENT_UNIT: TimeMeasurementUnits
