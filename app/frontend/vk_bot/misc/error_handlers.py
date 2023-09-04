@@ -16,6 +16,5 @@ async def exc_handler_undefined(e: Exception, *args) -> None:
     tb_str = ";".join(traceback.format_exception(None, e, e.__traceback__))
     logging.info(tb_str)
 
-    if not settings.PRODUCTION:
-        if isinstance(middleware, BaseMiddleware):
-            await middleware.event.answer(tb_str)
+    if isinstance(middleware, BaseMiddleware):
+        await middleware.event.answer(tb_str)
