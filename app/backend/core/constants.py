@@ -1,0 +1,1 @@
+GRADE_RANGE = (1, 6)

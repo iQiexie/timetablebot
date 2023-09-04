@@ -1,0 +1,81 @@
+[tool.black]
+line-length = 119
+
+[tool.isort]
+profile = "black"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.ruff]
+select = [
+    "E", # pycodestyle (Error)
+    "W", # pycodestyle (Warning)
+    "F", # Pyflakes
+    "PL", # Pylint
+    "ANN", # flake8-annotations
+    "B", # flake8-bugbear
+    "ERA", # eradicate
+    "I", # isort
+    "ARG", # flake8-unused-arguments
+    "N", # pep8-naming,
+    "S", # flake8-bandit
+    "T20", # flake8-print
+    "Q", # flake8-quotes
+]
+line-length = 119
+ignore = [
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**kwargs`
+    "ANN101", # Missing type annotation for `self` in method
+    "ANN102", # Missing type annotation for `cls` in classmethod
+    "ANN204", # Missing return type annotation for special method
+    "ANN401", #  Dynamically typed expressions (typing.Any) are disallowed
+    "B008", # Do not perform function call in argument defaults
+    "B904", # Within an except clause, raise exceptions with `raise ... from err` or `raise ... from None`
+    "N818", # Exception name should be named with an Error suffix,
+    "PLR0911", # Too many return statements
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments to function call
+    "PLR0915", # Too many statements
+]
+exclude = [
+    "__pycache__",
+    ".git",
+    "test*.py",
+]
+target-version = "py310"
+
+[tool.ruff.per-file-ignores]
+"app/api/routes/*" = [
+    "ANN201", # Missing return type annotation for public function
+    "ANN202", # Missing return type annotation for private function
+]
+"app/api/dto/*" = [
+    "ANN001", # Missing type annotation for function argument
+    "N805", # First argument of a method should be named `self`
+    "N815", # Variable in class scope should not be mixedCase
+]
+"app/config/models.py" = [
+    "ANN001", # Missing type annotation for function argument
+    "N805", # First argument of a method should be named `self`
+    "N815", # Variable in class scope should not be mixedCase
+]
+"app/services/dto/*" = [
+    "ANN001", # Missing type annotation for function argument
+    "N805", # First argument of a method should be named `self`
+    "N815", # Variable in class scope should not be mixedCase
+]
+"app/db/models.py" = [
+    "N805", # First argument of a method should be named `self`
+]
+"migration/*models.py" = [
+    "ANN001", # Missing type annotation for function argument
+    "N805", # First argument of a method should be named `self`
+    "N815", # Variable in class scope should not be mixedCase
+]
+"pubsub/*models.py" = [
+    "ANN001", # Missing type annotation for function argument
+    "N805", # First argument of a method should be named `self`
+    "N815", # Variable in class scope should not be mixedCase
+]
+[tool.ruff.flake8-quotes]
+inline-quotes = "double"

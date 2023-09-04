@@ -1,43 +1,41 @@
 import os
+from enum import Enum
 
 from pydantic import BaseSettings
 from pydantic import Field
 
 
-class Settings(BaseSettings):
-    POSTGRES_USER: str = Field(default="root")
-    POSTGRES_PASSWORD: str = Field(default="root")
-    POSTGRES_SERVER: str = Field(default="localhost")
-    POSTGRES_PORT: str = Field(default="5432")
-    POSTGRES_DB: str = Field(default="db")
+class TimeMeasurementUnits(str, Enum):
+    days = "days"
+    seconds = "seconds"
+    microseconds = "microseconds"
+    milliseconds = "milliseconds"
+    minutes = "minutes"
+    hours = "hours"
+    weeks = "weeks"
 
-    REDIS_HOST: str = Field(default="localhost")
-    REDIS_PORT: str = Field(default="6379")
-    REDIS_SEP: str = Field(default=":")
-    REDIS_PASSWORD: str = Field(default="root")
-    REDIS_CREDS_DB: str = Field(default="0")
-    REDIS_CLS_DB: str = Field(default="1")
-    REDIS_GTP_DB: str = Field(default="2")
+
+class Settings(BaseSettings):
+    APP_TITLE: str
+    BACKEND_CORS_ORIGINS: list[str] = Field(default=["*"])
+    ADMIN_SECRET_KEY: str
+
+    TOKEN_URL: str
+    JWT_SECRET: str
+    SECRET_EXPIRATION_TIME: int
+    SECRET_MEASUREMENT_UNIT: TimeMeasurementUnits
+
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_SERVER: str
+    POSTGRES_PORT: str
+    POSTGRES_DB: str
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
-    CHAT_GPT_TOKEN: str
-
-    VK_DOMASHKA_TOKEN: str
-    VK_RASPISANIE_TOKEN: str
-    VK_KPKPKP_TOKEN: str
-    VK_ADMIN_IDS: list[int]
-    VK_EMPTY_MESSAGE: str = Field(default=".")
-
-    PRODUCTION: bool = Field(default=False)
-    NOT_EXISTING_GROUPS: list[int] = Field(default=[410, 227])
-
-    class Config:
-        env_file = os.getenv("ENV_FILE", "deploy/.env")
-        env_file_encoding = "utf-8"
 
     @property
-    def POSTGRES_URL(self):
+    def POSTGRES_URL(self) -> str:  # noqa
         return "postgresql://{}:{}@{}/{}".format(
             self.POSTGRES_USER,
             self.POSTGRES_PASSWORD,
@@ -46,7 +44,7 @@ class Settings(BaseSettings):
         )
 
     @property
-    def POSTGRES_URL_ASYNC(self):
+    def POSTGRES_URL_ASYNC(self) -> str:  # noqa
         return "postgresql+asyncpg://{}:{}@{}/{}".format(
             self.POSTGRES_USER,
             self.POSTGRES_PASSWORD,
@@ -54,9 +52,9 @@ class Settings(BaseSettings):
             self.POSTGRES_DB,
         )
 
-    @property
-    def REDIS_URL(self):
-        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/"
+    class Config:
+        env_file = os.getenv("ENV_FILE", ".env")
+        env_file_encoding = "utf-8"
 
 
 settings = Settings()

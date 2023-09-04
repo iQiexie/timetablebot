@@ -4,7 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-sqlalchemy = "*"
+sqlalchemy = "==1.4.48"
 aioredis = "*"
 gspread = "*"
 google-api-python-client = "*"
@@ -12,9 +12,15 @@ vkbottle = "*"
 asyncpg = "*"
 greenlet = "*"
 alembic = "*"
-pydantic = {extras = ["dotenv"], version = "*"}
+pydantic = {extras = ["dotenv"], version = "==1.10.4"}
 psycopg2 = "*"
 pre-commit = "*"
+python-jose = "*"
+passlib = "*"
+fastapi = "==0.101.0"
+uvicorn = "*"
+python-multipart = "*"
+bcrypt = "*"
 
 [dev-packages]
 
