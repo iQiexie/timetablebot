@@ -94,5 +94,4 @@ volumes:
 
 networks:
   timetable-network:
-    external:
-      name: timetable-network
+    external: true
