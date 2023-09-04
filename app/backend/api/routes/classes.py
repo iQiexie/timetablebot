@@ -98,4 +98,4 @@ async def get_last_updated_at(
     service: ClassesService = Depends(ClassesService),
 ) -> dict[str, datetime]:
     result = await service.get_last_update_time()
-    return {"last_update": result + timedelta(hours=3)}
+    return {"last_update": result}
