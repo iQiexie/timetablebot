@@ -3,6 +3,7 @@ from datetime import datetime
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
+from app.backend.db.models.action import ButtonsEnum
 from app.frontend.dto.user import CreateUser
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
@@ -31,14 +32,16 @@ async def settings_menu(message: Message, user: User) -> None:
     )
 
     await message.answer(message=text, keyboard=settings_keyboard)
+    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.settings)
 
 
 @blueprint.on.message(ContainsTriggerRule(CHANGE_GROUP_TRIGGERS, ["change group"]))
-async def ask_for_group_number(message: Message) -> None:
+async def ask_for_group_number(message: Message, user: User) -> None:
     state = ChangingGroupStates.PICKING_GROUP
 
     await blueprint.state_dispenser.set(message.peer_id, state)
     await message.answer("Напиши номер своей группы")
+    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.change_group)
 
 
 @blueprint.on.message(state=ChangingGroupStates.PICKING_GROUP)
@@ -76,15 +79,11 @@ async def group_picking_handler(message: Message) -> None:
 
 
 @blueprint.on.message(ContainsTriggerRule(["uptime"], ["uptime"]))
-async def uptime(message: Message) -> None:
+async def uptime(message: Message, user: User) -> None:
     date_str = await RequestClients.backend.get_last_updated_at()
     date_obj = datetime.fromisoformat(date_str)
     classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
     text = f"Расписание последний раз обновлялось в {classes_uptime}"
 
     await message.answer(message=text, keyboard=settings_keyboard)
-
-
-@blueprint.on.message(ContainsTriggerRule(payload_triggers=["toggle chatbot"]))
-async def toggle_chatbot(message: Message) -> None:
-    await message.answer(message="Виртуальный собеседник отдыхает", keyboard=settings_keyboard)
+    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.uptime)

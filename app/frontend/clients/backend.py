@@ -81,7 +81,12 @@ class BackendApi(BaseRequestsClient):
 
         await self._make_request(method="POST", url=url, data=data)
 
-    async def mark_action(self, button_name: str, vk_id: int, pattern: Optional[str]) -> None:
+    async def mark_action(
+        self,
+        button_name: str,
+        vk_id: int,
+        pattern: Optional[str] = None,
+    ) -> None:
         data = json.dumps({"button_name": button_name, "vk_id": vk_id, "pattern": pattern})
         url = "/v1/action/button"
 

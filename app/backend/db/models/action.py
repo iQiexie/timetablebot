@@ -22,7 +22,9 @@ class ButtonsEnum(StrEnum):
     pattern_mode = "pattern_mode"
     change_group = "change_group"
     detailed_search = "detailed_search"
+    kill_keyboard = "kill_keyboard"
     settings = "settings"
+    uptime = "uptime"
     menu = "menu"
     back = "back"
 

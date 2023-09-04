@@ -98,7 +98,7 @@ async def find_by_week_day(message: Message, user: User) -> None:
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["pattern_search"]))
-async def pattern_search(message: Message) -> None:
+async def pattern_search(message: Message, user: User) -> None:
     greeting = (
         "Добро пожаловать в поиск по шаблону. В этом разделе можно найти все пары, "
         "в названии которых содержится твой запрос (шаблон) \n\n"
@@ -109,6 +109,7 @@ async def pattern_search(message: Message) -> None:
     await message.answer(greeting)
     await message.answer("Напиши мне свой запрос, а потом выбери нужный день")
     await blueprint.state_dispenser.set(message.peer_id, ClassStates.WAITING_FOR_PATTERN)
+    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.pattern_mode)
 
 
 @blueprint.on.message(state=ClassStates.WAITING_FOR_PATTERN)
@@ -144,7 +145,7 @@ async def day_selection(message: Message, user: User) -> None:
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["detailed"]))
-async def detailed_search(message: Message) -> None:
+async def detailed_search(message: Message, user: User) -> None:
     """Отправляет клавиатуру с выбором недели и паттерн поиском"""
     payload = json.loads(message.payload)
     pattern = payload.get("match")
@@ -155,6 +156,9 @@ async def detailed_search(message: Message) -> None:
         keyboard = compose_detailed_menu()
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=keyboard)
+    await RequestClients.backend.mark_action(
+        vk_id=user.vk_id, button_name=ButtonsEnum.detailed_search
+    )
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["searching_status"]))
