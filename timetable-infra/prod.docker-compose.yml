@@ -1,0 +1,92 @@
+version: "3"
+
+services:
+  timetable-postgres:
+    image: "postgres:15"
+    container_name: timetable-postgres
+    env_file:
+      - .env.prod
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    logging:
+     driver: "json-file"
+     options:
+       max-size: "100m"
+    networks:
+      - timetable-network
+
+  timetable-backend:
+    container_name: timetable-backend
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    command: uvicorn main:get_app --reload --port 8000 --host 0.0.0.0 --forwarded-allow-ips '*'
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../:/usr/app/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    depends_on:
+      - timetable-postgres
+    networks:
+      - timetable-network
+
+  timetable-migration:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    container_name: timetable-migration
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    command: sh -c "alembic upgrade head"
+    env_file:
+      - .env.prod
+    environment:
+      POSTGRES_HOST: timetable-postgres
+      POSTGRES_PORT: 5432
+    volumes:
+      - ../:/usr/app/
+    depends_on:
+      - timetable-postgres
+    networks:
+      - timetable-network
+
+  timetable-vkbot:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    container_name: timetable-vkbot
+    command: >
+      sh -c "service cron start && python run_vk_bot.py"
+    env_file:
+      - .env.prod
+    depends_on:
+      - timetable-postgres
+    networks:
+      - timetable-network
+
+volumes:
+  postgres-data:
+
+networks:
+  timetable-network:
+    external:
+      name: timetable-network

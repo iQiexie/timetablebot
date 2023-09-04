@@ -1,2 +1,0 @@
-0 * * * * ENV_FILE=/app/deploy/.env ROUTINE=ACTUALIZE /usr/local/bin/python /app/main.py > /var/log/actualizer.log 2>&1
-0 0 * * * ENV_FILE=/app/deploy/.env ROUTINE=REPORT /usr/local/bin/python /app/main.py > /var/log/report.log 2>&1

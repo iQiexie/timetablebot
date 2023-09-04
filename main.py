@@ -1,10 +1,10 @@
-import asyncio
 import logging
-import os
 
-from app.routines import actualize
-from app.routines import count_users
-from app.vk_bot.driver import run
+from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
+
+from app.backend.api.dispatcher import api_router
+from app.backend.core.exceptions.middlewares import ExceptionMiddleware
 from config import settings
 
 
@@ -16,15 +16,31 @@ def init_logger():
     logger.setFormatter(logging.Formatter(log_format))
 
 
-init_logger()
+def get_app() -> FastAPI:
+    init_logger()
 
-if __name__ == "__main__":
-    if os.getenv("ROUTINE") == "ACTUALIZE":
-        print(f"Running actualize routine with {settings.PRODUCTION=}")
-        asyncio.run(actualize())
-    elif os.getenv("ROUTINE") == "REPORT":
-        print(f"Running report routine with {settings.PRODUCTION=}")
-        asyncio.run(count_users())
-    else:
-        print(f"Starting bot with {settings.PRODUCTION=}")
-        run()
+    fastapi_app = FastAPI(
+        title=settings.APP_TITLE,
+        docs_url="/api/docs",
+        openapi_url="/api/openapi.json",
+        swagger_ui_parameters={
+            "displayRequestDuration": True,
+            "filter": True,
+        },
+    )
+
+    fastapi_app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.BACKEND_CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    fastapi_app.add_middleware(ExceptionMiddleware)
+    fastapi_app.include_router(api_router)
+
+    return fastapi_app
+
+
+app = get_app()

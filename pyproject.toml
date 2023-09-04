@@ -1,0 +1,48 @@
+[tool.black]
+line-length = 101
+
+[tool.isort]
+profile = "black"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER"]
+
+[tool.ruff]
+select = [
+    "E", # pycodestyle (Error)
+    "W", # pycodestyle (Warning)
+    "F", # Pyflakes
+    "PL", # Pylint
+    "ANN", # flake8-annotations
+    "B", # flake8-bugbear
+    "ERA", # eradicate
+    "I", # isort
+    "ARG", # flake8-unused-arguments
+    "N", # pep8-naming,
+    "S", # flake8-bandit
+    "T20", # flake8-print
+    "Q", # flake8-quotes
+]
+line-length = 119
+ignore = [
+    "ANN002", # Missing type annotation for `*args`
+    "ANN003", # Missing type annotation for `**kwargs`
+    "ANN101", # Missing type annotation for `self` in method
+    "ANN102", # Missing type annotation for `cls` in classmethod
+    "ANN204", # Missing return type annotation for special method
+    "ANN401", #  Dynamically typed expressions (typing.Any) are disallowed
+    "B008", # Do not perform function call in argument defaults
+    "B904", # Within an except clause, raise exceptions with `raise ... from err` or `raise ... from None`
+    "N818", # Exception name should be named with an Error suffix,
+    "PLR0911", # Too many return statements
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments to function call
+    "PLR0915", # Too many statements
+]
+exclude = [
+    "__pycache__",
+    ".git",
+    "test*.py",
+]
+target-version = "py310"
+
+[tool.ruff.flake8-quotes]
+inline-quotes = "double"

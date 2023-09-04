@@ -1,0 +1,1 @@
+0 * * * * URL=/v1/classes METHOD=PATCH /usr/local/bin/python /usr/app/cron.py > /var/log/actualizer.log 2>&1

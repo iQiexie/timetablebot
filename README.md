@@ -4,13 +4,8 @@ https://vk.com/mpsu_schedule
 
 ## Стек
 
-- Data validation: pydantic
-- Database: postgres
-- Database ORM: sqlalchemy
-- Migrations: alembic
-- Cache: redis
-- Cache framework: aioredis
-- VK framework: vkbottle
+- Backend: fastapi + postgres + sqlalchemy
+- Frontend: vkbottles + aiogram
 
 
 ## Deploy
@@ -44,7 +39,7 @@ https://vk.com/mpsu_schedule
 
 #### Команды
 
-`make actualize` - Обновляем пары вручную (локально) 
+`make actualize` - Обновляем пары вручную (локально)
 
 `make run` - Запускаем локально
 
@@ -62,4 +57,4 @@ https://vk.com/mpsu_schedule
 - [ ] Нормальная рассылка новостей
 - [ ] Пофиксить баг с ```2023-03-16 17:50:19.184 UTC [312] FATAL:  password authentication failed for user "postgres"
 2023-03-16 17:50:19.184 UTC [312] DETAIL:  Password does not match for user "postgres".
-        Connection matched pg_hba.conf line 99: "host all all all md5"``` при `make deploy` 
+        Connection matched pg_hba.conf line 99: "host all all all md5"``` при `make deploy`
