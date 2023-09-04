@@ -14,16 +14,23 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
 
     @expect_specific_arguments(arguments=("telegram_id", "vk_id"))
     async def update_external_user(
-        self, telegram_id: Optional[int] = None, vk_id: Optional[int] = None, **kwargs
+        self,
+        telegram_id: Optional[int] = None,
+        vk_id: Optional[int] = None,
+        **kwargs,
     ) -> ExternalUserModel:
-        return await self.base_update(
-            ExternalUserModel,
-            or_(
+        if telegram_id:
+            return await self.base_update(
+                ExternalUserModel,
                 ExternalUserModel.telegram_id == telegram_id,
+                **kwargs,
+            )
+        elif vk_id:
+            return await self.base_update(
+                ExternalUserModel,
                 ExternalUserModel.vk_id == vk_id,
-            ),
-            **kwargs,
-        )
+                **kwargs,
+            )
 
     @expect_specific_arguments(arguments=("telegram_id", "vk_id"))
     async def create_external_user(self, **kwargs) -> ExternalUserModel:
@@ -33,14 +40,16 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
 
     @expect_arguments
     async def get_user_by_external_id(
-        self, telegram_id: Optional[int] = None, vk_id: Optional[int] = None
+        self,
+        telegram_id: Optional[int] = None,
+        vk_id: Optional[int] = None,
     ) -> Optional[ExternalUserModel]:
-        stmt = select(ExternalUserModel).where(
-            or_(
-                ExternalUserModel.telegram_id == telegram_id,
-                ExternalUserModel.vk_id == vk_id,
-            )
-        )
+        stmt = select(ExternalUserModel)
+
+        if telegram_id:
+            stmt = stmt.where(ExternalUserModel.telegram_id == telegram_id)
+        else:
+            stmt = stmt.where(ExternalUserModel.vk_id == vk_id)
 
         query = await self.session.execute(stmt)
         return query.scalar_one_or_none()
