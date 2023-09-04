@@ -1,7 +1,7 @@
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
-from app.backend.handlers.users.schemes import UserSchema
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from config import settings
 
@@ -9,7 +9,7 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["downvote"]))
-async def downvote(message: Message, user: UserSchema):
+async def downvote(message: Message, user: User):
     """Отправляет админу о некорректной паре"""
 
     text = (

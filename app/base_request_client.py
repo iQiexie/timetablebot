@@ -1,4 +1,5 @@
 import logging
+from functools import lru_cache
 from http import HTTPStatus
 from typing import Optional
 
@@ -8,6 +9,7 @@ from aiohttp import ContentTypeError
 from starlette import status
 
 
+@lru_cache
 class BaseRequestsClient:
     base_url: str = NotImplemented
     auth: dict = NotImplemented

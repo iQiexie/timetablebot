@@ -9,7 +9,9 @@ from app.backend.db.repos.user import UserRepo
 from config import settings
 
 security_router = APIRouter()
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl=f"{settings.TOKEN_URL}")
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl=f"{settings.BACKEND_BASE_URL}/v1/security/token",
+)
 
 
 @security_router.post("/security/token", response_model=TokenModel)

@@ -26,6 +26,14 @@ class ExternalUserService:
 
     async def create_external_user(self, data: ExternalUserCreate) -> ExternalUserCreate:
         async with self.repo.transaction() as t:
+            existing_user = await self.get_user_by_external_id(
+                vk_id=data.vk_id,
+                telegram_id=data.telegram_id,
+            )
+
+            if existing_user:
+                return existing_user
+
             result = await self.repo.create_external_user(
                 telegram_id=data.telegram_id,
                 vk_id=data.vk_id,

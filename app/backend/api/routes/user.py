@@ -51,7 +51,7 @@ async def update_group_number(
     response_model=ExternalUser,
     dependencies=[Depends(get_current_user)],
 )
-async def create_external_user(
+async def get_or_create_external_user(
     data: ExternalUserCreate,
     service: ExternalUserService = Depends(ExternalUserService),
 ):

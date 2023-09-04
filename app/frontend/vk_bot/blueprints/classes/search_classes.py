@@ -5,15 +5,15 @@ from datetime import timedelta
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
-from app.backend.handlers.users.schemes import UserSchema
-from app.frontend.vk_bot import TODAY_CLASSES_TRIGGERS
-from app.frontend.vk_bot import TOMORROW_CLASSES_TRIGGERS
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.classes.feedback import compose_feedback_keyboard
 from app.frontend.vk_bot.keyboards.classes.week import compose_detailed_menu
 from app.frontend.vk_bot.keyboards.classes.week import compose_week_keyboard
 from app.frontend.vk_bot.keyboards.classes.week import reset_keyboard
 from app.frontend.vk_bot.misc.classes_service import compose_classes
 from app.frontend.vk_bot.misc.classes_service import group_index_set
+from app.frontend.vk_bot.misc.constants import TODAY_CLASSES_TRIGGERS
+from app.frontend.vk_bot.misc.constants import TOMORROW_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from app.frontend.vk_bot.states.classes import ClassStates
 from config import settings
@@ -22,39 +22,39 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(TODAY_CLASSES_TRIGGERS, ["today"]))
-async def today_classes_filter(message: Message, user: UserSchema):
+async def today_classes_filter(message: Message, user: User):
     if not await group_index_set(message=message, user=user):
         return
 
     searching_date = datetime.now()
 
     final_message = await compose_classes(
-        group_index=str(user.group_index),
+        group_index=str(user.group_number),
         searching_date=searching_date,
     )
 
-    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)
 
 
 @blueprint.on.message(ContainsTriggerRule(TOMORROW_CLASSES_TRIGGERS, ["tomorrow"]))
-async def tomorrow_classes_filter(message: Message, user: UserSchema):
+async def tomorrow_classes_filter(message: Message, user: User):
     if not await group_index_set(message=message, user=user):
         return
 
     searching_date = datetime.now() + timedelta(days=1)
 
     final_message = await compose_classes(
-        group_index=str(user.group_index),
+        group_index=str(user.group_number),
         searching_date=searching_date,
     )
 
-    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["by day"]))
-async def find_by_week_day(message: Message, user: UserSchema):
+async def find_by_week_day(message: Message, user: User):
     """Отправляет пары по указанному дню недели"""
 
     payload = json.loads(message.payload)
@@ -77,12 +77,12 @@ async def find_by_week_day(message: Message, user: UserSchema):
         searching_date += timedelta(days=7)
 
     final_message = await compose_classes(
-        group_index=str(user.group_index),
+        group_index=str(user.group_number),
         searching_date=searching_date,
         pattern=pattern,
     )
 
-    keyboard = compose_feedback_keyboard({"grp": user.group_index, "srf": str(searching_date)})
+    keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
     await message.answer(final_message, keyboard=keyboard)
 
 

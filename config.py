@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: list[str] = Field(default=["*"])
     ADMIN_SECRET_KEY: str
 
-    TOKEN_URL: str
+    BACKEND_BASE_URL: str
     JWT_SECRET: str
     SECRET_EXPIRATION_TIME: int
     SECRET_MEASUREMENT_UNIT: TimeMeasurementUnits

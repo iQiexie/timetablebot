@@ -12,7 +12,7 @@ vkbottle = "*"
 asyncpg = "*"
 greenlet = "*"
 alembic = "*"
-pydantic = {extras = ["dotenv"], version = "==1.10.4"}
+pydantic = "===1.10.11"
 psycopg2 = "*"
 pre-commit = "*"
 python-jose = "*"

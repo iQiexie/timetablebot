@@ -3,8 +3,8 @@ import traceback
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
-from app.backend.handlers.users.schemes import UserSchema
-from app.frontend.vk_bot.keyboards.menu import menu_keyboard
+from app.frontend.dto.user import User
+from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
 from app.frontend.vk_bot.misc.constants import MENU_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
@@ -14,8 +14,8 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(triggers=MENU_TRIGGERS, payload_triggers=["main menu"]))
-async def hello_handler(message: Message = None, user: UserSchema = None):
-    new_user = user.group_index is None
+async def hello_handler(message: Message = None, user: User = None):
+    new_user = user.group_number is None
 
     if new_user:
         answer_message = (

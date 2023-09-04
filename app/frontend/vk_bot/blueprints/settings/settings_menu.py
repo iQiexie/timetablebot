@@ -1,13 +1,14 @@
-from datetime import datetime
-
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
+from app.frontend.dto.user import CreateUser
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.settings import settings_keyboard
 from app.frontend.vk_bot.misc.constants import CHANGE_GROUP_TRIGGERS
 from app.frontend.vk_bot.misc.constants import SETTINGS_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
+from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.settings import ChangingGroupStates
 from config import settings
 
@@ -15,9 +16,9 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(SETTINGS_TRIGGERS, ["settings"]))
-async def settings_menu(message: Message, user: UserSchema):
+async def settings_menu(message: Message, user: User):
     text = (
-        f"Твоя/ваша группа: {user.group_index} \n\n"
+        f"Твоя группа: {user.group_number} \n\n"
         "Список команд:\n"
         "vk.com/@mpsu_schedule-vse-komandy-bota\n\n"
         "F.A.Q:\n"
@@ -55,19 +56,24 @@ async def group_picking_handler(message: Message):
         await message.answer(text)
         return
 
-    async with async_session() as session:
-        await UserCRUD(session).update_group(message.peer_id, group_number)
+    vk_user = await message.get_user()
+    user = await RequestClients.backend.update_user(
+        data=CreateUser(
+            vk_id=message.peer_id,
+            group_number=group_number,
+            first_name=vk_user.first_name,
+            last_name=vk_user.last_name,
+            username=vk_user.domain,
+        )
+    )
 
-    await message.answer(f"Выбрана группа: {message.text}", keyboard=menu_keyboard)
+    await message.answer(f"Выбрана группа: {user.group_number}", keyboard=menu_keyboard)
     await blueprint.state_dispenser.delete(message.peer_id)
 
 
 @blueprint.on.message(ContainsTriggerRule(["uptime"], ["uptime"]))
 async def uptime(message: Message):
-    date_str = await get_last_updated()
-    date_obj = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
-    classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
-    text = f"Расписание последний раз обновлялось в {classes_uptime}"
+    text = f"Расписание последний раз обновлялось в {NotImplemented}"
 
     await message.answer(message=text, keyboard=settings_keyboard)
 
