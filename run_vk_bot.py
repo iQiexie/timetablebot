@@ -8,6 +8,7 @@ from app.frontend.vk_bot.blueprints import blueprints
 from app.frontend.vk_bot.middlewares import middlewares
 from app.frontend.vk_bot.misc.constants import current_apis
 from app.frontend.vk_bot.misc.constants import current_bot
+from main import init_logger
 
 
 def start_bot(bot: Bot, apis: Iterable[API]):
@@ -25,4 +26,5 @@ def run():
 
 
 if __name__ == "__main__":
+    init_logger()
     run()

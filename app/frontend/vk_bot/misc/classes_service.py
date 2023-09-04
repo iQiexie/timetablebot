@@ -5,12 +5,21 @@ from vkbottle.bot import Message
 from app.backend.api.services.dto.classes import LinePositionEnum
 from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
 from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.frontend.dto.user import DayRequest
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
+from app.frontend.vk_bot.misc.request_clients import RequestClients
+
+
+def get_week_line_position(week_index: int) -> LinePositionEnum:
+    if week_index % 2 != 0:
+        return LinePositionEnum.ABOVE
+
+    return LinePositionEnum.BELOW
 
 
 async def group_index_set(message: Message, user: User) -> bool:
-    if not user.group_index:
+    if not user.group_number:
         text = 'Пожалуйста, укажи группу. Напиши "поменять группу" или нажми на кнопку внизу'
         await message.answer(text, keyboard=change_group_keyboard)
         return False
@@ -38,7 +47,8 @@ def compose_header(
 
 
 async def compose_classes(
-    group_index: str,
+    group_number: int,
+    vk_id: int,
     searching_date: datetime,
     pattern: str = None,
 ):
@@ -46,13 +56,21 @@ async def compose_classes(
     week_index = searching_date.isocalendar().week  # порядковый номер искомой недели
     week_day = WEEK_DAYS_NUMBERED.get(week_day_index)  # искомый день енамом
     line_position = get_week_line_position(week_index=week_index)
+    next_week = week_index > datetime.now().isocalendar().week
 
-    classes = await find_day(
-        group_number=group_index,
+    data = DayRequest(
+        group_number=group_number,
         week_day=week_day,
         line_position=line_position,
-        pattern=pattern,
+        next_week=next_week,
+        vk_id=vk_id,
     )
+
+    if pattern:
+        data.pattern = pattern
+        classes = await RequestClients.backend.get_classes_pattern(data=data)
+    else:
+        classes = await RequestClients.backend.get_classes(data=data)
 
     header = compose_header(
         week_day=week_day,

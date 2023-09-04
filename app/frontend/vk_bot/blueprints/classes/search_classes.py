@@ -29,8 +29,9 @@ async def today_classes_filter(message: Message, user: User):
     searching_date = datetime.now()
 
     final_message = await compose_classes(
-        group_index=str(user.group_number),
+        group_number=user.group_number,
         searching_date=searching_date,
+        vk_id=message.peer_id,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -45,8 +46,9 @@ async def tomorrow_classes_filter(message: Message, user: User):
     searching_date = datetime.now() + timedelta(days=1)
 
     final_message = await compose_classes(
-        group_index=str(user.group_number),
+        group_number=user.group_number,
         searching_date=searching_date,
+        vk_id=message.peer_id,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -77,9 +79,10 @@ async def find_by_week_day(message: Message, user: User):
         searching_date += timedelta(days=7)
 
     final_message = await compose_classes(
-        group_index=str(user.group_number),
+        group_number=user.group_number,
         searching_date=searching_date,
         pattern=pattern,
+        vk_id=message.peer_id,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})

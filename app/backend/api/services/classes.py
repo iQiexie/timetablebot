@@ -60,13 +60,6 @@ class ClassesService:
         return searching_date
 
     @staticmethod
-    def get_week_line_position(week_index: int) -> LinePositionEnum:
-        if week_index % 2 != 0:
-            return LinePositionEnum.ABOVE
-
-        return LinePositionEnum.BELOW
-
-    @staticmethod
     def _cast_classes(classes: List[ClassModel], requested_date: datetime) -> List[ClassScheme]:
         result = [
             ClassScheme(
