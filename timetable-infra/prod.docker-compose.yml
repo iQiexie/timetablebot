@@ -67,17 +67,23 @@ services:
       - timetable-network
 
   timetable-vkbot:
+    container_name: timetable-vkbot
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    command: python run_vk_bot.py
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - ../:/usr/app/
     logging:
       driver: "json-file"
       options:
         max-size: "100m"
-    build:
-      context: ../
-      dockerfile: ./timetable-infra/Dockerfile
-    container_name: timetable-vkbot
-    command: python run_vk_bot.py
-    env_file:
-      - .env.prod
     depends_on:
       - timetable-backend
     networks:
