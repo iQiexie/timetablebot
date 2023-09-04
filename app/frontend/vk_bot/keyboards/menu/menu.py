@@ -8,7 +8,5 @@ menu_keyboard.add(Text("🔎 Завтрашние пары", {"cmd": "tomorrow"}
 menu_keyboard.row()
 menu_keyboard.add(Text("👀 Подробный поиск", {"cmd": "detailed"}), KeyboardButtonColor.SECONDARY)
 menu_keyboard.row()
-menu_keyboard.add(Text("🤖 ChatGPT", {"cmd": "chatgpt"}), KeyboardButtonColor.POSITIVE)
 menu_keyboard.add(Text("🛠 Настройки", {"cmd": "settings"}), KeyboardButtonColor.SECONDARY)
-menu_keyboard.row()
 menu_keyboard.add(Text("Убрать клавиатуру", {"cmd": "suicide"}), KeyboardButtonColor.NEGATIVE)

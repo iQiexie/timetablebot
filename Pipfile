@@ -8,11 +8,10 @@ sqlalchemy = "==1.4.48"
 aioredis = "*"
 gspread = "*"
 google-api-python-client = "*"
-vkbottle = "*"
+vkbottle = "==4.3.12"
 asyncpg = "*"
 greenlet = "*"
 alembic = "*"
-pydantic = "===1.10.11"
 psycopg2 = "*"
 pre-commit = "*"
 python-jose = "*"
@@ -21,6 +20,8 @@ fastapi = "==0.101.0"
 uvicorn = "*"
 python-multipart = "*"
 bcrypt = "*"
+pydantic = {extras = ["dotenv"], version = "*"}
+python-dotenv = "*"
 
 [dev-packages]
 

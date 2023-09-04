@@ -36,6 +36,11 @@ class ClassesService:
         self.google_api = GoogleAPI(repo=CredentialsRepo(session=session))
         self.repo = ClassesRepo(session=session)
 
+    async def get_last_update_time(self) -> datetime:
+        async with self.repo.transaction():
+            first_class = await self.repo.get_first_class()
+            return first_class.updated_at
+
     @staticmethod
     def get_requested_date(week_day: WeekDaysEnum | str, next_week: bool) -> datetime:
         current_week_day = datetime.now().isocalendar().weekday

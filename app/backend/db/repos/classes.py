@@ -17,6 +17,11 @@ from app.backend.db.models.classes import ClassModel
 class ClassesRepo(BaseRepo[ClassModel]):
     model = ClassModel
 
+    async def get_first_class(self) -> ClassModel:
+        stmt = select(self.model).order_by(self.model.id).limit(1)
+        query = await self.session.execute(stmt)
+        return query.scalar()
+
     async def get_day(self, data: DayRequest) -> List[ClassModel]:
         stmt = select(self.model).where(
             and_(

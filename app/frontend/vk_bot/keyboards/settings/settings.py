@@ -11,12 +11,11 @@ settings_keyboard.add(
     Text("⚙ Uptime расписания", payload={"cmd": "uptime"}),
     color=KeyboardButtonColor.PRIMARY,
 )
-settings_keyboard.row()
-settings_keyboard.add(
-    # Text("🙊 Виртуальный собеседник", payload={"cmd": "toggle chatbot"}),
-    Text("📈 Статистика", payload={"cmd": "statistics"}),
-    color=KeyboardButtonColor.PRIMARY,
-)
+# settings_keyboard.row()
+# settings_keyboard.add(
+#     Text("📈 Статистика", payload={"cmd": "statistics"}),
+#     color=KeyboardButtonColor.PRIMARY,
+# )
 settings_keyboard.row()
 settings_keyboard.add(
     Text("В меню", payload={"cmd": "main menu"}),

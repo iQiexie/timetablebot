@@ -31,6 +31,10 @@ class Settings(BaseSettings):
     POSTGRES_PORT: str
     POSTGRES_DB: str
 
+    VK_TOKEN: str
+    VK_ADMIN_IDS: list[str]
+    VK_EMPTY_MESSAGE: str
+
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
 

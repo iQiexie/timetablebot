@@ -40,10 +40,8 @@ MENU_TRIGGERS = [
     "старт",
 ]
 
+NOT_EXISTING_GROUPS = [410, 227]
 
-if settings.PRODUCTION:
-    current_bot = Bot(settings.VK_DOMASHKA_TOKEN)
-    current_apis = (API(settings.VK_DOMASHKA_TOKEN), API(settings.VK_RASPISANIE_TOKEN))
-else:
-    current_bot = Bot(settings.VK_KPKPKP_TOKEN)
-    current_apis = (API(settings.VK_KPKPKP_TOKEN),)
+
+current_bot = Bot(settings.VK_TOKEN)
+current_apis = (API(settings.VK_TOKEN),)

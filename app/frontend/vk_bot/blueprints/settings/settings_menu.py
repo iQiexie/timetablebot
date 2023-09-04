@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
@@ -6,6 +8,7 @@ from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.settings import settings_keyboard
 from app.frontend.vk_bot.misc.constants import CHANGE_GROUP_TRIGGERS
+from app.frontend.vk_bot.misc.constants import NOT_EXISTING_GROUPS
 from app.frontend.vk_bot.misc.constants import SETTINGS_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from app.frontend.vk_bot.misc.request_clients import RequestClients
@@ -47,7 +50,7 @@ async def group_picking_handler(message: Message):
 
     group_number = int(message.text)
 
-    if group_number in settings.NOT_EXISTING_GROUPS:
+    if group_number in NOT_EXISTING_GROUPS:
         await message.answer("Такой группы не существует")
         return
 
@@ -73,7 +76,10 @@ async def group_picking_handler(message: Message):
 
 @blueprint.on.message(ContainsTriggerRule(["uptime"], ["uptime"]))
 async def uptime(message: Message):
-    text = f"Расписание последний раз обновлялось в {NotImplemented}"
+    date_str = await RequestClients.backend.get_last_updated_at()
+    date_obj = datetime.fromisoformat(date_str)
+    classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
+    text = f"Расписание последний раз обновлялось в {classes_uptime}"
 
     await message.answer(message=text, keyboard=settings_keyboard)
 

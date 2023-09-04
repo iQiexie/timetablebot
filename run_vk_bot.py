@@ -22,3 +22,7 @@ def start_bot(bot: Bot, apis: Iterable[API]):
 
 def run():
     start_bot(bot=current_bot, apis=current_apis)
+
+
+if __name__ == "__main__":
+    run()

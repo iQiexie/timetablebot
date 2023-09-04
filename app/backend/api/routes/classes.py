@@ -1,3 +1,5 @@
+from datetime import datetime
+from datetime import timedelta
 from typing import List
 from typing import Optional
 
@@ -72,7 +74,9 @@ async def get_classes_by_pattern(
 
 
 @classes_router.post(
-    path="/classes/rate", response_model=SuccessResponse, dependencies=[Depends(get_current_user)]
+    path="/classes/rate",
+    response_model=SuccessResponse,
+    dependencies=[Depends(get_current_user)],
 )
 async def rate_response(
     data: RateRequest,
@@ -80,3 +84,14 @@ async def rate_response(
 ) -> SuccessResponse:
     await action_service.mark_action_rate(data=data)
     return SuccessResponse(success=True)
+
+
+@classes_router.get(
+    path="/classes/last_update",
+    response_model=dict[str, datetime],
+)
+async def get_last_updated_at(
+    service: ClassesService = Depends(ClassesService),
+) -> dict[str, datetime]:
+    result = await service.get_last_update_time()
+    return {"last_update": result + timedelta(hours=3)}

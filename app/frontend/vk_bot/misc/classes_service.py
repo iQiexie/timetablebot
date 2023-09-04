@@ -2,16 +2,14 @@ from datetime import datetime
 
 from vkbottle.bot import Message
 
-from app.backend.handlers.classes.enums import LinePositionEnum
-from app.backend.handlers.classes.enums import WEEK_DAYS_NUMBERED
-from app.backend.handlers.classes.enums import WeekDaysEnum
-from app.backend.handlers.classes.handler import find_day
-from app.backend.handlers.classes.handler import get_week_line_position
-from app.backend.handlers.users.schemes import UserSchema
+from app.backend.api.services.dto.classes import LinePositionEnum
+from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
+from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
 
 
-async def group_index_set(message: Message, user: UserSchema) -> bool:
+async def group_index_set(message: Message, user: User) -> bool:
     if not user.group_index:
         text = 'Пожалуйста, укажи группу. Напиши "поменять группу" или нажми на кнопку внизу'
         await message.answer(text, keyboard=change_group_keyboard)

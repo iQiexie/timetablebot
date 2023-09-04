@@ -9,7 +9,6 @@ from aiohttp import ContentTypeError
 from starlette import status
 
 
-@lru_cache
 class BaseRequestsClient:
     base_url: str = NotImplemented
     auth: dict = NotImplemented
