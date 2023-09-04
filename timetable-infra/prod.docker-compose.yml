@@ -26,7 +26,8 @@ services:
     build:
       context: ../
       dockerfile: ./timetable-infra/Dockerfile
-    command: uvicorn main:get_app --reload --port 8000 --host 0.0.0.0 --forwarded-allow-ips '*'
+    command: >
+      sh -c "service cron start && uvicorn main:get_app --reload --port 8000 --host 0.0.0.0 --forwarded-allow-ips '*'"
     restart: unless-stopped
     env_file:
       - .env.prod
@@ -74,8 +75,7 @@ services:
       context: ../
       dockerfile: ./timetable-infra/Dockerfile
     container_name: timetable-vkbot
-    command: >
-      sh -c "service cron start && python run_vk_bot.py"
+    command: python run_vk_bot.py
     env_file:
       - .env.prod
     depends_on:
