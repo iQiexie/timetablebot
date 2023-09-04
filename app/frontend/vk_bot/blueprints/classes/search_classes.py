@@ -5,6 +5,7 @@ from datetime import timedelta
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
+from app.backend.db.models.action import ButtonsEnum
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.classes.feedback import compose_feedback_keyboard
 from app.frontend.vk_bot.keyboards.classes.week import compose_detailed_menu
@@ -15,6 +16,7 @@ from app.frontend.vk_bot.misc.classes_service import group_index_set
 from app.frontend.vk_bot.misc.constants import TODAY_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.constants import TOMORROW_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
+from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.classes import ClassStates
 from config import settings
 
@@ -117,19 +119,28 @@ async def search_by_pattern(message: Message) -> None:
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["sweek"]))
-async def day_selection(message: Message) -> None:
+async def day_selection(message: Message, user: User) -> None:
     """Отправляет клавиатуру с выбором дня"""
 
     payload = json.loads(message.payload)
     next_week = payload.get("next")
     match = payload.get("match")
 
-    if match:
-        keyboard = compose_week_keyboard(next_week=next_week, pattern=match)
-    else:
-        keyboard = compose_week_keyboard(next_week=next_week)
-
+    keyboard = compose_week_keyboard(next_week=next_week, pattern=match)
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=keyboard)
+
+    button_name = {
+        next_week is True and match is not None: ButtonsEnum.next_week_pattern,
+        next_week is False and match is not None: ButtonsEnum.current_week_pattern,
+        next_week is True and match is None: ButtonsEnum.next_week,
+        next_week is False and match is None: ButtonsEnum.current_week,
+    }.get(True)
+
+    await RequestClients.backend.mark_action(
+        vk_id=user.vk_id,
+        button_name=button_name,
+        pattern=match,
+    )
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["detailed"]))

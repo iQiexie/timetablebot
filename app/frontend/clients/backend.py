@@ -1,7 +1,10 @@
+import json
 import urllib.parse
 from datetime import datetime
 from functools import lru_cache
+from typing import Optional
 
+from app.backend.api.routes.dto.action.request import ButtonActionRequest
 from app.backend.api.routes.dto.classes.request import DayRequest
 from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
@@ -75,5 +78,11 @@ class BackendApi(BaseRequestsClient):
     async def rate_class(self, data: RateRequest) -> None:
         data = data.json()
         url = "/v1/classes/rate"
+
+        await self._make_request(method="POST", url=url, data=data)
+
+    async def mark_action(self, button_name: str, vk_id: int, pattern: Optional[str]) -> None:
+        data = json.dumps({"button_name": button_name, "vk_id": vk_id, "pattern": pattern})
+        url = "/v1/action/button"
 
         await self._make_request(method="POST", url=url, data=data)
