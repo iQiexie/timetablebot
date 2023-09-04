@@ -79,19 +79,11 @@ class ActionService:
             )
             await t.commit()
 
-    async def mark_action_rate(
-        self,
-        data: RateRequest,
-    ) -> None:
+    async def mark_action_rate(self, data: RateRequest) -> None:
         async with self.repo.transaction() as t:
             user = await self.services.external_user.get_user_by_external_id(
                 telegram_id=data.telegram_id,
                 vk_id=data.vk_id,
-            )
-            rated_class = await self.services.classes.get_class_by_id(class_id=data.class_id)
-            requested_day = self.services.classes.get_requested_date(
-                week_day=rated_class.week_day,
-                next_week=data.next_week,
             )
 
             await self.repo.create_action(
@@ -100,6 +92,7 @@ class ActionService:
                 action=ActionsEnum.rate,
                 current_group=user.group_number,
                 correct=data.correct,
-                requested_day=requested_day,
+                requested_day=data.date.date(),
+                pattern=data.pattern,
             )
             await t.commit()

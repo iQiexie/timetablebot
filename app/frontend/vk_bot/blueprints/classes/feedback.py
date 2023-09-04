@@ -1,8 +1,12 @@
+import json
+
 from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
+from app.backend.api.routes.dto.classes.request import RateRequest
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
+from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 blueprint = Blueprint()
@@ -11,6 +15,10 @@ blueprint = Blueprint()
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["downvote"]))
 async def downvote(message: Message, user: User) -> None:
     """Отправляет админу о некорректной паре"""
+
+    payload = json.loads(message.payload)
+    requested_date = payload["srf"]
+    pattern = payload["ptr"]
 
     text = (
         f"Пользователю: https://vk.com/gim206763355?sel={user.vk_id} "
@@ -30,10 +38,28 @@ async def downvote(message: Message, user: User) -> None:
 
     await message.ctx_api.messages.send(peer_ids=settings.VK_ADMIN_IDS, random_id=0, message=text)
     await message.answer(answer_text)
+    await RequestClients.backend.rate_class(
+        data=RateRequest(
+            date=requested_date,
+            correct=False,
+            vk_id=message.peer_id,
+            pattern=pattern,
+        )
+    )
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["upvote"]))
 async def upvote(message: Message) -> None:
-    """Ничего не делает, просто высылает фидбек юзверу"""
+    payload = json.loads(message.payload)
+    requested_date = payload["srf"]
+    pattern = payload["ptr"]
 
     await message.answer("Обратная связь учтена. Спасибо 💖")
+    await RequestClients.backend.rate_class(
+        data=RateRequest(
+            date=requested_date,
+            correct=True,
+            vk_id=message.peer_id,
+            pattern=pattern,
+        )
+    )

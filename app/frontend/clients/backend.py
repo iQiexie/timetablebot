@@ -3,6 +3,7 @@ from datetime import datetime
 from functools import lru_cache
 
 from app.backend.api.routes.dto.classes.request import DayRequest
+from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.dto.classes import DURATIONS_MAP
 from app.base_request_client import BaseRequestsClient
@@ -70,3 +71,9 @@ class BackendApi(BaseRequestsClient):
         day_schema = {DURATIONS_MAP[i.duration]: i for i in classes}
 
         return DaySchema(**day_schema)
+
+    async def rate_class(self, data: RateRequest) -> None:
+        data = data.json()
+        url = "/v1/classes/rate"
+
+        await self._make_request(method="POST", url=url, data=data)

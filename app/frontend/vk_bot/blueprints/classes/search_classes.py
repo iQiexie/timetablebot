@@ -85,7 +85,13 @@ async def find_by_week_day(message: Message, user: User) -> None:
         vk_id=message.peer_id,
     )
 
-    keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
+    keyboard = compose_feedback_keyboard(
+        {
+            "grp": user.group_number,
+            "srf": str(searching_date),
+            "ptr": pattern,
+        }
+    )
     await message.answer(final_message, keyboard=keyboard)
 
 

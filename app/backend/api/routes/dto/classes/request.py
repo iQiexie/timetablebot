@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from pydantic import BaseModel
@@ -23,8 +24,8 @@ class DayRequestPattern(BaseModel):
 
 
 class RateRequest(BaseModel):
-    class_id: int
-    next_week: bool
+    date: datetime
     correct: bool
     telegram_id: Optional[int]
     vk_id: Optional[int]
+    pattern: Optional[str]
