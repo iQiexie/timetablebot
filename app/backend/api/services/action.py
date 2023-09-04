@@ -15,7 +15,7 @@ from app.backend.db.repos.user import UserRepo
 
 class ActionService:
     def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.mediator = ServiceMediator(session=session)
+        self.services = ServiceMediator(session=session)
         self.repo = UserRepo(session=session)
 
     async def mark_action_search(
@@ -42,7 +42,7 @@ class ActionService:
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
     ) -> None:
-        user = await self.mediator.external_user.get_user_by_external_id(
+        user = await self.services.external_user.get_user_by_external_id(
             telegram_id=telegram_id,
             vk_id=vk_id,
         )
@@ -65,7 +65,7 @@ class ActionService:
         vk_id: Optional[int] = None,
     ) -> None:
         async with self.repo.transaction() as t:
-            user = await self.mediator.external_user.get_user_by_external_id(
+            user = await self.services.external_user.get_user_by_external_id(
                 telegram_id=telegram_id,
                 vk_id=vk_id,
             )
@@ -84,12 +84,12 @@ class ActionService:
         data: RateRequest,
     ) -> None:
         async with self.repo.transaction() as t:
-            user = await self.mediator.external_user.get_user_by_external_id(
+            user = await self.services.external_user.get_user_by_external_id(
                 telegram_id=data.telegram_id,
                 vk_id=data.vk_id,
             )
-            rated_class = await self.mediator.classes.get_class_by_id(class_id=data.class_id)
-            requested_day = self.mediator.classes.get_requested_date(
+            rated_class = await self.services.classes.get_class_by_id(class_id=data.class_id)
+            requested_day = self.services.classes.get_requested_date(
                 week_day=rated_class.week_day,
                 next_week=data.next_week,
             )

@@ -15,7 +15,7 @@ from app.backend.db.repos.user import UserRepo
 
 class UserService:
     def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.mediator = ServiceMediator(session=session)
+        self.services = ServiceMediator(session=session)
         self.repo = UserRepo(session=session)
 
     async def create_user(self, data: UserIn) -> UserModel:

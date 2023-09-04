@@ -13,7 +13,7 @@ from app.backend.db.repos.external_user import ExternalUserRepo
 
 class ExternalUserService:
     def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.mediator = ServiceMediator(session=session)
+        self.services = ServiceMediator(session=session)
         self.repo = ExternalUserRepo(session=session)
 
     async def get_user_by_external_id(
@@ -43,7 +43,7 @@ class ExternalUserService:
         self,
         data: ExternalUserUpdate,
     ) -> ExternalUserModel:
-        await self.mediator.action.mark_action_settings(
+        await self.services.action.mark_action_settings(
             vk_id=data.vk_id,
             telegram_id=data.telegram_id,
             new_group=data.group_number,

@@ -32,7 +32,7 @@ class ClassesService:
     google_api = NotImplementedError
 
     def __init__(self, session: AsyncSession = Depends(get_session)):
-        self.mediator = ServiceMediator(session=session)
+        self.services = ServiceMediator(session=session)
         self.google_api = GoogleAPI(repo=CredentialsRepo(session=session))
         self.repo = ClassesRepo(session=session)
 
@@ -83,7 +83,7 @@ class ClassesService:
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
     ) -> List[ClassScheme]:
-        user = await self.mediator.external_user.get_user_by_external_id(
+        user = await self.services.external_user.get_user_by_external_id(
             telegram_id=telegram_id,
             vk_id=vk_id,
         )
@@ -101,7 +101,7 @@ class ClassesService:
         )
 
         try:
-            await self.mediator.action.mark_action_search(
+            await self.services.action.mark_action_search(
                 user=user,
                 day=cords,
                 requested_date=requested_date,
@@ -124,7 +124,7 @@ class ClassesService:
         )
 
         try:
-            await self.mediator.action.mark_action_search_pattern(
+            await self.services.action.mark_action_search_pattern(
                 telegram_id=data.telegram_id,
                 vk_id=data.vk_id,
                 requested_date=requested_date,
