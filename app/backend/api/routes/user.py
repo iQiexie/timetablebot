@@ -17,7 +17,7 @@ from app.backend.db.models.user import UserModel
 users_router = APIRouter()
 
 
-@users_router.post("/users", response_model=UserOut)
+@users_router.post("/users", response_model=UserOut, dependencies=[Depends(get_current_user)])
 async def create_user(
     user: UserIn,
     service: UserService = Depends(UserService),
