@@ -9,5 +9,5 @@ __pycache__
 files/*
 test.py
 data
-./deploy/.env
-./deploy/.env.local
+./timetable-infra/.env.prod
+.env
