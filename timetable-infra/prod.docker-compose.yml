@@ -65,6 +65,24 @@ services:
     networks:
       - timetable-network
 
+  timetable-vkbot:
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    container_name: timetable-vkbot
+    command: >
+      sh -c "service cron start && python run_vk_bot.py"
+    env_file:
+      - .env.prod
+    depends_on:
+      - timetable-postgres
+    networks:
+      - timetable-network
+
 volumes:
   postgres-data:
 
