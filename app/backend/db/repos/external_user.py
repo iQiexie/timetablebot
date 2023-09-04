@@ -26,7 +26,7 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
         )
 
     @expect_specific_arguments(arguments=("telegram_id", "vk_id"))
-    async def create_external_user(self, **kwargs):
+    async def create_external_user(self, **kwargs) -> ExternalUserModel:
         model = ExternalUserModel(**kwargs)
         self.session.add(model)
         return model

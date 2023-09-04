@@ -3,8 +3,9 @@ import webbrowser
 import wsgiref.simple_server
 import wsgiref.util
 
-from google_auth_oauthlib.flow import _RedirectWSGIApp  # noqa
-from google_auth_oauthlib.flow import _WSGIRequestHandler  # noqa
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import _RedirectWSGIApp
+from google_auth_oauthlib.flow import _WSGIRequestHandler
 from google_auth_oauthlib.flow import Flow
 
 
@@ -64,16 +65,16 @@ class InstalledAppFlow(Flow):
 
     def run_local_server(
         self,
-        host="localhost",
-        bind_addr=None,
-        port=8080,
-        authorization_prompt_message=_DEFAULT_AUTH_PROMPT_MESSAGE,
-        success_message=_DEFAULT_WEB_SUCCESS_MESSAGE,
-        open_browser=True,
-        redirect_uri_trailing_slash=True,
-        timeout_seconds=None,
+        host: str = "localhost",
+        bind_addr: str = None,
+        port: int = 8080,
+        authorization_prompt_message: str = _DEFAULT_AUTH_PROMPT_MESSAGE,
+        success_message: str = _DEFAULT_WEB_SUCCESS_MESSAGE,
+        open_browser: bool = True,
+        redirect_uri_trailing_slash: bool = True,
+        timeout_seconds: int = None,
         **kwargs
-    ):
+    ) -> Credentials:
         """Run the flow using the server strategy.
 
         The server strategy instructs the user to open the authorization URL in

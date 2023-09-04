@@ -1,4 +1,5 @@
 import json
+from typing import Any
 from typing import List
 
 from google.auth.transport.requests import Request
@@ -10,7 +11,6 @@ from app.backend.libs.dto.sheets import Sheet
 from app.backend.libs.sheets.flow import InstalledAppFlow
 from config import settings
 
-
 # TODO refactor
 
 
@@ -19,16 +19,19 @@ class GoogleAPI:
         self.repo = repo
         self.sheets_service = None
 
-    async def init_services(self):
-        """Обязательно нужно вызывать после каждой инициализации этого круда"""
-
+    async def init_services(self) -> None:
         self.sheets_service = await self.create_service(
             service_name="sheets",
             service_version="v4",
             scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"],
         )
 
-    async def create_service(self, service_name: str, service_version: str, scopes: List[str]):
+    async def create_service(
+        self,
+        service_name: str,
+        service_version: str,
+        scopes: List[str],
+    ) -> Any:
         creds = await self.repo.get_credentials(service_name=service_name)
 
         if creds is not None:

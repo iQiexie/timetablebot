@@ -11,7 +11,7 @@ class UserRepo(BaseRepo[UserModel]):
         self.session.add(model)
         return model
 
-    async def create_action(self, **kwargs):
+    async def create_action(self, **kwargs) -> UserActionModel:
         model = UserActionModel(**kwargs)
         self.session.add(model)
         return model

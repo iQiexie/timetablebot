@@ -11,7 +11,7 @@ from app.frontend.vk_bot.misc.constants import current_bot
 from main import init_logger
 
 
-def start_bot(bot: Bot, apis: Iterable[API]):
+def start_bot(bot: Bot, apis: Iterable[API]) -> None:
     for blueprint in blueprints:
         blueprint.load(bot)
 
@@ -21,7 +21,7 @@ def start_bot(bot: Bot, apis: Iterable[API]):
     run_multibot(bot, apis=apis)
 
 
-def run():
+def run() -> None:
     start_bot(bot=current_bot, apis=current_apis)
 
 

@@ -1,3 +1,4 @@
+import logging
 from typing import List
 
 from app.backend.api.services.dto.classes import ClassCords
@@ -22,7 +23,7 @@ def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
     final_classes = []
 
     for grade in range(*GRADE_RANGE):
-        print(f"Parsing grade: {grade}")
+        logging.info(f"Parsing grade: {grade}")
         sheet = sheets[grade]
 
         group_indexes = {}

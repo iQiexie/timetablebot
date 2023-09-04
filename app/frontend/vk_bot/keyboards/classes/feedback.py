@@ -3,7 +3,7 @@ from vkbottle import KeyboardButtonColor
 from vkbottle import Text
 
 
-def compose_feedback_keyboard(context: dict):
+def compose_feedback_keyboard(context: dict) -> Keyboard:
     feedback_keyboard = Keyboard(inline=True)
     feedback_keyboard.add(
         Text("👍 Правильно", payload={"cmd": "upvote", **context}),

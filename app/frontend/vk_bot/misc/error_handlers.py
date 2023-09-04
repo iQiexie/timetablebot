@@ -1,3 +1,4 @@
+import logging
 import traceback
 
 from vkbottle import BaseMiddleware
@@ -9,11 +10,11 @@ error_handler = ErrorHandler(redirect_arguments=True, raise_exceptions=True)
 
 
 @error_handler.register_undefined_error_handler
-async def exc_handler_undefined(e: Exception, *args):
+async def exc_handler_undefined(e: Exception, *args) -> None:
     middleware: BaseMiddleware = args[0]
-    print(f"Oh no! {args} returned an error. \n\nTraceback:")
+    logging.info(f"Oh no! {args} returned an error. \n\nTraceback:")
     tb_str = ";".join(traceback.format_exception(None, e, e.__traceback__))
-    print(tb_str)
+    logging.info(tb_str)
 
     if not settings.PRODUCTION:
         if isinstance(middleware, BaseMiddleware):

@@ -3,9 +3,9 @@ from typing import TYPE_CHECKING
 from sqlalchemy.ext.asyncio import AsyncSession
 
 if TYPE_CHECKING:
-    from app.backend.api.services.external_user import ExternalUserService
-    from app.backend.api.services.classes import ClassesService
     from app.backend.api.services.action import ActionService
+    from app.backend.api.services.classes import ClassesService
+    from app.backend.api.services.external_user import ExternalUserService
 
 
 class ServiceMediator:
