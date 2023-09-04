@@ -36,6 +36,7 @@ ignore = [
     "PLR0912", # Too many branches
     "PLR0913", # Too many arguments to function call
     "PLR0915", # Too many statements
+    "ERA001", # Found commented-out code
 ]
 exclude = [
     "__pycache__",

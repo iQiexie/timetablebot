@@ -51,12 +51,12 @@ class ClassesRepo(BaseRepo[ClassModel]):
         query = await self.session.execute(stmt)
         return query.scalars().all()
 
-    async def update_classes(self, classes: List[ScraperResult]):
+    async def update_classes(self, classes: List[ScraperResult]) -> None:
         values = [{**value.dict(), "updated_at": datetime.now()} for value in classes]
 
         args_per_row = len(values[0])
-        PSQL_QUERY_ALLOWED_MAX_ARGS = 3000
-        allowed_args_per_query = int(math.floor(PSQL_QUERY_ALLOWED_MAX_ARGS / args_per_row))
+        psql_query_allowed_max_args = 3000
+        allowed_args_per_query = int(math.floor(psql_query_allowed_max_args / args_per_row))
         query_args_sets = [
             values[x : x + allowed_args_per_query]
             for x in range(0, len(values), allowed_args_per_query)

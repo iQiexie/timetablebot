@@ -27,4 +27,4 @@ class SheetRows(BaseModel):
 
 
 class Sheet(BaseModel):
-    rowData: List[SheetRows]
+    row_data: List[SheetRows] = Field(alias="rowData")

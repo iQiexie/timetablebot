@@ -35,7 +35,7 @@ def compose_detailed_menu(pattern: str = None) -> Keyboard:
     return keyboard
 
 
-def compose_week_keyboard(next_week: bool, pattern: str = None):
+def compose_week_keyboard(next_week: bool, pattern: str = None) -> Keyboard:
     keyboard = Keyboard(inline=False, one_time=False)
 
     payload = {

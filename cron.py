@@ -10,4 +10,4 @@ r = requests.request(
     headers={"Authorization": f"Bearer {settings.ADMIN_SECRET_KEY}"},
 )
 
-print(r.text)
+print(r.text)  # noqa

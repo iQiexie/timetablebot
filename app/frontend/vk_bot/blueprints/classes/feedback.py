@@ -9,7 +9,7 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["downvote"]))
-async def downvote(message: Message, user: User):
+async def downvote(message: Message, user: User) -> None:
     """Отправляет админу о некорректной паре"""
 
     text = (
@@ -33,7 +33,7 @@ async def downvote(message: Message, user: User):
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["upvote"]))
-async def upvote(message: Message):
+async def upvote(message: Message) -> None:
     """Ничего не делает, просто высылает фидбек юзверу"""
 
     await message.answer("Обратная связь учтена. Спасибо 💖")

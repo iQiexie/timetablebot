@@ -8,7 +8,7 @@ from app.backend.core.exceptions.middlewares import ExceptionMiddleware
 from config import settings
 
 
-def init_logger():
+def init_logger() -> None:
     logging.basicConfig(level=logging.DEBUG)
 
     logger = logging.getLogger().handlers[0]

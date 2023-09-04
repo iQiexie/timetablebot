@@ -21,14 +21,18 @@ classes_router = APIRouter()
 
 
 @classes_router.patch(
-    path="/classes", response_model=SuccessResponse, dependencies=[Depends(get_current_user)]
+    path="/classes",
+    response_model=SuccessResponse,
+    dependencies=[Depends(get_current_user)],
 )
-async def update_classes(service: ClassesService = Depends(ClassesService)):
+async def update_classes(service: ClassesService = Depends(ClassesService)) -> SuccessResponse:
     return await service.update_classes()
 
 
 @classes_router.get(
-    path="/classes/days", response_model=List[ClassScheme], dependencies=[Depends(get_current_user)]
+    path="/classes/days",
+    response_model=List[ClassScheme],
+    dependencies=[Depends(get_current_user)],
 )
 async def get_classes_for_day(
     week_day: WeekDaysEnum = Query(...),
@@ -37,7 +41,7 @@ async def get_classes_for_day(
     vk_id: Optional[int] = Query(None),
     telegram_id: Optional[int] = Query(None),
     service: ClassesService = Depends(ClassesService),
-):
+) -> List[ClassScheme]:
     return await service.get_day(
         week_day=week_day,
         line_position=line_position,
@@ -60,7 +64,7 @@ async def get_classes_by_pattern(
     telegram_id: Optional[int] = Query(None),
     vk_id: Optional[int] = Query(None),
     service: ClassesService = Depends(ClassesService),
-):
+) -> List[ClassScheme]:
     return await service.get_day_by_pattern(
         data=DayRequestPattern(
             pattern=pattern,

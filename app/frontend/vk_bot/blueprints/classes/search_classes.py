@@ -22,7 +22,7 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(TODAY_CLASSES_TRIGGERS, ["today"]))
-async def today_classes_filter(message: Message, user: User):
+async def today_classes_filter(message: Message, user: User) -> None:
     if not await group_index_set(message=message, user=user):
         return
 
@@ -39,7 +39,7 @@ async def today_classes_filter(message: Message, user: User):
 
 
 @blueprint.on.message(ContainsTriggerRule(TOMORROW_CLASSES_TRIGGERS, ["tomorrow"]))
-async def tomorrow_classes_filter(message: Message, user: User):
+async def tomorrow_classes_filter(message: Message, user: User) -> None:
     if not await group_index_set(message=message, user=user):
         return
 
@@ -56,7 +56,7 @@ async def tomorrow_classes_filter(message: Message, user: User):
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["by day"]))
-async def find_by_week_day(message: Message, user: User):
+async def find_by_week_day(message: Message, user: User) -> None:
     """Отправляет пары по указанному дню недели"""
 
     payload = json.loads(message.payload)
@@ -90,7 +90,7 @@ async def find_by_week_day(message: Message, user: User):
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["pattern_search"]))
-async def pattern_search(message: Message):
+async def pattern_search(message: Message) -> None:
     greeting = (
         "Добро пожаловать в поиск по шаблону. В этом разделе можно найти все пары, "
         "в названии которых содержится твой запрос (шаблон) \n\n"
@@ -104,14 +104,14 @@ async def pattern_search(message: Message):
 
 
 @blueprint.on.message(state=ClassStates.WAITING_FOR_PATTERN)
-async def search_by_pattern(message: Message):
+async def search_by_pattern(message: Message) -> None:
     keyboard = compose_detailed_menu(pattern=message.text)
     await message.answer("Готово, теперь выбери нужную неделю и день", keyboard=keyboard)
     await blueprint.state_dispenser.delete(message.peer_id)
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["sweek"]))
-async def day_selection(message: Message):
+async def day_selection(message: Message) -> None:
     """Отправляет клавиатуру с выбором дня"""
 
     payload = json.loads(message.payload)
@@ -127,7 +127,7 @@ async def day_selection(message: Message):
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["detailed"]))
-async def detailed_search(message: Message):
+async def detailed_search(message: Message) -> None:
     """Отправляет клавиатуру с выбором недели и паттерн поиском"""
     payload = json.loads(message.payload)
     pattern = payload.get("match")
@@ -141,10 +141,11 @@ async def detailed_search(message: Message):
 
 
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["searching_status"]))
-async def searching_status(message: Message):
-    text = (
-        f"Эта кнопка ничего не делает. Она лишь показывает, в каком статусе сейчас "
-        f"находится бот."
+async def searching_status(message: Message) -> None:
+    await message.answer(
+        message=(
+            "Эта кнопка ничего не делает. Она лишь показывает, "
+            "в каком статусе сейчас находится бот."
+        ),
+        keyboard=reset_keyboard,
     )
-
-    await message.answer(text, keyboard=reset_keyboard)

@@ -1,5 +1,4 @@
 import logging
-from functools import lru_cache
 from http import HTTPStatus
 from typing import Optional
 

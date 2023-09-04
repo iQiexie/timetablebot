@@ -51,7 +51,7 @@ async def compose_classes(
     vk_id: int,
     searching_date: datetime,
     pattern: str = None,
-):
+) -> None:
     week_day_index = searching_date.isocalendar().weekday  # пор. номер искомого дня недели
     week_index = searching_date.isocalendar().week  # порядковый номер искомой недели
     week_day = WEEK_DAYS_NUMBERED.get(week_day_index)  # искомый день енамом

@@ -42,7 +42,7 @@ async def get_user(
 async def update_group_number(
     data: ExternalUserUpdate,
     service: ExternalUserService = Depends(ExternalUserService),
-):
+) -> ExternalUser:
     return await service.update_external_user(data=data)
 
 
@@ -54,5 +54,5 @@ async def update_group_number(
 async def get_or_create_external_user(
     data: ExternalUserCreate,
     service: ExternalUserService = Depends(ExternalUserService),
-):
+) -> ExternalUserCreate:
     return await service.create_external_user(data=data)

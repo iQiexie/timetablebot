@@ -14,7 +14,7 @@ blueprint = Blueprint()
 
 
 @blueprint.on.message(ContainsTriggerRule(triggers=MENU_TRIGGERS, payload_triggers=["main menu"]))
-async def hello_handler(message: Message = None, user: User = None):
+async def hello_handler(message: Message = None, user: User = None) -> None:
     new_user = user.group_number is None
 
     if new_user:
