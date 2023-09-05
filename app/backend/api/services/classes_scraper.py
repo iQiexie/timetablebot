@@ -3,6 +3,7 @@ from typing import List
 
 from app.backend.api.services.dto.classes import ClassCords
 from app.backend.api.services.dto.classes import DURATIONS_MAP
+from app.backend.api.services.dto.classes import LinePositionEnum
 from app.backend.api.services.dto.classes import WeekDaysEnum
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.constants import GRADE_RANGE
@@ -29,7 +30,7 @@ def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
         group_indexes = {}
         week_days = [value for value in WeekDaysEnum]
         durations = DURATIONS_MAP.keys()
-        line_positions = ("НАД", "ПОД")
+        line_positions = [i for i in LinePositionEnum]
 
         classes = []
         last_week_day = None
@@ -43,10 +44,9 @@ def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
             for index, column in enumerate(row.values):
                 column_value = column.formatted_value
                 column_url = get_column_url(column)
-
                 ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
 
-                if not column_value or column_value in ending_values:
+                if (not column_value) or (column_value in ending_values):
                     continue
 
                 column_value = column_value.strip()

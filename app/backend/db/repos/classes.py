@@ -52,6 +52,8 @@ class ClassesRepo(BaseRepo[ClassModel]):
         return query.scalars().all()
 
     async def update_classes(self, classes: List[ScraperResult]) -> None:
+        await self.session.execute("truncate classes")
+
         values = [{**value.dict(), "updated_at": datetime.now()} for value in classes]
 
         args_per_row = len(values[0])
