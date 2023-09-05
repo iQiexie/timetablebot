@@ -18,7 +18,7 @@ async def downvote(message: Message, user: User) -> None:
 
     payload = json.loads(message.payload)
     requested_date = payload["srf"]
-    pattern = payload["ptr"]
+    pattern = payload.get("ptr")
 
     text = (
         f"Пользователю: https://vk.com/gim206763355?sel={user.vk_id} "
@@ -52,7 +52,7 @@ async def downvote(message: Message, user: User) -> None:
 async def upvote(message: Message) -> None:
     payload = json.loads(message.payload)
     requested_date = payload["srf"]
-    pattern = payload["ptr"]
+    pattern = payload.get("ptr")
 
     await message.answer("Обратная связь учтена. Спасибо 💖")
     await RequestClients.backend.rate_class(
