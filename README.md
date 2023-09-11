@@ -10,7 +10,7 @@ https://vk.com/mpsu_schedule
 
 ## Deploy
 
-Сначала создаём файлики: `deploy/.env`, `deploy/.env.local` и прописываем там всё в соответствии с `deploy/.env.example`
+Сначала создаём файлик `./timetable-infra/.env.prod` и прописываем там всё в соответствии с `./timetable-infra/.env.example`
 
 ### Первый раз:
 
