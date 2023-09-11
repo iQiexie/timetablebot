@@ -27,6 +27,7 @@ class ButtonsEnum(StrEnum):
     uptime = "uptime"
     menu = "menu"
     back = "back"
+    statistics_daily_users = "statistics_daily_users"
 
 
 class ActionsEnum(StrEnum):
@@ -51,5 +52,6 @@ class UserActionModel(Base):
     pattern = Column(String)
     correct = Column(Boolean)
     button = Column(String)
+    source = Column(String)
 
     user = relationship(ExternalUserModel, viewonly=True)

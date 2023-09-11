@@ -4,8 +4,6 @@ import traceback
 from vkbottle import BaseMiddleware
 from vkbottle import ErrorHandler
 
-from config import settings
-
 error_handler = ErrorHandler(redirect_arguments=True, raise_exceptions=True)
 
 

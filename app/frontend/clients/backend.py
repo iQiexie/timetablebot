@@ -4,13 +4,12 @@ from datetime import datetime
 from functools import lru_cache
 from typing import Optional
 
-from app.backend.api.routes.dto.action.request import ButtonActionRequest
-from app.backend.api.routes.dto.classes.request import DayRequest
 from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.dto.classes import DURATIONS_MAP
 from app.base_request_client import BaseRequestsClient
 from app.frontend.dto.user import CreateUser
+from app.frontend.dto.user import DayRequest
 from app.frontend.dto.user import DaySchema
 from app.frontend.dto.user import User
 from config import settings
@@ -55,7 +54,6 @@ class BackendApi(BaseRequestsClient):
         )
 
         classes = [ClassScheme(**i) for i in response]
-
         day_schema = {DURATIONS_MAP[i.duration]: i for i in classes}
 
         return DaySchema(**day_schema)
@@ -70,7 +68,6 @@ class BackendApi(BaseRequestsClient):
         )
 
         classes = [ClassScheme(**i) for i in response]
-
         day_schema = {DURATIONS_MAP[i.duration]: i for i in classes}
 
         return DaySchema(**day_schema)
@@ -84,10 +81,10 @@ class BackendApi(BaseRequestsClient):
     async def mark_action(
         self,
         button_name: str,
-        vk_id: int,
+        user_id: int,
         pattern: Optional[str] = None,
     ) -> None:
-        data = json.dumps({"button_name": button_name, "vk_id": vk_id, "pattern": pattern})
+        data = json.dumps({"button": button_name, "user_id": user_id, "pattern": pattern})
         url = "/v1/action/button"
 
         await self._make_request(method="POST", url=url, data=data)

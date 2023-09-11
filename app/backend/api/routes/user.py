@@ -17,19 +17,21 @@ from app.backend.db.models.user import UserModel
 users_router = APIRouter()
 
 
-@users_router.post("/users", response_model=UserOut, dependencies=[Depends(get_current_user)])
+@users_router.post("/users", response_model=UserOut)
 async def create_user(
     user: UserIn,
     service: UserService = Depends(UserService),
+    _: UserModel = Depends(get_current_user),
 ) -> UserModel:
     return await service.create_user(data=user)
 
 
-@users_router.get("/users", response_model=UserOut, dependencies=[Depends(get_current_user)])
+@users_router.get("/users", response_model=UserOut)
 async def get_user(
     user_id: int = Query(default=None),
     user_name: str = Query(default=None),
     service: UserService = Depends(UserService),
+    _: UserModel = Depends(get_current_user),
 ) -> Optional[UserModel]:
     return await service.get_user(user_id=user_id, user_name=user_name)
 
@@ -37,22 +39,25 @@ async def get_user(
 @users_router.patch(
     path="/users/external",
     response_model=ExternalUser,
-    dependencies=[Depends(get_current_user)],
 )
 async def update_group_number(
     data: ExternalUserUpdate,
     service: ExternalUserService = Depends(ExternalUserService),
+    current_user: UserModel = Depends(get_current_user),
 ) -> ExternalUser:
-    return await service.update_external_user(data=data)
+    return await service.update_external_user(
+        data=data,
+        current_user=current_user,
+    )
 
 
 @users_router.post(
     path="/users/external",
     response_model=ExternalUser,
-    dependencies=[Depends(get_current_user)],
 )
 async def get_or_create_external_user(
     data: ExternalUserCreate,
     service: ExternalUserService = Depends(ExternalUserService),
+    _: UserModel = Depends(get_current_user),
 ) -> ExternalUserCreate:
     return await service.create_external_user(data=data)

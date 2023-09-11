@@ -1,6 +1,5 @@
 from typing import Optional
 
-from sqlalchemy import or_
 from sqlalchemy import select
 
 from app.backend.core.exceptions.decorators import expect_arguments
@@ -11,6 +10,9 @@ from app.backend.db.models.user import ExternalUserModel
 
 class ExternalUserRepo(BaseRepo[ExternalUserModel]):
     model = ExternalUserModel
+
+    async def get_external_user_by_id(self, external_user_id: int) -> Optional[ExternalUserModel]:
+        return await self.base_get_one(id=external_user_id)
 
     @expect_specific_arguments(arguments=("telegram_id", "vk_id"))
     async def update_external_user(

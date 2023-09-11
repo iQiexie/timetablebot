@@ -18,6 +18,6 @@ async def kill_keyboard(message: Message, user: User) -> None:
     )
     await message.answer(message=text, keyboard=remove_keyboard)
     await RequestClients.backend.mark_action(
-        vk_id=user.vk_id,
+        user_id=user.id,
         button_name=ButtonsEnum.kill_keyboard,
     )

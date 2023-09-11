@@ -35,4 +35,4 @@ async def hello_handler(message: Message = None, user: User = None) -> None:
         traceback.print_exc()
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=menu_keyboard)
-    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.menu)
+    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.menu)

@@ -22,6 +22,7 @@ python-multipart = "*"
 bcrypt = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
 python-dotenv = "*"
+matplotlib = "*"
 
 [dev-packages]
 

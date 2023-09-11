@@ -22,6 +22,7 @@ from app.backend.core.schemes import SuccessResponse
 from app.backend.core.service import ServiceMediator
 from app.backend.db.dependencies import get_session
 from app.backend.db.models.classes import ClassModel
+from app.backend.db.models.user import UserModel
 from app.backend.db.repos.classes import ClassesRepo
 from app.backend.db.repos.credentials import CredentialsRepo
 from app.backend.libs.dto.sheets import Sheet
@@ -78,13 +79,13 @@ class ClassesService:
         week_day: WeekDaysEnum,
         line_position: LinePositionEnum,
         next_week: bool,
-        telegram_id: Optional[int] = None,
-        vk_id: Optional[int] = None,
+        user_id: int,
+        current_user: UserModel,
     ) -> List[ClassScheme]:
-        user = await self.services.external_user.get_user_by_external_id(
-            telegram_id=telegram_id,
-            vk_id=vk_id,
-        )
+        async with self.repo.transaction():
+            user = await self.services.external_user.repo.get_external_user_by_id(
+                external_user_id=user_id,
+            )
 
         cords = DayRequest(
             group_number=user.group_number,
@@ -103,6 +104,7 @@ class ClassesService:
                 user=user,
                 day=cords,
                 requested_date=requested_date,
+                current_user=current_user,
             )
         except Exception as e:
             logging.error(f"Cannot mark user activity, because of: {e}")
@@ -115,6 +117,7 @@ class ClassesService:
     async def get_day_by_pattern(
         self,
         data: DayRequestPattern,
+        current_user: UserModel,
     ) -> List[ClassScheme]:
         requested_date = self.get_requested_date(
             week_day=data.week_day,
@@ -123,10 +126,10 @@ class ClassesService:
 
         try:
             await self.services.action.mark_action_search_pattern(
-                telegram_id=data.telegram_id,
-                vk_id=data.vk_id,
+                user_id=data.user_id,
                 requested_date=requested_date,
                 pattern=data.pattern,
+                current_user=current_user,
             )
         except Exception as e:
             logging.error(f"Cannot mark user activity, because of: {e}")

@@ -33,7 +33,7 @@ async def today_classes_filter(message: Message, user: User) -> None:
     final_message = await compose_classes(
         group_number=user.group_number,
         searching_date=searching_date,
-        vk_id=message.peer_id,
+        user_id=user.id,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -50,7 +50,7 @@ async def tomorrow_classes_filter(message: Message, user: User) -> None:
     final_message = await compose_classes(
         group_number=user.group_number,
         searching_date=searching_date,
-        vk_id=message.peer_id,
+        user_id=user.id,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -84,7 +84,7 @@ async def find_by_week_day(message: Message, user: User) -> None:
         group_number=user.group_number,
         searching_date=searching_date,
         pattern=pattern,
-        vk_id=message.peer_id,
+        user_id=user.id,
     )
 
     keyboard = compose_feedback_keyboard(
@@ -109,7 +109,7 @@ async def pattern_search(message: Message, user: User) -> None:
     await message.answer(greeting)
     await message.answer("Напиши мне свой запрос, а потом выбери нужный день")
     await blueprint.state_dispenser.set(message.peer_id, ClassStates.WAITING_FOR_PATTERN)
-    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.pattern_mode)
+    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.pattern_mode)
 
 
 @blueprint.on.message(state=ClassStates.WAITING_FOR_PATTERN)
@@ -138,7 +138,7 @@ async def day_selection(message: Message, user: User) -> None:
     }.get(True)
 
     await RequestClients.backend.mark_action(
-        vk_id=user.vk_id,
+        user_id=user.id,
         button_name=button_name,
         pattern=match,
     )
@@ -157,7 +157,8 @@ async def detailed_search(message: Message, user: User) -> None:
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=keyboard)
     await RequestClients.backend.mark_action(
-        vk_id=user.vk_id, button_name=ButtonsEnum.detailed_search
+        user_id=user.id,
+        button_name=ButtonsEnum.detailed_search,
     )
 
 

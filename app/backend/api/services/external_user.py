@@ -8,6 +8,7 @@ from app.backend.api.routes.dto.user.request import ExternalUserUpdate
 from app.backend.core.service import ServiceMediator
 from app.backend.db.dependencies import get_session
 from app.backend.db.models.user import ExternalUserModel
+from app.backend.db.models.user import UserModel
 from app.backend.db.repos.external_user import ExternalUserRepo
 
 
@@ -58,11 +59,13 @@ class ExternalUserService:
     async def update_external_user(
         self,
         data: ExternalUserUpdate,
+        current_user: UserModel,
     ) -> ExternalUserModel:
         await self.services.action.mark_action_settings(
             vk_id=data.vk_id,
             telegram_id=data.telegram_id,
             new_group=data.group_number,
+            current_user=current_user,
         )
 
         async with self.repo.transaction() as t:

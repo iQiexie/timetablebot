@@ -1,78 +1,39 @@
-version: "3"
-
 services:
-  timetable-postgres:
-    image: "postgres:15"
-    container_name: timetable-postgres
-    environment:
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: root
-      POSTGRES_DB: db
-      PGDATA: /var/lib/postgresql/data/pgdata
+  db:
+    image: mysql:8.0.27
+    command: '--default-authentication-plugin=mysql_native_password'
+    volumes:
+      - db_data:/var/lib/mysql
     restart: always
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    logging:
-     driver: "json-file"
-     options:
-       max-size: "100m"
-    networks:
-      - timetable-network
-
-  timetable-backend:
-    container_name: timetable-backend
-    labels:
-      logging: "promtail"
-      logging_jobname: "containerlogs"
-    build:
-      context: ../
-      dockerfile: /Dockerfile
-    command: uvicorn main:get_app --reload --port 8080 --host 0.0.0.0 --forwarded-allow-ips '*'
-    restart: unless-stopped
-    env_file:
-      - ../.env
-    ports:
-      - "8080:8080"
-    volumes:
-      - ../:/usr/app/
-      - ../statics/:/usr/local/lib/python3.10/site-packages/sqladmin/statics
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-    depends_on:
-      - timetable-postgres
-    networks:
-      - timetable-network
-
-  timetable-migration:
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "100m"
-    container_name: timetable-migration
-    build:
-      context: ../
-      dockerfile: /Dockerfile
-    command: sh -c "alembic upgrade head"
-    env_file:
-      - ../.env
     environment:
-      POSTGRES_HOST: timetable-postgres
-      POSTGRES_PORT: 5432
+      - MYSQL_ROOT_PASSWORD=2VZD2z905tdwa_T
+      - MYSQL_DATABASE=wordpress
+      - MYSQL_USER=1_xyTE39A9Rtapv
+      - MYSQL_PASSWORD=foqizEiW5wiv_j2
+    ports:
+      - "3306:3306"
+    networks:
+      - timetable-network
+
+  wordpress:
+    image: wordpress:latest
     volumes:
-      - ../:/usr/app/
-    depends_on:
-      - timetable-postgres
+      - wp_data:/var/www/html
+    ports:
+      - "3000:80"
+    restart: always
+    environment:
+      - WORDPRESS_DB_HOST=db
+      - WORDPRESS_DB_USER=1_xyTE39A9Rtapv
+      - WORDPRESS_DB_PASSWORD=foqizEiW5wiv_j2
+      - WORDPRESS_DB_NAME=wordpress
     networks:
       - timetable-network
 
 volumes:
-  postgres-data:
+  db_data:
+  wp_data:
 
 networks:
-  timetable-network:
-    external:
-      name: timetable-network
+  wordpress-network:
+    external: true

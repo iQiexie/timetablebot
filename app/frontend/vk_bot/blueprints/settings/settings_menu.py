@@ -32,7 +32,7 @@ async def settings_menu(message: Message, user: User) -> None:
     )
 
     await message.answer(message=text, keyboard=settings_keyboard)
-    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.settings)
+    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.settings)
 
 
 @blueprint.on.message(ContainsTriggerRule(CHANGE_GROUP_TRIGGERS, ["change group"]))
@@ -41,7 +41,7 @@ async def ask_for_group_number(message: Message, user: User) -> None:
 
     await blueprint.state_dispenser.set(message.peer_id, state)
     await message.answer("Напиши номер своей группы")
-    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.change_group)
+    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.change_group)
 
 
 @blueprint.on.message(state=ChangingGroupStates.PICKING_GROUP)
@@ -86,4 +86,4 @@ async def uptime(message: Message, user: User) -> None:
     text = f"Расписание последний раз обновлялось в {classes_uptime}"
 
     await message.answer(message=text, keyboard=settings_keyboard)
-    await RequestClients.backend.mark_action(vk_id=user.vk_id, button_name=ButtonsEnum.uptime)
+    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.uptime)

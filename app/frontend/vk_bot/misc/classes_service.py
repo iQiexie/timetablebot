@@ -48,10 +48,10 @@ def compose_header(
 
 async def compose_classes(
     group_number: int,
-    vk_id: int,
+    user_id: int,
     searching_date: datetime,
     pattern: str = None,
-) -> None:
+) -> str:
     week_day_index = searching_date.isocalendar().weekday  # пор. номер искомого дня недели
     week_index = searching_date.isocalendar().week  # порядковый номер искомой недели
     week_day = WEEK_DAYS_NUMBERED.get(week_day_index)  # искомый день енамом
@@ -63,7 +63,7 @@ async def compose_classes(
         week_day=week_day,
         line_position=line_position,
         next_week=next_week,
-        vk_id=vk_id,
+        user_id=user_id,
     )
 
     if pattern:

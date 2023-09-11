@@ -13,11 +13,14 @@ actions_router = APIRouter()
 @actions_router.post(
     "/action/button",
     response_model=SuccessResponse,
-    dependencies=[Depends(get_current_user)],
 )
 async def create_action(
     data: ButtonActionRequest,
     service: ActionService = Depends(ActionService),
+    current_user: UserModel = Depends(get_current_user),
 ) -> SuccessResponse:
-    await service.mark_action_button_clicked(data=data)
+    await service.mark_action_button_clicked(
+        **data.dict(),
+        current_user=current_user,
+    )
     return SuccessResponse(success=True)

@@ -4,13 +4,14 @@ from typing import Optional
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.backend.api.routes.dto.action.request import ButtonActionRequest
 from app.backend.api.routes.dto.classes.request import DayRequest
 from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.core.service import ServiceMediator
 from app.backend.db.dependencies import get_session
 from app.backend.db.models.action import ActionsEnum
+from app.backend.db.models.action import ButtonsEnum
 from app.backend.db.models.user import ExternalUserModel
+from app.backend.db.models.user import UserModel
 from app.backend.db.repos.user import UserRepo
 
 
@@ -19,19 +20,25 @@ class ActionService:
         self.services = ServiceMediator(session=session)
         self.repo = UserRepo(session=session)
 
-    async def mark_action_button_clicked(self, data: ButtonActionRequest):
-        existing_user = await self.services.external_user.get_user_by_external_id(
-            telegram_id=data.telegram_id,
-            vk_id=data.vk_id,
-        )
-
+    async def mark_action_button_clicked(
+        self,
+        button: ButtonsEnum,
+        user_id: int,
+        current_user: UserModel,
+        pattern: Optional[str] = None,
+    ) -> None:
         async with self.repo.transaction() as t:
+            existing_user = await self.services.external_user.repo.get_external_user_by_id(
+                external_user_id=user_id,
+            )
+
             await self.repo.create_action(
                 user_id=existing_user.id,
                 action=ActionsEnum.button_clicked,
-                button=data.button_name,
+                button=button,
                 created_at=datetime.now(),
-                pattern=data.pattern,
+                pattern=pattern,
+                source=current_user.source,
             )
             await t.commit()
 
@@ -40,6 +47,7 @@ class ActionService:
         user: ExternalUserModel,
         day: DayRequest,
         requested_date: datetime,
+        current_user: UserModel,
     ) -> None:
         async with self.repo.transaction() as t:
             await self.repo.create_action(
@@ -49,6 +57,7 @@ class ActionService:
                 requested_day=requested_date.date(),
                 new_group=day.group_number,
                 current_group=user.group_number,
+                source=current_user.source,
             )
             await t.commit()
 
@@ -56,15 +65,14 @@ class ActionService:
         self,
         pattern: str,
         requested_date: datetime,
-        telegram_id: Optional[int] = None,
-        vk_id: Optional[int] = None,
+        user_id: int,
+        current_user: UserModel,
     ) -> None:
-        user = await self.services.external_user.get_user_by_external_id(
-            telegram_id=telegram_id,
-            vk_id=vk_id,
-        )
-
         async with self.repo.transaction() as t:
+            user = await self.services.external_user.repo.get_external_user_by_id(
+                external_user_id=user_id,
+            )
+
             await self.repo.create_action(
                 user_id=user.id,
                 action=ActionsEnum.search_pattern,
@@ -72,12 +80,14 @@ class ActionService:
                 requested_day=requested_date.date(),
                 current_group=user.group_number,
                 pattern=pattern,
+                source=current_user.source,
             )
             await t.commit()
 
     async def mark_action_settings(
         self,
         new_group: int,
+        current_user: UserModel,
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
     ) -> None:
@@ -93,16 +103,17 @@ class ActionService:
                 action=ActionsEnum.change_settings,
                 current_group=user.group_number,
                 new_group=new_group,
+                source=current_user.source,
             )
             await t.commit()
 
-    async def mark_action_rate(self, data: RateRequest) -> None:
-        async with self.repo.transaction() as t:
-            user = await self.services.external_user.get_user_by_external_id(
-                telegram_id=data.telegram_id,
-                vk_id=data.vk_id,
-            )
+    async def mark_action_rate(self, data: RateRequest, current_user: UserModel) -> None:
+        user = await self.services.external_user.get_user_by_external_id(
+            telegram_id=data.telegram_id,
+            vk_id=data.vk_id,
+        )
 
+        async with self.repo.transaction() as t:
             await self.repo.create_action(
                 user_id=user.id,
                 created_at=datetime.now(),
@@ -111,5 +122,6 @@ class ActionService:
                 correct=data.correct,
                 requested_day=data.date.date(),
                 pattern=data.pattern,
+                source=current_user.source,
             )
             await t.commit()

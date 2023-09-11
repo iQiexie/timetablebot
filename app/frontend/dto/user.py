@@ -13,8 +13,7 @@ class DayRequest(BaseModel):
     week_day: WeekDaysEnum
     line_position: LinePositionEnum
     next_week: bool
-    vk_id: Optional[int]
-    telegram_id: Optional[int]
+    user_id: int
     pattern: Optional[str]
 
     class Config:

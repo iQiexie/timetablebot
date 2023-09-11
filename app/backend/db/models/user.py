@@ -11,7 +11,8 @@ class UserModel(TimeMixin, Base):
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, unique=True)
-    password = Column(String)
+    password = Column(String, nullable=False)
+    source = Column(String, nullable=False)
 
 
 class ExternalUserModel(TimeMixin, Base):
