@@ -3,8 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import LinePositionEnum, WeekDaysEnum
 from app.backend.db.models.user import UserModel
 
 

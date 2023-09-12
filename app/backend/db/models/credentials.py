@@ -1,5 +1,4 @@
-from sqlalchemy import Column
-from sqlalchemy import String
+from sqlalchemy import Column, String
 
 from app.backend.db.base_model import Base
 from app.backend.db.mixins import TimeMixin

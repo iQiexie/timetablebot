@@ -3,8 +3,7 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from app.backend.core.schemes import BaseModelORM
-from app.backend.core.schemes import StrEnum
+from app.backend.core.schemes import BaseModelORM, StrEnum
 
 
 class ClassesEnum(str, Enum):

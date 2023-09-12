@@ -1,20 +1,20 @@
 import logging
 import traceback
 from contextlib import asynccontextmanager
-from typing import Any
-from typing import AsyncContextManager
-from typing import Callable
-from typing import Generic
-from typing import List
-from typing import Optional
-from typing import Sequence
-from typing import TypeVar
+from typing import (
+    Any,
+    AsyncContextManager,
+    Callable,
+    Generic,
+    List,
+    Optional,
+    Sequence,
+    TypeVar,
+)
 from uuid import UUID
 
 from fastapi import Depends
-from sqlalchemy import delete
-from sqlalchemy import select
-from sqlalchemy import update
+from sqlalchemy import delete, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.backend.core.exceptions.decorators import expect_arguments

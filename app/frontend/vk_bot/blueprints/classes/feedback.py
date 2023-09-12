@@ -1,7 +1,6 @@
 import json
 
-from vkbottle.bot import Blueprint
-from vkbottle.bot import Message
+from vkbottle.bot import Blueprint, Message
 
 from app.backend.api.routes.dto.classes.request import RateRequest
 from app.frontend.dto.user import User

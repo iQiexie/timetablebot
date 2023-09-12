@@ -1,5 +1,4 @@
-from typing import Any
-from typing import Optional
+from typing import Any, Optional
 
 from fastapi import HTTPException
 from pydantic import BaseModel

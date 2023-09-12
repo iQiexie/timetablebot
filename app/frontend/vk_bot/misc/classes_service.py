@@ -2,11 +2,12 @@ from datetime import datetime
 
 from vkbottle.bot import Message
 
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
-from app.backend.api.services.dto.classes import WeekDaysEnum
-from app.frontend.dto.user import DayRequest
-from app.frontend.dto.user import User
+from app.backend.api.services.dto.classes import (
+    WEEK_DAYS_NUMBERED,
+    LinePositionEnum,
+    WeekDaysEnum,
+)
+from app.frontend.dto.user import DayRequest, User
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
 from app.frontend.vk_bot.misc.request_clients import RequestClients
 

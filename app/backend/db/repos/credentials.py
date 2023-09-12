@@ -1,7 +1,6 @@
 from typing import Optional
 
-from sqlalchemy import select
-from sqlalchemy import update
+from sqlalchemy import select, update
 
 from app.backend.core.repo import BaseRepo
 from app.backend.db.models.credentials import CredentialsModel
@@ -16,11 +15,7 @@ class CredentialsRepo(BaseRepo[CredentialsModel]):
         existing_credential = query.scalar()
 
         if existing_credential:
-            stmt = (
-                update(self.model)
-                .where(self.model.service_name == service_name)
-                .values(credentials=credentials)
-            )
+            stmt = update(self.model).where(self.model.service_name == service_name).values(credentials=credentials)
             await self.session.execute(stmt)
             existing_credential.credentials = credentials
             return existing_credential

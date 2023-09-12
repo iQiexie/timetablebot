@@ -25,9 +25,7 @@ def upgrade() -> None:
         sa.Column("credentials", sa.String(), nullable=True),
         sa.PrimaryKeyConstraint("service_name"),
     )
-    op.create_index(
-        op.f("ix_credentials_service_name"), "credentials", ["service_name"], unique=False
-    )
+    op.create_index(op.f("ix_credentials_service_name"), "credentials", ["service_name"], unique=False)
     # ### end Alembic commands ###
 
 

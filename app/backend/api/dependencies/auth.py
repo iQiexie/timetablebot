@@ -1,9 +1,7 @@
 import logging
 
 from fastapi import Depends
-from jose import ExpiredSignatureError
-from jose import jwt
-from jose import JWTError
+from jose import ExpiredSignatureError, JWTError, jwt
 
 from app.backend.api.routes.auth import oauth2_scheme
 from app.backend.api.routes.dto.user.response import UserOut

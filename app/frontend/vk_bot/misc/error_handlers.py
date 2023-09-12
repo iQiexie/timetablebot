@@ -2,8 +2,7 @@ import logging
 import traceback
 
 import aiohttp
-from vkbottle import BaseMiddleware
-from vkbottle import ErrorHandler
+from vkbottle import BaseMiddleware, ErrorHandler
 
 from config import settings
 

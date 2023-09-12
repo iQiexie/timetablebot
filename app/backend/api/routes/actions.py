@@ -1,5 +1,4 @@
-from fastapi import APIRouter
-from fastapi import Depends
+from fastapi import APIRouter, Depends
 
 from app.backend.api.dependencies.auth import get_current_user
 from app.backend.api.routes.dto.action.request import ButtonActionRequest

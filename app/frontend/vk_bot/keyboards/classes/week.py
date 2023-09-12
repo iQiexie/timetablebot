@@ -1,6 +1,4 @@
-from vkbottle import Keyboard
-from vkbottle import KeyboardButtonColor
-from vkbottle import Text
+from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 
 def compose_detailed_menu(pattern: str = None) -> Keyboard:

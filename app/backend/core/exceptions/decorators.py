@@ -1,5 +1,4 @@
-from typing import Any
-from typing import Callable
+from typing import Any, Callable
 
 from app.backend.core.exceptions.runtime import EmptyArgumentsError
 
@@ -24,9 +23,7 @@ def expect_specific_arguments(arguments: tuple[str, ...]) -> Callable:
     def decorator(func: Callable) -> Callable:
         async def wrapper(*args, **kwargs) -> Any:
             arguments_in_args = any(i in arguments for i in args)
-            arguments_in_kwargs = any(
-                key in arguments and value is not None for key, value in kwargs.items()
-            )
+            arguments_in_kwargs = any(key in arguments and value is not None for key, value in kwargs.items())
 
             if (not arguments_in_args) and (not arguments_in_kwargs):
                 raise EmptyArgumentsError(arguments=arguments)

@@ -3,8 +3,7 @@ from http import HTTPStatus
 from typing import Optional
 
 import aiohttp
-from aiohttp import ClientResponse
-from aiohttp import ContentTypeError
+from aiohttp import ClientResponse, ContentTypeError
 from starlette import status
 
 

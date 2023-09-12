@@ -8,10 +8,7 @@ from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.dto.classes import DURATIONS_MAP
 from app.base_request_client import BaseRequestsClient
-from app.frontend.dto.user import CreateUser
-from app.frontend.dto.user import DayRequest
-from app.frontend.dto.user import DaySchema
-from app.frontend.dto.user import User
+from app.frontend.dto.user import CreateUser, DayRequest, DaySchema, User
 from config import settings
 
 

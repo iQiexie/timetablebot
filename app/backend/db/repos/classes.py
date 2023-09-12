@@ -2,13 +2,11 @@ import math
 from datetime import datetime
 from typing import List
 
-from sqlalchemy import and_
-from sqlalchemy import select
+from sqlalchemy import and_, select
 from sqlalchemy.dialects.postgresql import insert
 
 from app.backend.api.routes.dto.classes.request import DayRequest
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import LinePositionEnum, WeekDaysEnum
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.repo import BaseRepo
 from app.backend.db.models.classes import ClassModel
@@ -60,8 +58,7 @@ class ClassesRepo(BaseRepo[ClassModel]):
         psql_query_allowed_max_args = 3000
         allowed_args_per_query = int(math.floor(psql_query_allowed_max_args / args_per_row))
         query_args_sets = [
-            values[x : x + allowed_args_per_query]
-            for x in range(0, len(values), allowed_args_per_query)
+            values[x : x + allowed_args_per_query] for x in range(0, len(values), allowed_args_per_query)
         ]
 
         for arg_set in query_args_sets:

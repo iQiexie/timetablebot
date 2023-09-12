@@ -1,6 +1,5 @@
 from traceback import print_exception
-from typing import Any
-from typing import Callable
+from typing import Any, Callable
 
 from fastapi import Request
 from fastapi.exceptions import ResponseValidationError

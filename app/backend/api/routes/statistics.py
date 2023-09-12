@@ -1,12 +1,12 @@
 from typing import List
 
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import Query
+from fastapi import APIRouter, Depends, Query
 
 from app.backend.api.dependencies.auth import get_current_user
-from app.backend.api.routes.dto.statistics.response import ByGradeResponse
-from app.backend.api.routes.dto.statistics.response import DailyUsersResponse
+from app.backend.api.routes.dto.statistics.response import (
+    ByGradeResponse,
+    DailyUsersResponse,
+)
 from app.backend.api.services.statistics import StatisticsService
 from app.backend.db.models.user import UserModel
 

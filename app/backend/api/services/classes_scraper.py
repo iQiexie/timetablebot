@@ -1,14 +1,15 @@
 import logging
 from typing import List
 
-from app.backend.api.services.dto.classes import ClassCords
-from app.backend.api.services.dto.classes import DURATIONS_MAP
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import (
+    DURATIONS_MAP,
+    ClassCords,
+    LinePositionEnum,
+    WeekDaysEnum,
+)
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.constants import GRADE_RANGE
-from app.backend.libs.dto.sheets import Sheet
-from app.backend.libs.dto.sheets import SheetValue
+from app.backend.libs.dto.sheets import Sheet, SheetValue
 
 
 def get_column_url(column: SheetValue) -> str:

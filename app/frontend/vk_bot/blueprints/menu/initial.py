@@ -1,7 +1,6 @@
 import traceback
 
-from vkbottle.bot import Blueprint
-from vkbottle.bot import Message
+from vkbottle.bot import Blueprint, Message
 
 from app.backend.db.models.action import ButtonsEnum
 from app.frontend.dto.user import User

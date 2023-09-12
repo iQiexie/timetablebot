@@ -1,6 +1,5 @@
 import json
-from typing import List
-from typing import Optional
+from typing import List, Optional
 
 from vkbottle import ABCRule
 from vkbottle.tools.dev.mini_types.base import BaseMessageMin

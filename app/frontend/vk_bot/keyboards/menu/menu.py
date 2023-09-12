@@ -1,6 +1,4 @@
-from vkbottle import Keyboard
-from vkbottle import KeyboardButtonColor
-from vkbottle import Text
+from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 menu_keyboard = Keyboard(one_time=False, inline=False)
 menu_keyboard.add(Text("🔎 Сегодняшние пары", {"cmd": "today"}), KeyboardButtonColor.PRIMARY)

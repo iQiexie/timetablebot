@@ -3,9 +3,11 @@ from typing import Optional
 from pydantic import BaseModel
 
 from app.backend.api.routes.dto.classes.response import ClassScheme
-from app.backend.api.services.dto.classes import ClassesEnum
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import (
+    ClassesEnum,
+    LinePositionEnum,
+    WeekDaysEnum,
+)
 
 
 class DayRequest(BaseModel):

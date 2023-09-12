@@ -1,18 +1,18 @@
 from datetime import datetime
 
-from vkbottle.bot import Blueprint
-from vkbottle.bot import Message
+from vkbottle.bot import Blueprint, Message
 
 from app.backend.db.models.action import ButtonsEnum
-from app.frontend.dto.user import CreateUser
-from app.frontend.dto.user import User
+from app.frontend.dto.user import CreateUser, User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.settings import settings_keyboard
-from app.frontend.vk_bot.misc.constants import CHANGE_GROUP_TRIGGERS
-from app.frontend.vk_bot.misc.constants import HIGHEST_GROUP_NUMBER
-from app.frontend.vk_bot.misc.constants import LOWEST_GROUP_NUMBER
-from app.frontend.vk_bot.misc.constants import NOT_EXISTING_GROUPS
-from app.frontend.vk_bot.misc.constants import SETTINGS_TRIGGERS
+from app.frontend.vk_bot.misc.constants import (
+    CHANGE_GROUP_TRIGGERS,
+    HIGHEST_GROUP_NUMBER,
+    LOWEST_GROUP_NUMBER,
+    NOT_EXISTING_GROUPS,
+    SETTINGS_TRIGGERS,
+)
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.settings import ChangingGroupStates

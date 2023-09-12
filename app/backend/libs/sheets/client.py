@@ -1,6 +1,5 @@
 import json
-from typing import Any
-from typing import List
+from typing import Any, List
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials

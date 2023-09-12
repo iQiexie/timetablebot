@@ -2,8 +2,10 @@ from typing import Optional
 
 from sqlalchemy import select
 
-from app.backend.core.exceptions.decorators import expect_arguments
-from app.backend.core.exceptions.decorators import expect_specific_arguments
+from app.backend.core.exceptions.decorators import (
+    expect_arguments,
+    expect_specific_arguments,
+)
 from app.backend.core.repo import BaseRepo
 from app.backend.db.models.user import ExternalUserModel
 

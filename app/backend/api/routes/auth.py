@@ -1,7 +1,5 @@
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from app.backend.api.routes.dto.auth.request import TokenModel
 from app.backend.api.services.auth import SecurityService

@@ -1,6 +1,4 @@
-from sqlalchemy import distinct
-from sqlalchemy import func
-from sqlalchemy import select
+from sqlalchemy import distinct, func, select
 
 from app.backend.core.repo import BaseRepo
 from app.backend.db.models.action import UserActionModel

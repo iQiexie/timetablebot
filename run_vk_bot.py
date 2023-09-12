@@ -1,13 +1,10 @@
 from typing import Iterable
 
-from vkbottle import API
-from vkbottle import Bot
-from vkbottle import run_multibot
+from vkbottle import API, Bot, run_multibot
 
 from app.frontend.vk_bot.blueprints import blueprints
 from app.frontend.vk_bot.middlewares import middlewares
-from app.frontend.vk_bot.misc.constants import current_apis
-from app.frontend.vk_bot.misc.constants import current_bot
+from app.frontend.vk_bot.misc.constants import current_apis, current_bot
 from main import init_logger
 
 

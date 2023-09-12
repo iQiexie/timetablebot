@@ -4,14 +4,11 @@ from typing import Optional
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.backend.api.routes.dto.classes.request import DayRequest
-from app.backend.api.routes.dto.classes.request import RateRequest
+from app.backend.api.routes.dto.classes.request import DayRequest, RateRequest
 from app.backend.core.service import ServiceMediator
 from app.backend.db.dependencies import get_session
-from app.backend.db.models.action import ActionsEnum
-from app.backend.db.models.action import ButtonsEnum
-from app.backend.db.models.user import ExternalUserModel
-from app.backend.db.models.user import UserModel
+from app.backend.db.models.action import ActionsEnum, ButtonsEnum
+from app.backend.db.models.user import ExternalUserModel, UserModel
 from app.backend.db.repos.user import UserRepo
 
 

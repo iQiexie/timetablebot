@@ -4,9 +4,7 @@ import wsgiref.simple_server
 import wsgiref.util
 
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import _RedirectWSGIApp
-from google_auth_oauthlib.flow import _WSGIRequestHandler
-from google_auth_oauthlib.flow import Flow
+from google_auth_oauthlib.flow import Flow, _RedirectWSGIApp, _WSGIRequestHandler
 
 
 class InstalledAppFlow(Flow):
@@ -59,9 +57,7 @@ class InstalledAppFlow(Flow):
     """str: The message to display when prompting the user for the
     authorization code. Used only by the console strategy."""
 
-    _DEFAULT_WEB_SUCCESS_MESSAGE = (
-        "The authentication flow has completed. You may close this window."
-    )
+    _DEFAULT_WEB_SUCCESS_MESSAGE = "The authentication flow has completed. You may close this window."
 
     def run_local_server(
         self,

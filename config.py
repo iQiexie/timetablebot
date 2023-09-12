@@ -1,8 +1,7 @@
 import os
 from enum import Enum
 
-from pydantic import BaseSettings
-from pydantic import Field
+from pydantic import BaseSettings, Field
 
 
 class TimeMeasurementUnits(str, Enum):

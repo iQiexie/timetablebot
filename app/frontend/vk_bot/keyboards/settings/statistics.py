@@ -1,6 +1,4 @@
-from vkbottle import Keyboard
-from vkbottle import KeyboardButtonColor
-from vkbottle import Text
+from vkbottle import Keyboard, KeyboardButtonColor, Text
 
 statistics_keyboard = Keyboard(one_time=False, inline=False)
 statistics_keyboard.add(

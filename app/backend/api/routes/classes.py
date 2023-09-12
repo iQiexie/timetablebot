@@ -1,18 +1,14 @@
 from datetime import datetime
 from typing import List
 
-from fastapi import APIRouter
-from fastapi import Depends
-from fastapi import Query
+from fastapi import APIRouter, Depends, Query
 
 from app.backend.api.dependencies.auth import get_current_user
-from app.backend.api.routes.dto.classes.request import DayRequestPattern
-from app.backend.api.routes.dto.classes.request import RateRequest
+from app.backend.api.routes.dto.classes.request import DayRequestPattern, RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.action import ActionService
 from app.backend.api.services.classes import ClassesService
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import LinePositionEnum, WeekDaysEnum
 from app.backend.core.schemes import SuccessResponse
 from app.backend.db.models.user import UserModel
 

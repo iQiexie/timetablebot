@@ -1,21 +1,20 @@
 import logging
 import traceback
-from datetime import datetime
-from datetime import timedelta
-from typing import List
-from typing import Optional
+from datetime import datetime, timedelta
+from typing import List, Optional
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.backend.api.routes.dto.classes.request import DayRequest
-from app.backend.api.routes.dto.classes.request import DayRequestPattern
+from app.backend.api.routes.dto.classes.request import DayRequest, DayRequestPattern
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.classes_scraper import scrape_spreadsheet
-from app.backend.api.services.dto.classes import DURATIONS_MAP_FOR_SORTING
-from app.backend.api.services.dto.classes import LinePositionEnum
-from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
-from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.backend.api.services.dto.classes import (
+    DURATIONS_MAP_FOR_SORTING,
+    WEEK_DAYS_NUMBERED,
+    LinePositionEnum,
+    WeekDaysEnum,
+)
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.constants import GRADE_RANGE
 from app.backend.core.schemes import SuccessResponse
