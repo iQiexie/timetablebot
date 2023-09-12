@@ -37,6 +37,9 @@ class Settings(BaseSettings):
     VK_ADMIN_IDS: list[str]
     VK_EMPTY_MESSAGE: str
 
+    TELEGRAM_TOKEN: str
+    TELEGRAM_ALERTS_CHAT_ID: int
+
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
 
