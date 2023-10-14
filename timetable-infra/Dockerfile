@@ -5,8 +5,8 @@ RUN ln -fs /usr/share/zoneinfo/Europe/Moscow /etc/localtime && dpkg-reconfigure 
 
 WORKDIR /usr/app/
 
-COPY Pipfile.lock Pipfile ./
 RUN pip install pipenv
+COPY Pipfile.lock Pipfile ./
 RUN pipenv install --system
 
 COPY . .

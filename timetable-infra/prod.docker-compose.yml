@@ -89,6 +89,29 @@ services:
     networks:
       - timetable-network
 
+  timetable-tgbot:
+    container_name: timetable-tgbot
+    labels:
+      logging: "promtail"
+      logging_jobname: "containerlogs"
+    build:
+      context: ../
+      dockerfile: ./timetable-infra/Dockerfile
+    command: python run_telegram_bot.py
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    volumes:
+      - ../:/usr/app/
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+    depends_on:
+      - timetable-backend
+    networks:
+      - timetable-network
+
 volumes:
   postgres-data:
 

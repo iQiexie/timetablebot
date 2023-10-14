@@ -1,6 +1,8 @@
-from vkbottle.bot import Blueprint, Message
+from vkbottle.bot import Blueprint
+from vkbottle.bot import Message
 
 from app.backend.db.models.action import ButtonsEnum
+from app.frontend.dto.enum import SourcesEnum
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.remove import remove_keyboard
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
@@ -17,6 +19,7 @@ async def kill_keyboard(message: Message, user: User) -> None:
     )
     await message.answer(message=text, keyboard=remove_keyboard)
     await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
         user_id=user.id,
         button_name=ButtonsEnum.kill_keyboard,
     )

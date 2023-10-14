@@ -8,7 +8,11 @@ from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.dto.classes import DURATIONS_MAP
 from app.base_request_client import BaseRequestsClient
-from app.frontend.dto.user import CreateUser, DayRequest, DaySchema, User
+from app.frontend.dto.enum import SourcesEnum
+from app.frontend.dto.user import CreateUser
+from app.frontend.dto.user import DayRequest
+from app.frontend.dto.user import DaySchema
+from app.frontend.dto.user import User
 from config import settings
 
 
@@ -37,9 +41,12 @@ class BackendApi(BaseRequestsClient):
 
         return User(**response)
 
-    async def get_last_updated_at(self) -> datetime:
+    async def get_last_updated_at(self) -> str:
         response = await self._make_request(method="GET", url="/v1/classes/last_update")
-        return response["last_update"]
+        uptime = response["last_update"]
+        date_obj = datetime.fromisoformat(uptime)
+        classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
+        return classes_uptime
 
     async def get_classes(self, data: DayRequest) -> DaySchema:
         params = data.dict(exclude_none=True)
@@ -79,9 +86,17 @@ class BackendApi(BaseRequestsClient):
         self,
         button_name: str,
         user_id: int,
+        source: SourcesEnum,
         pattern: Optional[str] = None,
     ) -> None:
-        data = json.dumps({"button": button_name, "user_id": user_id, "pattern": pattern})
+        data = json.dumps(
+            {
+                "button": button_name,
+                "user_id": user_id,
+                "pattern": pattern,
+                "source": source,
+            }
+        )
         url = "/v1/action/button"
 
         await self._make_request(method="POST", url=url, data=data)

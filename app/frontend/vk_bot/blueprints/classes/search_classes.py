@@ -1,21 +1,21 @@
 import json
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 
-from vkbottle.bot import Blueprint, Message
+from vkbottle.bot import Blueprint
+from vkbottle.bot import Message
 
 from app.backend.db.models.action import ButtonsEnum
+from app.frontend.dto.enum import SourcesEnum
 from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.classes.feedback import compose_feedback_keyboard
-from app.frontend.vk_bot.keyboards.classes.week import (
-    compose_detailed_menu,
-    compose_week_keyboard,
-    reset_keyboard,
-)
-from app.frontend.vk_bot.misc.classes_service import compose_classes, group_index_set
-from app.frontend.vk_bot.misc.constants import (
-    TODAY_CLASSES_TRIGGERS,
-    TOMORROW_CLASSES_TRIGGERS,
-)
+from app.frontend.vk_bot.keyboards.classes.week import compose_detailed_menu
+from app.frontend.vk_bot.keyboards.classes.week import compose_week_keyboard
+from app.frontend.vk_bot.keyboards.classes.week import reset_keyboard
+from app.frontend.vk_bot.misc.classes_service import compose_classes
+from app.frontend.vk_bot.misc.classes_service import group_index_set
+from app.frontend.vk_bot.misc.constants import TODAY_CLASSES_TRIGGERS
+from app.frontend.vk_bot.misc.constants import TOMORROW_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.classes import ClassStates
@@ -110,7 +110,9 @@ async def pattern_search(message: Message, user: User) -> None:
     await message.answer(greeting)
     await message.answer("Напиши мне свой запрос, а потом выбери нужный день")
     await blueprint.state_dispenser.set(message.peer_id, ClassStates.WAITING_FOR_PATTERN)
-    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.pattern_mode)
+    await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk, user_id=user.id, button_name=ButtonsEnum.pattern_mode
+    )
 
 
 @blueprint.on.message(state=ClassStates.WAITING_FOR_PATTERN)
@@ -139,6 +141,7 @@ async def day_selection(message: Message, user: User) -> None:
     }.get(True)
 
     await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
         user_id=user.id,
         button_name=button_name,
         pattern=match,
@@ -158,6 +161,7 @@ async def detailed_search(message: Message, user: User) -> None:
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=keyboard)
     await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
         user_id=user.id,
         button_name=ButtonsEnum.detailed_search,
     )
@@ -166,6 +170,9 @@ async def detailed_search(message: Message, user: User) -> None:
 @blueprint.on.message(ContainsTriggerRule(payload_triggers=["searching_status"]))
 async def searching_status(message: Message) -> None:
     await message.answer(
-        message=("Эта кнопка ничего не делает. Она лишь показывает, " "в каком статусе сейчас находится бот."),
+        message=(
+            "Эта кнопка ничего не делает. Она лишь показывает, "
+            "в каком статусе сейчас находится бот."
+        ),
         keyboard=reset_keyboard,
     )

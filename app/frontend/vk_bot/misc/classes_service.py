@@ -2,12 +2,11 @@ from datetime import datetime
 
 from vkbottle.bot import Message
 
-from app.backend.api.services.dto.classes import (
-    WEEK_DAYS_NUMBERED,
-    LinePositionEnum,
-    WeekDaysEnum,
-)
-from app.frontend.dto.user import DayRequest, User
+from app.backend.api.services.dto.classes import LinePositionEnum
+from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
+from app.backend.api.services.dto.classes import WeekDaysEnum
+from app.frontend.dto.user import DayRequest
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
 from app.frontend.vk_bot.misc.request_clients import RequestClients
 
@@ -33,6 +32,7 @@ def compose_header(
     week_index: int,
     line_position: LinePositionEnum,
     date: datetime,
+    group_number: int,
 ) -> str:
     current_week = datetime.now().today().isocalendar().week
     week_order = "Эта неделя" if current_week == week_index else "Следующая неделя"
@@ -42,6 +42,7 @@ def compose_header(
         f"{week_day.title()}, "
         f"{line_position.title()} чертой, "
         f"{week_order}, "
+        f"Группа {group_number}, "
         f'{date.strftime("%d.%m.%Y")}'
         ")"
     )
@@ -78,11 +79,12 @@ async def compose_classes(
         week_index=week_index,
         line_position=line_position,
         date=searching_date,
+        group_number=group_number,
     )
 
     result = f"{header}\n\n{classes}\n{header}"
 
     if pattern:
-        result += f'\n\n\nВнимание! Это результат поиска по запросу "{pattern}"'
+        result += f'\n\n\n⚠️ Внимание! Это результат поиска по запросу "{pattern}"'
 
     return result

@@ -1,7 +1,8 @@
 import os
 from enum import Enum
 
-from pydantic import BaseSettings, Field
+from pydantic import BaseSettings
+from pydantic import Field
 
 
 class TimeMeasurementUnits(str, Enum):
@@ -38,6 +39,9 @@ class Settings(BaseSettings):
 
     TELEGRAM_TOKEN: str
     TELEGRAM_ALERTS_CHAT_ID: int
+    TELEGRAM_ADMIN: int
+    TELEGRAM_EMPTY_MESSAGE: str = Field(default="")
+    TELEGRAM_BLOG_CHANNEL_ID: int
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict

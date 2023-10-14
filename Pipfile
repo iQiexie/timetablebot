@@ -22,6 +22,7 @@ python-multipart = "*"
 bcrypt = "*"
 pydantic = {extras = ["dotenv"], version = "*"}
 python-dotenv = "*"
+aiogram = "==3.0.0b3"
 
 [dev-packages]
 

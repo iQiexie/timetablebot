@@ -1,18 +1,17 @@
-from datetime import datetime
-
-from vkbottle.bot import Blueprint, Message
+from vkbottle.bot import Blueprint
+from vkbottle.bot import Message
 
 from app.backend.db.models.action import ButtonsEnum
-from app.frontend.dto.user import CreateUser, User
+from app.frontend.dto.enum import SourcesEnum
+from app.frontend.dto.user import CreateUser
+from app.frontend.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.settings import settings_keyboard
-from app.frontend.vk_bot.misc.constants import (
-    CHANGE_GROUP_TRIGGERS,
-    HIGHEST_GROUP_NUMBER,
-    LOWEST_GROUP_NUMBER,
-    NOT_EXISTING_GROUPS,
-    SETTINGS_TRIGGERS,
-)
+from app.frontend.vk_bot.misc.constants import CHANGE_GROUP_TRIGGERS
+from app.frontend.vk_bot.misc.constants import HIGHEST_GROUP_NUMBER
+from app.frontend.vk_bot.misc.constants import LOWEST_GROUP_NUMBER
+from app.frontend.vk_bot.misc.constants import NOT_EXISTING_GROUPS
+from app.frontend.vk_bot.misc.constants import SETTINGS_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
 from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.settings import ChangingGroupStates
@@ -32,7 +31,11 @@ async def settings_menu(message: Message, user: User) -> None:
     )
 
     await message.answer(message=text, keyboard=settings_keyboard)
-    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.settings)
+    await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
+        user_id=user.id,
+        button_name=ButtonsEnum.settings,
+    )
 
 
 @blueprint.on.message(ContainsTriggerRule(CHANGE_GROUP_TRIGGERS, ["change group"]))
@@ -41,7 +44,11 @@ async def ask_for_group_number(message: Message, user: User) -> None:
 
     await blueprint.state_dispenser.set(message.peer_id, state)
     await message.answer("Напиши номер своей группы")
-    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.change_group)
+    await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
+        user_id=user.id,
+        button_name=ButtonsEnum.change_group,
+    )
 
 
 @blueprint.on.message(state=ChangingGroupStates.PICKING_GROUP)
@@ -81,9 +88,11 @@ async def group_picking_handler(message: Message) -> None:
 @blueprint.on.message(ContainsTriggerRule(["uptime"], ["uptime"]))
 async def uptime(message: Message, user: User) -> None:
     date_str = await RequestClients.backend.get_last_updated_at()
-    date_obj = datetime.fromisoformat(date_str)
-    classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
-    text = f"Расписание последний раз обновлялось в {classes_uptime}"
+    text = f"Расписание последний раз обновлялось в {date_str}"
 
     await message.answer(message=text, keyboard=settings_keyboard)
-    await RequestClients.backend.mark_action(user_id=user.id, button_name=ButtonsEnum.uptime)
+    await RequestClients.backend.mark_action(
+        source=SourcesEnum.vk,
+        user_id=user.id,
+        button_name=ButtonsEnum.uptime,
+    )

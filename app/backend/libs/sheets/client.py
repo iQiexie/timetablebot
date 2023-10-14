@@ -1,5 +1,6 @@
 import json
-from typing import Any, List
+from typing import Any
+from typing import List
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -40,8 +41,8 @@ class GoogleAPI:
             )
         else:
             flow = InstalledAppFlow.from_client_config(
-                settings.GOOGLE_SECRET,
-                scopes,
+                client_config=settings.GOOGLE_SECRET,
+                scopes=scopes,
             )
             creds = flow.run_local_server(host="localhost", port=1234)
             await self.repo.create_credentials(
@@ -64,7 +65,7 @@ class GoogleAPI:
             self.sheets_service.spreadsheets()
             .get(
                 spreadsheetId=settings.SPREADSHEET_ID,
-                fields="sheets/data/rowData/values(hyperlink,formattedValue,textFormatRuns/format/link/uri)",
+                fields="sheets/data/rowData/values(hyperlink,formattedValue,textFormatRuns/format/link/uri)",  # noqa
                 ranges=range_str,
             )
             .execute()
