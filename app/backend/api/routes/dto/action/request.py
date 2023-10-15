@@ -9,4 +9,3 @@ class ButtonActionRequest(BaseModel):
     button: ButtonsEnum
     user_id: int
     pattern: Optional[str]
-    source: str

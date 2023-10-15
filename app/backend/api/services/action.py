@@ -24,7 +24,7 @@ class ActionService:
         self,
         button: ButtonsEnum,
         user_id: int,
-        source: str,
+        current_user: UserModel,
         pattern: Optional[str] = None,
     ) -> None:
         async with self.repo.transaction() as t:
@@ -38,7 +38,7 @@ class ActionService:
                 button=button,
                 created_at=datetime.now(),
                 pattern=pattern,
-                source=source,
+                source=current_user.source,
             )
             await t.commit()
 

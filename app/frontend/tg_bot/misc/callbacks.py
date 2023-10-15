@@ -17,7 +17,7 @@ class CallbackActions(str, Enum):
     by_day = "by_day"
     pattern_search = "pattern_search"
     stop_pattern_search = "stop_pattern_search"
-    sweak = "sweak"
+    sweek = "sweek"
     detailed = "detailed"
     searching_status = "searching_status"
     settings = "settings"

@@ -1,9 +1,14 @@
 from aiogram.types import InlineKeyboardButton
 from aiogram.types import InlineKeyboardMarkup
+from aiogram.types import KeyboardButton
+from aiogram.types import ReplyKeyboardMarkup
+from aiogram.types import WebAppInfo
 from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
 from app.frontend.tg_bot.misc.callbacks import Callback
 from app.frontend.tg_bot.misc.callbacks import CallbackActions
+from config import settings
 
 
 def get_menu_keyboard() -> InlineKeyboardMarkup:
@@ -47,15 +52,11 @@ def get_detailed_menu(pattern: str = None) -> InlineKeyboardMarkup:
     builder.row(
         InlineKeyboardButton(
             text="👈 Эта неделя",
-            callback_data=Callback(
-                action=CallbackActions.sweak, data=f"this,{pattern or ' '}"
-            ).pack(),
+            callback_data=Callback(action=CallbackActions.sweek, data="this").pack(),
         ),
         InlineKeyboardButton(
             text="👉 Следующая неделя",
-            callback_data=Callback(
-                action=CallbackActions.sweak, data=f"next,{pattern or ' '}"
-            ).pack(),
+            callback_data=Callback(action=CallbackActions.sweek, data="next").pack(),
         ),
     )
 
@@ -81,3 +82,20 @@ def get_detailed_menu(pattern: str = None) -> InlineKeyboardMarkup:
     )
 
     return builder.as_markup()
+
+
+def get_calendar_keyboard() -> ReplyKeyboardMarkup:
+    builder = ReplyKeyboardBuilder()
+    builder.row(
+        KeyboardButton(
+            text="Календарь",
+            web_app=WebAppInfo(
+                url=settings.TELEGRAM_WEBAPP_URL,
+            ),
+        )
+    )
+
+    return builder.as_markup(
+        is_persistent=True,
+        resize_keyboard=True,
+    )

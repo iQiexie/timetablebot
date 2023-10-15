@@ -6,10 +6,10 @@ from aiogram.types import CallbackQuery
 from aiogram.types import Message
 
 from app.backend.db.models.action import ButtonsEnum
+from app.frontend.clients.request_clients import RequestClients
 from app.frontend.clients.telegram import TelegramClient
-from app.frontend.dto.enum import SourcesEnum
-from app.frontend.dto.user import CreateUser
-from app.frontend.dto.user import User
+from app.frontend.common.dto.user import CreateUser
+from app.frontend.common.dto.user import User
 from app.frontend.tg_bot.keyboards.menu import get_menu_keyboard
 from app.frontend.tg_bot.keyboards.settings import get_settings_keyboard
 from app.frontend.tg_bot.misc.callbacks import Callback
@@ -18,7 +18,6 @@ from app.frontend.tg_bot.misc.states import FSMStates
 from app.frontend.vk_bot.misc.constants import HIGHEST_GROUP_NUMBER
 from app.frontend.vk_bot.misc.constants import LOWEST_GROUP_NUMBER
 from app.frontend.vk_bot.misc.constants import NOT_EXISTING_GROUPS
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 settings_router = Router()
@@ -34,8 +33,7 @@ async def send_settings(query: CallbackQuery, current_user: User) -> None:
         reply_markup=get_settings_keyboard(),
     )
 
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.settings,
     )
@@ -43,7 +41,7 @@ async def send_settings(query: CallbackQuery, current_user: User) -> None:
 
 @settings_router.callback_query(Callback.filter(F.action.in_({CallbackActions.uptime})))
 async def get_uptime(query: CallbackQuery, current_user: User) -> None:
-    uptime = await RequestClients.backend.get_last_updated_at()
+    uptime = await RequestClients.tg_backend.get_last_updated_at()
 
     try:
         await TelegramClient.send_message(
@@ -58,8 +56,7 @@ async def get_uptime(query: CallbackQuery, current_user: User) -> None:
             raise e
 
     await query.answer(text=f"Последнее обновление было в {uptime}")
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.settings,
     )
@@ -71,8 +68,7 @@ async def change_group(query: CallbackQuery, current_user: User, state: FSMConte
 
     await TelegramClient.send_message(query=query, text="Теперь напиши номер своей группы")
 
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.change_group,
     )
@@ -105,7 +101,7 @@ async def set_group(message: Message, state: FSMContext) -> None:
         )
         return
 
-    user = await RequestClients.backend.update_user(
+    user = await RequestClients.tg_backend.update_user(
         data=CreateUser(
             telegram_id=message.from_user.id,
             group_number=group_number,

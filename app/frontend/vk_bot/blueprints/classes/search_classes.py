@@ -6,18 +6,17 @@ from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
 from app.backend.db.models.action import ButtonsEnum
-from app.frontend.dto.enum import SourcesEnum
-from app.frontend.dto.user import User
+from app.frontend.clients.request_clients import RequestClients
+from app.frontend.common.dto.user import User
+from app.frontend.common.service import compose_classes
 from app.frontend.vk_bot.keyboards.classes.feedback import compose_feedback_keyboard
 from app.frontend.vk_bot.keyboards.classes.week import compose_detailed_menu
 from app.frontend.vk_bot.keyboards.classes.week import compose_week_keyboard
 from app.frontend.vk_bot.keyboards.classes.week import reset_keyboard
-from app.frontend.vk_bot.misc.classes_service import compose_classes
 from app.frontend.vk_bot.misc.classes_service import group_index_set
 from app.frontend.vk_bot.misc.constants import TODAY_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.constants import TOMORROW_CLASSES_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from app.frontend.vk_bot.states.classes import ClassStates
 from config import settings
 
@@ -35,6 +34,7 @@ async def today_classes_filter(message: Message, user: User) -> None:
         group_number=user.group_number,
         searching_date=searching_date,
         user_id=user.id,
+        backend_client=RequestClients.vk_backend,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -52,6 +52,7 @@ async def tomorrow_classes_filter(message: Message, user: User) -> None:
         group_number=user.group_number,
         searching_date=searching_date,
         user_id=user.id,
+        backend_client=RequestClients.vk_backend,
     )
 
     keyboard = compose_feedback_keyboard({"grp": user.group_number, "srf": str(searching_date)})
@@ -86,6 +87,7 @@ async def find_by_week_day(message: Message, user: User) -> None:
         searching_date=searching_date,
         pattern=pattern,
         user_id=user.id,
+        backend_client=RequestClients.vk_backend,
     )
 
     keyboard = compose_feedback_keyboard(
@@ -110,8 +112,8 @@ async def pattern_search(message: Message, user: User) -> None:
     await message.answer(greeting)
     await message.answer("Напиши мне свой запрос, а потом выбери нужный день")
     await blueprint.state_dispenser.set(message.peer_id, ClassStates.WAITING_FOR_PATTERN)
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.vk, user_id=user.id, button_name=ButtonsEnum.pattern_mode
+    await RequestClients.vk_backend.mark_action(
+        user_id=user.id, button_name=ButtonsEnum.pattern_mode
     )
 
 
@@ -140,8 +142,7 @@ async def day_selection(message: Message, user: User) -> None:
         next_week is False and match is None: ButtonsEnum.current_week,
     }.get(True)
 
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.vk,
+    await RequestClients.vk_backend.mark_action(
         user_id=user.id,
         button_name=button_name,
         pattern=match,
@@ -160,8 +161,7 @@ async def detailed_search(message: Message, user: User) -> None:
         keyboard = compose_detailed_menu()
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=keyboard)
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.vk,
+    await RequestClients.vk_backend.mark_action(
         user_id=user.id,
         button_name=ButtonsEnum.detailed_search,
     )

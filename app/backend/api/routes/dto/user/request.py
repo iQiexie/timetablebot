@@ -1,11 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+from pydantic import Field
 
 
 class UserIn(BaseModel):
     username: str
     password: str
+    source: str
 
 
 class ExternalUserUpdate(BaseModel):

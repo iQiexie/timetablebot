@@ -4,13 +4,12 @@ from vkbottle.bot import Blueprint
 from vkbottle.bot import Message
 
 from app.backend.db.models.action import ButtonsEnum
-from app.frontend.dto.enum import SourcesEnum
-from app.frontend.dto.user import User
+from app.frontend.clients.request_clients import RequestClients
+from app.frontend.common.dto.user import User
 from app.frontend.vk_bot.keyboards.menu.menu import menu_keyboard
 from app.frontend.vk_bot.keyboards.settings.change_group import change_group_keyboard
 from app.frontend.vk_bot.misc.constants import MENU_TRIGGERS
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 blueprint = Blueprint()
@@ -36,8 +35,7 @@ async def hello_handler(message: Message = None, user: User = None) -> None:
         traceback.print_exc()
 
     await message.answer(message=settings.VK_EMPTY_MESSAGE, keyboard=menu_keyboard)
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.vk,
+    await RequestClients.vk_backend.mark_action(
         user_id=user.id,
         button_name=ButtonsEnum.menu,
     )

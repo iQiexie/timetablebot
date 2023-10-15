@@ -1,6 +1,12 @@
 from datetime import datetime
 
-from sqlalchemy import Boolean, Column, Date, DateTime, ForeignKey, Integer, String
+from sqlalchemy import Boolean
+from sqlalchemy import Column
+from sqlalchemy import Date
+from sqlalchemy import DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy import Integer
+from sqlalchemy import String
 from sqlalchemy.orm import relationship
 
 from app.backend.core.schemes import StrEnum
@@ -36,7 +42,9 @@ class UserActionModel(Base):
     __tablename__ = "users_activity"
 
     id = Column(Integer, primary_key=True, index=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey("external_users.id", ondelete="SET NULL"), index=True)
+    user_id = Column(
+        Integer, ForeignKey("external_users.id", ondelete="SET NULL"), index=True, nullable=False
+    )
 
     created_at = Column(DateTime, default=datetime.utcnow)
     action = Column(String)
@@ -49,3 +57,11 @@ class UserActionModel(Base):
     source = Column(String)
 
     user = relationship(ExternalUserModel, viewonly=True)
+
+
+class UsersActivityLegacy(Base):
+    __tablename__ = "users_activity_legacy"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    date = Column(DateTime)
+    user_count = Column(Integer)

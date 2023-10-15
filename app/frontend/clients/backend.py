@@ -8,19 +8,18 @@ from app.backend.api.routes.dto.classes.request import RateRequest
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.dto.classes import DURATIONS_MAP
 from app.base_request_client import BaseRequestsClient
-from app.frontend.dto.enum import SourcesEnum
-from app.frontend.dto.user import CreateUser
-from app.frontend.dto.user import DayRequest
-from app.frontend.dto.user import DaySchema
-from app.frontend.dto.user import User
+from app.frontend.common.dto.user import CreateUser
+from app.frontend.common.dto.user import DayRequest
+from app.frontend.common.dto.user import DaySchema
+from app.frontend.common.dto.user import User
 from config import settings
 
 
 @lru_cache
 class BackendApi(BaseRequestsClient):
-    def __init__(self):
+    def __init__(self, token: str):
         self.base_url = settings.BACKEND_BASE_URL
-        self.auth = {"Authorization": f"Bearer {settings.ADMIN_SECRET_KEY}"}
+        self.auth = {"Authorization": f"Bearer {token}"}
         self.raise_exceptions = True
 
     async def get_user(self, data: CreateUser) -> User:
@@ -86,7 +85,6 @@ class BackendApi(BaseRequestsClient):
         self,
         button_name: str,
         user_id: int,
-        source: SourcesEnum,
         pattern: Optional[str] = None,
     ) -> None:
         data = json.dumps(
@@ -94,7 +92,6 @@ class BackendApi(BaseRequestsClient):
                 "button": button_name,
                 "user_id": user_id,
                 "pattern": pattern,
-                "source": source,
             }
         )
         url = "/v1/action/button"

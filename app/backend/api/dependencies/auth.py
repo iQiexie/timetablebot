@@ -1,7 +1,9 @@
 import logging
 
 from fastapi import Depends
-from jose import ExpiredSignatureError, JWTError, jwt
+from jose import ExpiredSignatureError
+from jose import jwt
+from jose import JWTError
 
 from app.backend.api.routes.auth import oauth2_scheme
 from app.backend.api.routes.dto.user.response import UserOut
@@ -11,9 +13,6 @@ from config import settings
 
 
 def validate_decode_token(token: str) -> dict:
-    if token == settings.ADMIN_SECRET_KEY:
-        return {"sub": "admin"}
-
     try:
         payload = jwt.decode(
             token=token,

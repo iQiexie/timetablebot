@@ -10,7 +10,9 @@ from app.frontend.tg_bot.misc.callbacks import CallbackActions
 
 
 def get_feedback_keyboard(
-    searching_date: float, back: CallbackActions, back_payload: Optional[dict] = None
+    searching_date: float,
+    back: CallbackActions,
+    back_payload: Optional[dict] = None,
 ) -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     raw_payload = {"s": searching_date}
@@ -19,7 +21,8 @@ def get_feedback_keyboard(
     downvote = Callback(action=CallbackActions.downvote, data=payload).pack()
     upvote = Callback(action=CallbackActions.upvote, data=payload).pack()
     back = Callback(
-        action=back, data=urllib.parse.urlencode(raw_payload | (back_payload or {}))
+        action=back,
+        data=urllib.parse.urlencode(raw_payload | (back_payload or {})),
     ).pack()
 
     builder.row(

@@ -6,9 +6,9 @@ from aiogram import BaseMiddleware
 from aiogram.types import CallbackQuery
 from aiogram.types import Message
 
+from app.frontend.clients.request_clients import RequestClients
 from app.frontend.clients.telegram import TelegramClient
-from app.frontend.dto.user import CreateUser
-from app.frontend.vk_bot.misc.request_clients import RequestClients
+from app.frontend.common.dto.user import CreateUser
 from config import settings
 
 
@@ -39,7 +39,7 @@ class AuthMiddleware(BaseMiddleware):
 
             return
 
-        user = await RequestClients.backend.get_user(
+        user = await RequestClients.tg_backend.get_user(
             data=CreateUser(
                 telegram_id=event.from_user.id,
                 first_name=event.from_user.first_name,

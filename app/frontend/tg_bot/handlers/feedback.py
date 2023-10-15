@@ -3,25 +3,29 @@ from datetime import datetime
 
 from aiogram import F
 from aiogram import Router
+from aiogram.dispatcher.fsm.context import FSMContext
 from aiogram.types import CallbackQuery
 
 from app.backend.api.routes.dto.classes.request import RateRequest
+from app.frontend.clients.request_clients import RequestClients
 from app.frontend.clients.telegram import TelegramClient
 from app.frontend.tg_bot.keyboards.feedback import get_empty_feedback_keyboard
 from app.frontend.tg_bot.misc.callbacks import Callback
 from app.frontend.tg_bot.misc.callbacks import CallbackActions
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 feedback_router = Router()
 
 
 @feedback_router.callback_query(Callback.filter(F.action.in_({CallbackActions.downvote})))
-async def downvote(query: CallbackQuery, callback_data: Callback) -> None:
+async def downvote(query: CallbackQuery, callback_data: Callback, state: FSMContext) -> None:
+    context_data = await state.get_data()
+    pattern = context_data.get("pattern")
+    if pattern == " ":
+        pattern = None
 
     payload = urllib.parse.parse_qs(callback_data.data)
     requested_date = datetime.fromtimestamp(float(payload["s"][0]))
-    pattern = payload.get("p")[0] if payload.get("p") else None
 
     answer_text = (
         "Жалко, что пары пришли неправильные 🥺\n\n"
@@ -34,11 +38,12 @@ async def downvote(query: CallbackQuery, callback_data: Callback) -> None:
         query=query,
         text=f"{query.message.text}\n\n{answer_text}",
         reply_markup=get_empty_feedback_keyboard(
-            back=CallbackActions.menu,
+            back=context_data.get("back"),
+            back_payload=context_data.get("back_payload"),
         ),
     )
 
-    await RequestClients.backend.rate_class(
+    await RequestClients.tg_backend.rate_class(
         data=RateRequest(
             date=requested_date,
             correct=False,
@@ -47,20 +52,15 @@ async def downvote(query: CallbackQuery, callback_data: Callback) -> None:
         )
     )
 
-    # await TelegramClient.send_message(
-    #     query=query,
-    #     text=f"{query.message.text}\n\n👎 Неправильно",
-    #     reply_markup=get_empty_feedback_keyboard()
-    # )
-
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
 
 
 @feedback_router.callback_query(Callback.filter(F.action.in_({CallbackActions.upvote})))
-async def upvote(query: CallbackQuery, callback_data: Callback) -> None:
+async def upvote(query: CallbackQuery, callback_data: Callback, state: FSMContext) -> None:
+    context_data = await state.get_data()
+    pattern = context_data.get("pattern")
     payload = urllib.parse.parse_qs(callback_data.data)
     requested_date = datetime.fromtimestamp(float(payload["s"][0]))
-    pattern = payload.get("p")[0] if payload.get("p") else None
 
     await query.answer("Обратная связь учтена. Спасибо 💖")
 
@@ -68,11 +68,12 @@ async def upvote(query: CallbackQuery, callback_data: Callback) -> None:
         query=query,
         text=f"{query.message.text}\n\n👍 Правильно",
         reply_markup=get_empty_feedback_keyboard(
-            back=CallbackActions.menu,
+            back=context_data.get("back") or CallbackActions.menu,
+            back_payload=context_data.get("back_payload"),
         ),
     )
 
-    await RequestClients.backend.rate_class(
+    await RequestClients.tg_backend.rate_class(
         data=RateRequest(
             date=requested_date,
             correct=True,

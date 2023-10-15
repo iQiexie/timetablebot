@@ -1,5 +1,3 @@
-import traceback
-
 from aiogram import F
 from aiogram import Router
 from aiogram.dispatcher.fsm.context import FSMContext
@@ -7,18 +5,18 @@ from aiogram.types import CallbackQuery
 from aiogram.types import Message
 
 from app.backend.db.models.action import ButtonsEnum
+from app.frontend.clients.request_clients import RequestClients
 from app.frontend.clients.telegram import TelegramClient
-from app.frontend.dto.enum import SourcesEnum
-from app.frontend.dto.user import User
+from app.frontend.common.dto.user import User
 from app.frontend.singletons import Clients
 from app.frontend.tg_bot.keyboards.feedback import get_empty_feedback_keyboard
+from app.frontend.tg_bot.keyboards.menu import get_calendar_keyboard
 from app.frontend.tg_bot.keyboards.menu import get_detailed_menu
 from app.frontend.tg_bot.keyboards.menu import get_menu_keyboard
 from app.frontend.tg_bot.keyboards.settings import get_change_group_keyboard
 from app.frontend.tg_bot.misc.callbacks import Callback
 from app.frontend.tg_bot.misc.callbacks import CallbackActions
 from app.frontend.tg_bot.misc.states import FSMStates
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 initial_router = Router()
@@ -33,18 +31,14 @@ async def hello_handler(
 ) -> None:
     if isinstance(message, CallbackQuery):
         await message.answer(settings.TELEGRAM_EMPTY_MESSAGE)
+    else:
+        await TelegramClient.bot.send_message(
+            text=f"Привет, {current_user.first_name or current_user.username or 'Анон'}!",
+            chat_id=message.from_user.id,
+            reply_markup=get_calendar_keyboard(),
+        )
 
     new_user = current_user.group_number is None
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
-        user_id=current_user.id,
-        button_name=ButtonsEnum.menu,
-    )
-    try:
-        if await state.get_state():
-            await state.clear()
-    except KeyError:
-        traceback.print_exc()
 
     if new_user:
         answer_message = (
@@ -62,6 +56,13 @@ async def hello_handler(
         text=answer_message,
         reply_markup=reply_markup,
     )
+
+    await RequestClients.tg_backend.mark_action(
+        user_id=current_user.id,
+        button_name=ButtonsEnum.menu,
+    )
+
+    await state.clear()
 
 
 @initial_router.callback_query(Callback.filter(F.action.in_({CallbackActions.suicide})))
@@ -94,7 +95,7 @@ async def pattern_search(query: CallbackQuery, current_user: User, state: FSMCon
     )
 
     await state.set_state(state=FSMStates.pattern_input)
-    await RequestClients.backend.mark_action(
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.pattern_mode,
     )
@@ -123,8 +124,7 @@ async def detailed_search(query: CallbackQuery, current_user: User, state: FSMCo
         reply_markup=keyboard,
     )
 
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.detailed_search,
     )
@@ -142,8 +142,7 @@ async def stop_search_pattern(query: CallbackQuery, current_user: User, state: F
         reply_markup=keyboard,
     )
 
-    await RequestClients.backend.mark_action(
-        source=SourcesEnum.telegram,
+    await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.detailed_search,
     )

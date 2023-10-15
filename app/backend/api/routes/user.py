@@ -1,14 +1,15 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter
+from fastapi import Depends
+from fastapi import Query
 
 from app.backend.api.dependencies.auth import get_current_user
-from app.backend.api.routes.dto.user.request import (
-    ExternalUserCreate,
-    ExternalUserUpdate,
-    UserIn,
-)
-from app.backend.api.routes.dto.user.response import ExternalUser, UserOut
+from app.backend.api.routes.dto.user.request import ExternalUserCreate
+from app.backend.api.routes.dto.user.request import ExternalUserUpdate
+from app.backend.api.routes.dto.user.request import UserIn
+from app.backend.api.routes.dto.user.response import ExternalUser
+from app.backend.api.routes.dto.user.response import UserOut
 from app.backend.api.services.external_user import ExternalUserService
 from app.backend.api.services.user import UserService
 from app.backend.db.models.user import UserModel
@@ -20,7 +21,7 @@ users_router = APIRouter()
 async def create_user(
     user: UserIn,
     service: UserService = Depends(UserService),
-    _: UserModel = Depends(get_current_user),
+    # _: UserModel = Depends(get_current_user),
 ) -> UserModel:
     return await service.create_user(data=user)
 

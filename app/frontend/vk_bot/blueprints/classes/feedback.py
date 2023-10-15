@@ -1,11 +1,12 @@
 import json
 
-from vkbottle.bot import Blueprint, Message
+from vkbottle.bot import Blueprint
+from vkbottle.bot import Message
 
 from app.backend.api.routes.dto.classes.request import RateRequest
-from app.frontend.dto.user import User
+from app.frontend.clients.request_clients import RequestClients
+from app.frontend.common.dto.user import User
 from app.frontend.vk_bot.misc.contains_trigger_rule import ContainsTriggerRule
-from app.frontend.vk_bot.misc.request_clients import RequestClients
 from config import settings
 
 blueprint = Blueprint()
@@ -37,7 +38,7 @@ async def downvote(message: Message, user: User) -> None:
 
     await message.ctx_api.messages.send(peer_ids=settings.VK_ADMIN_IDS, random_id=0, message=text)
     await message.answer(answer_text)
-    await RequestClients.backend.rate_class(
+    await RequestClients.vk_backend.rate_class(
         data=RateRequest(
             date=requested_date,
             correct=False,
@@ -54,7 +55,7 @@ async def upvote(message: Message) -> None:
     pattern = payload.get("ptr")
 
     await message.answer("Обратная связь учтена. Спасибо 💖")
-    await RequestClients.backend.rate_class(
+    await RequestClients.vk_backend.rate_class(
         data=RateRequest(
             date=requested_date,
             correct=True,

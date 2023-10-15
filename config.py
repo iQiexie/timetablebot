@@ -18,7 +18,8 @@ class TimeMeasurementUnits(str, Enum):
 class Settings(BaseSettings):
     APP_TITLE: str
     BACKEND_CORS_ORIGINS: list[str] = Field(default=["*"])
-    ADMIN_SECRET_KEY: str
+    VK_BACKEND_SECRET_KEY: str
+    TG_BACKEND_SECRET_KEY: str
 
     BACKEND_BASE_URL: str
     BACKEND_BASE_URL_SWAGGER: str
@@ -42,6 +43,7 @@ class Settings(BaseSettings):
     TELEGRAM_ADMIN: int
     TELEGRAM_EMPTY_MESSAGE: str = Field(default="")
     TELEGRAM_BLOG_CHANNEL_ID: int
+    TELEGRAM_WEBAPP_URL: str
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
