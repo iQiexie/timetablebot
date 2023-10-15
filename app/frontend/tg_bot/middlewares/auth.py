@@ -29,13 +29,18 @@ class AuthMiddleware(BaseMiddleware):
 
         if subscriber_status.status not in ("creator", "member"):
             subscribe_to_me = (
+                '<a href="https://t.me/not_romaa">Подписаться на канал</a>\n\n'
                 "К сожалению, ты не мой подписчик 🥺 "
                 "А этот бот был создан только для них.. какое совпадение\n\n"
                 "Но у меня есть хорошие новости! Ты тоже можешь подписаться на мой личный "
                 "канал, a потом воспользоваться ботом 👀 @not_romaa"
             )
 
-            await TelegramClient.bot.send_message(chat_id=event.from_user.id, text=subscribe_to_me)
+            await TelegramClient.bot.send_message(
+                chat_id=event.from_user.id,
+                text=subscribe_to_me,
+                parse_mode="HTML",
+            )
 
             return
 
