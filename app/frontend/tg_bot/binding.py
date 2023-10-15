@@ -1,5 +1,6 @@
 from aiogram import Dispatcher
 
+from app.frontend.tg_bot.handlers.chat_gpt import gpt_router
 from app.frontend.tg_bot.handlers.classes import class_search_router
 from app.frontend.tg_bot.handlers.feedback import feedback_router
 from app.frontend.tg_bot.handlers.menu import initial_router
@@ -27,5 +28,6 @@ def get_root_dispatcher() -> Dispatcher:
     dispatcher.include_router(class_search_router)
     dispatcher.include_router(feedback_router)
     dispatcher.include_router(settings_router)
+    dispatcher.include_router(gpt_router)
 
     return dispatcher

@@ -47,6 +47,8 @@ class Settings(BaseSettings):
 
     SPREADSHEET_ID: str
     GOOGLE_SECRET: dict
+    GPT_PROVIDER_KEYS: list[str]
+    GPT_PROVIDER_URL: str
 
     @property
     def POSTGRES_URL(self) -> str:  # noqa

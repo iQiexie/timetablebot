@@ -15,6 +15,7 @@ from app.backend.db.models.user import ExternalUserModel
 
 
 class ButtonsEnum(StrEnum):
+    statistics_daily_users = "statistics_daily_users"
     current_week = "current_week"
     next_week = "next_week"
     current_week_pattern = "current_week_pattern"
@@ -24,10 +25,10 @@ class ButtonsEnum(StrEnum):
     detailed_search = "detailed_search"
     kill_keyboard = "kill_keyboard"
     settings = "settings"
+    chat_gpt = "chat_gpt"
     uptime = "uptime"
     menu = "menu"
     back = "back"
-    statistics_daily_users = "statistics_daily_users"
 
 
 class ActionsEnum(StrEnum):

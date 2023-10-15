@@ -140,6 +140,8 @@ async def find_by_week_day_web_app(
         back=CallbackActions.detailed,
     )
 
+    await state.set_state(FSMStates.idle)
+
 
 @class_search_router.message(state=FSMStates.pattern_input)
 async def search_by_pattern(message: Message, state: FSMContext) -> None:

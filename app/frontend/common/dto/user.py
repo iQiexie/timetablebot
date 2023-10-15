@@ -31,6 +31,7 @@ class CreateUser(BaseModel):
 
 class User(BaseModel):
     id: int
+    gpt_allowed: Optional[bool]
     telegram_id: Optional[int]
     vk_id: Optional[int]
     group_number: Optional[int]

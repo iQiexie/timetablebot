@@ -42,8 +42,12 @@ def get_settings_keyboard() -> InlineKeyboardMarkup:
 
     builder.row(
         InlineKeyboardButton(
-            text="👇 Назад",
+            text="Назад",
             callback_data=Callback(action=CallbackActions.menu).pack(),
+        ),
+        InlineKeyboardButton(
+            text="Удалить сообщение",
+            callback_data=Callback(action=CallbackActions.suicide).pack(),
         ),
     )
 

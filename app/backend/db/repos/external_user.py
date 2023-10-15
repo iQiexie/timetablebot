@@ -1,12 +1,17 @@
+from datetime import datetime
+from datetime import timedelta
+from typing import List
 from typing import Optional
 
+from sqlalchemy import func
 from sqlalchemy import select
+from sqlalchemy import text
+from sqlalchemy.engine import RowMapping
 
-from app.backend.core.exceptions.decorators import (
-    expect_arguments,
-    expect_specific_arguments,
-)
+from app.backend.core.exceptions.decorators import expect_arguments
+from app.backend.core.exceptions.decorators import expect_specific_arguments
 from app.backend.core.repo import BaseRepo
+from app.backend.db.models.action import UserActionModel
 from app.backend.db.models.user import ExternalUserModel
 
 
@@ -47,8 +52,23 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
         self,
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
-    ) -> Optional[ExternalUserModel]:
-        stmt = select(ExternalUserModel)
+    ) -> List[RowMapping]:
+        max_messages_per_minute = 5
+        from_date = datetime.now() - timedelta(minutes=1)
+
+        sub = (
+            select((func.count() < max_messages_per_minute).label("gpt_allowed"))
+            .select_from(UserActionModel)
+            .filter(
+                UserActionModel.created_at > text(f"'{from_date.isoformat()}'::timestamp"),
+                UserActionModel.user_id == ExternalUserModel.id,
+                UserActionModel.button == "chat_gpt",
+                UserActionModel.pattern.isnot(None),
+            )
+            .scalar_subquery()
+        )
+
+        stmt = select([ExternalUserModel, sub.as_scalar().label("gpt_allowed")])
 
         if telegram_id:
             stmt = stmt.where(ExternalUserModel.telegram_id == telegram_id)
@@ -56,4 +76,4 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
             stmt = stmt.where(ExternalUserModel.vk_id == vk_id)
 
         query = await self.session.execute(stmt)
-        return query.scalar_one_or_none()
+        return query.mappings().all()

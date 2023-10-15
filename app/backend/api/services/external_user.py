@@ -3,13 +3,12 @@ from typing import Optional
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.backend.api.routes.dto.user.request import (
-    ExternalUserCreate,
-    ExternalUserUpdate,
-)
+from app.backend.api.routes.dto.user.request import ExternalUserCreate
+from app.backend.api.routes.dto.user.request import ExternalUserUpdate
 from app.backend.core.service import ServiceMediator
 from app.backend.db.dependencies import get_session
-from app.backend.db.models.user import ExternalUserModel, UserModel
+from app.backend.db.models.user import ExternalUserModel
+from app.backend.db.models.user import UserModel
 from app.backend.db.repos.external_user import ExternalUserRepo
 
 
@@ -22,9 +21,15 @@ class ExternalUserService:
         self,
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
-    ) -> ExternalUserModel:
+    ) -> Optional[ExternalUserModel]:
         async with self.repo.transaction():
-            return await self.repo.get_user_by_external_id(telegram_id=telegram_id, vk_id=vk_id)
+            result = await self.repo.get_user_by_external_id(telegram_id=telegram_id, vk_id=vk_id)
+            if len(result) < 1:
+                return
+
+            user = result[0]["ExternalUserModel"]
+            user.gpt_allowed = result[0]["gpt_allowed"]
+            return user
 
     async def create_external_user(self, data: ExternalUserCreate) -> ExternalUserCreate:
         async with self.repo.transaction() as t:

@@ -26,3 +26,4 @@ class CallbackActions(str, Enum):
     uptime = "uptime"
     statistics = "statistics"
     menu = "menu"
+    gpt = "gpt"

@@ -34,12 +34,12 @@ def get_menu_keyboard() -> InlineKeyboardMarkup:
 
     builder.row(
         InlineKeyboardButton(
-            text="🛠 Настройки",
-            callback_data=Callback(action=CallbackActions.settings).pack(),
+            text="🤖 ChatGPT",
+            callback_data=Callback(action=CallbackActions.gpt).pack(),
         ),
         InlineKeyboardButton(
-            text="Удалить сообщение",
-            callback_data=Callback(action=CallbackActions.suicide).pack(),
+            text="🛠 Настройки",
+            callback_data=Callback(action=CallbackActions.settings).pack(),
         ),
     )
 
@@ -99,3 +99,15 @@ def get_calendar_keyboard() -> ReplyKeyboardMarkup:
         is_persistent=True,
         resize_keyboard=True,
     )
+
+
+def get_light_menu_keyboard() -> InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+
+    builder.row(
+        InlineKeyboardButton(
+            text="Меню", callback_data=Callback(action=CallbackActions.menu).pack()
+        ),
+    )
+
+    return builder.as_markup()

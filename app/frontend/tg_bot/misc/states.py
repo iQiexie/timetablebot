@@ -7,3 +7,4 @@ class FSMStates(StatesGroup):
     picking_group = State()
     pattern_input = State()
     pattern_search = State()
+    chat_gpt = State()
