@@ -1,0 +1,26 @@
+server {
+    listen 80;
+    listen [::]:80;
+
+    server_name shitposting.su;
+
+    location / {
+        return 301 https://shitposting.su$request_uri;
+    }
+}
+
+server {
+    listen 443;
+    server_name shitposting.su;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/shitposting.su/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/shitposting.su/privkey.pem; # managed by Certbot
+
+    location / {
+        root /opt/telegram_webapp/build/;
+        index index.html;
+        try_files $uri /index.html;
+    }
+
+}

@@ -2,7 +2,7 @@ version: "3"
 
 services:
   timetable-postgres:
-    image: "postgres:15"  # TODO change to 15
+    image: "postgres:14"
     container_name: timetable-postgres
     env_file:
       - .env.prod
