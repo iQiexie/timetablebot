@@ -1,4 +1,5 @@
-from vkbottle import API, Bot
+from vkbottle import API
+from vkbottle import Bot
 
 from config import settings
 

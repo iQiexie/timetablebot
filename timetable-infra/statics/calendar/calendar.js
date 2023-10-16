@@ -11,8 +11,8 @@ function CalendarControl() {
       prevMonthLastDate: null,
 
       calWeekDays: {
-        en: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
-        ru: ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"]
+        en: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        ru: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
       },
 
       calMonthName: {

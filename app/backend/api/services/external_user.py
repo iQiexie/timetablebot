@@ -1,3 +1,4 @@
+from typing import List
 from typing import Optional
 
 from fastapi import Depends
@@ -16,6 +17,10 @@ class ExternalUserService:
     def __init__(self, session: AsyncSession = Depends(get_session)):
         self.services = ServiceMediator(session=session)
         self.repo = ExternalUserRepo(session=session)
+
+    async def get_all_users(self) -> List[ExternalUserModel]:
+        async with self.repo.transaction():
+            return await self.repo.get_all_users()
 
     async def get_user_by_external_id(
         self,

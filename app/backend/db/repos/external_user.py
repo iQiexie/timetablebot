@@ -18,6 +18,12 @@ from app.backend.db.models.user import ExternalUserModel
 class ExternalUserRepo(BaseRepo[ExternalUserModel]):
     model = ExternalUserModel
 
+    async def get_all_users(self) -> List[ExternalUserModel]:
+        stmt = select(ExternalUserModel)
+
+        query = await self.session.execute(stmt)
+        return query.scalars().all()
+
     async def get_external_user_by_id(self, external_user_id: int) -> Optional[ExternalUserModel]:
         return await self.base_get_one(id=external_user_id)
 
