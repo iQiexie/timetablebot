@@ -46,8 +46,11 @@ async def get_uptime(query: CallbackQuery, current_user: User) -> None:
     try:
         await TelegramClient.send_message(
             query=query,
-            text=f"{query.message.text}\n\nРасписание последний раз обновлялось в: {uptime}",
             reply_markup=get_settings_keyboard(),
+            text=(
+                f"Настройки\n\nТекущая группа: {current_user.group_number}\n\n"
+                f"Расписание последний раз обновлялось в: {uptime}"
+            ),
         )
     except TelegramBadRequest as e:
         if "message is not modified" in e.message:
