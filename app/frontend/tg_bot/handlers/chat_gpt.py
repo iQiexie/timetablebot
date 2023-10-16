@@ -47,14 +47,14 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         )
         return
 
-    await TelegramClient.bot.send_chat_action(
-        chat_id=message.chat.id,
-        action="typing",
-    )
-
     msg = await TelegramClient.bot.send_message(
         chat_id=message.chat.id,
         text="Генерирую ответ... ⏳",
+    )
+
+    await TelegramClient.bot.send_chat_action(
+        chat_id=message.chat.id,
+        action="typing",
     )
 
     my_name = message.from_user.first_name or message.from_user.username
