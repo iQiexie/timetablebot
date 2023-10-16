@@ -28,7 +28,7 @@ function CalendarControl() {
         return new Date(calendar.getFullYear(), calendar.getMonth(), 1);
       },
       firstDayNumber: function () {
-        return calendarControl.firstDay().getDay() + 1;
+        return calendarControl.firstDay().getDay();
       },
       getPreviousMonthLastDate: function () {
         return new Date(
