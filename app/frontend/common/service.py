@@ -24,8 +24,8 @@ def compose_header(
     current_week = datetime.now().today().isocalendar().week
     week_order = {
         current_week == week_index: "Эта неделя",
-        current_week > week_index: "Следующая неделя",
-        current_week < week_index: "Предыдущая неделя",
+        current_week > week_index: "Предыдущая неделя",
+        current_week < week_index: "Следующая неделя",
     }[True]
 
     return (
