@@ -42,8 +42,8 @@ async def compose_classes(
     backend_client: BackendApi,
     pattern: str = None,
 ) -> str:
-    week_day_index = searching_date.isocalendar().weekday  # пор. номер искомого дня недели
-    week_index = searching_date.isocalendar().week  # порядковый номер искомой недели
+    week_day_index = searching_date.astimezone().isocalendar().weekday
+    week_index = searching_date.astimezone().isocalendar().week  # порядковый номер искомой недели
     week_day = WEEK_DAYS_NUMBERED.get(week_day_index)  # искомый день енамом
     line_position = get_week_line_position(week_index=week_index)
     next_week = week_index > datetime.now().isocalendar().week
