@@ -46,7 +46,7 @@ async def send_gpt_message(message: Message = None, user: User = None) -> None:
     answer_text = (
         "К сожалению, из-за ограничений ВКонтакте, ChatGPT здесь не работает 🥲\n\n"
         "Но есть хорошие новости! Им можно воспользоваться в моём боте в телеграме!!! \n\n"
-        "Переходи по ссылке 👉 https://t.me/tg_schedule_bot?start=vk\n\n"
+        "Переходи по ссылке 👉 https://t.me/tg_schedule_bot\n\n"
         "Или найди его в тг по @tg_schedule_bot"
     )
     await message.answer(message=answer_text, keyboard=menu_keyboard)
