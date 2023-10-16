@@ -1,3 +1,5 @@
+import json
+
 from aiogram import F
 from aiogram import Router
 from aiogram.dispatcher.fsm.context import FSMContext
@@ -82,5 +84,5 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
         button_name=ButtonsEnum.chat_gpt,
-        pattern=message.text,
+        pattern=json.dumps(chat_context, ensure_ascii=False),
     )
