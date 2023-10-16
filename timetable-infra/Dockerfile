@@ -10,4 +10,5 @@ COPY Pipfile.lock Pipfile ./
 RUN pipenv install --system
 
 COPY . .
+# возможно из-за этого будет гонка кронтабов среди всех инстансов (бека, телеги и вк)
 RUN echo "$(cat timetable-infra/crontab)" | crontab -

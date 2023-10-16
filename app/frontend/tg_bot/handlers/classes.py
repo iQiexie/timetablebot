@@ -138,6 +138,7 @@ async def find_by_week_day_web_app(
         state=state,
         query=message,
         back=CallbackActions.detailed,
+        is_webapp=True,
     )
 
     await state.set_state(FSMStates.idle)

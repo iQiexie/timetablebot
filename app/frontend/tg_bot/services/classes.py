@@ -60,6 +60,7 @@ async def send_by_day(
     state: FSMContext,
     back: CallbackActions,
     back_payload: Optional[dict] = None,
+    is_webapp: Optional[bool] = False,
 ) -> None:
     context_data = await state.get_data()
     pattern = context_data.get("pattern")
@@ -73,6 +74,7 @@ async def send_by_day(
         pattern=pattern,
         user_id=current_user.id,
         backend_client=RequestClients.tg_backend,
+        is_webapp=is_webapp,
     )
 
     keyboard = get_feedback_keyboard(

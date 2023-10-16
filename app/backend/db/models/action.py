@@ -33,7 +33,9 @@ class ButtonsEnum(StrEnum):
 
 class ActionsEnum(StrEnum):
     search = "search"
+    search_webapp = "search_webapp"
     search_pattern = "search_pattern"
+    search_pattern_webapp = "search_pattern_webapp"
     change_settings = "change_group"
     rate = "rate"
     button_clicked = "button_clicked"

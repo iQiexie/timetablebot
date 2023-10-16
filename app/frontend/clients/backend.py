@@ -47,8 +47,9 @@ class BackendApi(BaseRequestsClient):
         classes_uptime = date_obj.strftime("%H:%M, %d.%m.%Y")
         return classes_uptime
 
-    async def get_classes(self, data: DayRequest) -> DaySchema:
+    async def get_classes(self, data: DayRequest, is_webapp: bool) -> DaySchema:
         params = data.dict(exclude_none=True)
+        params["is_webapp"] = is_webapp
 
         params = urllib.parse.urlencode(params)
         response = await self._make_request(
@@ -61,8 +62,9 @@ class BackendApi(BaseRequestsClient):
 
         return DaySchema(**day_schema)
 
-    async def get_classes_pattern(self, data: DayRequest) -> DaySchema:
+    async def get_classes_pattern(self, data: DayRequest, is_webapp: bool) -> DaySchema:
         params = data.dict(exclude_none=True)
+        params["is_webapp"] = is_webapp
 
         params = urllib.parse.urlencode(params)
         response = await self._make_request(

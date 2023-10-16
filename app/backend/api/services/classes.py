@@ -1,20 +1,21 @@
 import logging
 import traceback
-from datetime import datetime, timedelta
-from typing import List, Optional
+from datetime import datetime
+from datetime import timedelta
+from typing import List
+from typing import Optional
 
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.backend.api.routes.dto.classes.request import DayRequest, DayRequestPattern
+from app.backend.api.routes.dto.classes.request import DayRequest
+from app.backend.api.routes.dto.classes.request import DayRequestPattern
 from app.backend.api.routes.dto.classes.response import ClassScheme
 from app.backend.api.services.classes_scraper import scrape_spreadsheet
-from app.backend.api.services.dto.classes import (
-    DURATIONS_MAP_FOR_SORTING,
-    WEEK_DAYS_NUMBERED,
-    LinePositionEnum,
-    WeekDaysEnum,
-)
+from app.backend.api.services.dto.classes import DURATIONS_MAP_FOR_SORTING
+from app.backend.api.services.dto.classes import LinePositionEnum
+from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
+from app.backend.api.services.dto.classes import WeekDaysEnum
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.constants import GRADE_RANGE
 from app.backend.core.schemes import SuccessResponse
@@ -80,6 +81,7 @@ class ClassesService:
         next_week: bool,
         user_id: int,
         current_user: UserModel,
+        is_webapp: bool,
     ) -> List[ClassScheme]:
         async with self.repo.transaction():
             user = await self.services.external_user.repo.get_external_user_by_id(
@@ -104,6 +106,7 @@ class ClassesService:
                 day=cords,
                 requested_date=requested_date,
                 current_user=current_user,
+                is_webapp=is_webapp,
             )
         except Exception as e:
             logging.error(f"Cannot mark user activity, because of: {e}")
@@ -117,6 +120,7 @@ class ClassesService:
         self,
         data: DayRequestPattern,
         current_user: UserModel,
+        is_webapp: bool,
     ) -> List[ClassScheme]:
         requested_date = self.get_requested_date(
             week_day=data.week_day,
@@ -129,6 +133,7 @@ class ClassesService:
                 requested_date=requested_date,
                 pattern=data.pattern,
                 current_user=current_user,
+                is_webapp=is_webapp,
             )
         except Exception as e:
             logging.error(f"Cannot mark user activity, because of: {e}")

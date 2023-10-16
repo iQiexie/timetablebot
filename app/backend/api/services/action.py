@@ -48,11 +48,12 @@ class ActionService:
         day: DayRequest,
         requested_date: datetime,
         current_user: UserModel,
+        is_webapp: bool,
     ) -> None:
         async with self.repo.transaction() as t:
             await self.repo.create_action(
                 user_id=user.id,
-                action=ActionsEnum.search,
+                action=ActionsEnum.search_webapp if is_webapp else ActionsEnum.search,
                 created_at=datetime.now(),
                 requested_day=requested_date.date(),
                 new_group=day.group_number,
@@ -67,7 +68,9 @@ class ActionService:
         requested_date: datetime,
         user_id: int,
         current_user: UserModel,
+        is_webapp: bool,
     ) -> None:
+        action = ActionsEnum.search_pattern_webapp if is_webapp else ActionsEnum.search_pattern
         async with self.repo.transaction() as t:
             user = await self.services.external_user.repo.get_external_user_by_id(
                 external_user_id=user_id,
@@ -75,7 +78,7 @@ class ActionService:
 
             await self.repo.create_action(
                 user_id=user.id,
-                action=ActionsEnum.search_pattern,
+                action=action,
                 created_at=datetime.now(),
                 requested_day=requested_date.date(),
                 current_group=user.group_number,

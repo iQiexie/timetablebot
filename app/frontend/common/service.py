@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from app.backend.api.services.dto.classes import LinePositionEnum
 from app.backend.api.services.dto.classes import WEEK_DAYS_NUMBERED
@@ -45,6 +46,7 @@ async def compose_classes(
     searching_date: datetime,
     backend_client: BackendApi,
     pattern: str = None,
+    is_webapp: Optional[bool] = False,
 ) -> str:
     week_day_index = searching_date.astimezone().isocalendar().weekday
     week_index = searching_date.astimezone().isocalendar().week  # порядковый номер искомой недели
@@ -62,9 +64,9 @@ async def compose_classes(
 
     if pattern:
         data.pattern = pattern
-        classes = await backend_client.get_classes_pattern(data=data)
+        classes = await backend_client.get_classes_pattern(data=data, is_webapp=is_webapp)
     else:
-        classes = await backend_client.get_classes(data=data)
+        classes = await backend_client.get_classes(data=data, is_webapp=is_webapp)
 
     header = compose_header(
         week_day=week_day,
