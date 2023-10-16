@@ -52,6 +52,11 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         action="typing",
     )
 
+    msg = await TelegramClient.bot.send_message(
+        chat_id=message.chat.id,
+        text="Генерирую ответ... ⏳",
+    )
+
     my_name = message.from_user.first_name or message.from_user.username
     state_data = await state.get_data()
     chat_context = state_data.get(
@@ -64,8 +69,9 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     )
     chat_context.append(response.dict())
 
-    await TelegramClient.send_message(
-        query=message,
+    await TelegramClient.bot.edit_message_text(
+        chat_id=msg.chat.id,
+        message_id=msg.message_id,
         text=response.content,
         reply_markup=get_light_menu_keyboard(),
     )
