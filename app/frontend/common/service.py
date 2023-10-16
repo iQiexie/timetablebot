@@ -22,7 +22,11 @@ def compose_header(
     group_number: int,
 ) -> str:
     current_week = datetime.now().today().isocalendar().week
-    week_order = "Эта неделя" if current_week == week_index else "Следующая неделя"
+    week_order = {
+        current_week == week_index: "Эта неделя",
+        current_week > week_index: "Следующая неделя",
+        current_week < week_index: "Предыдущая неделя",
+    }[True]
 
     return (
         "("

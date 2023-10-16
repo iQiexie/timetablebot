@@ -1,5 +1,29 @@
 const client = window.Telegram.WebApp;
 
+const toISOStringWithTimezone = date => {
+  const tzOffset = -date.getTimezoneOffset();
+  const diff = tzOffset >= 0 ? '+' : '-';
+  const pad = n => `${Math.floor(Math.abs(n))}`.padStart(2, '0');
+  return date.getFullYear() +
+    '-' + pad(date.getMonth() + 1) +
+    '-' + pad(date.getDate()) +
+    'T' + pad(date.getHours()) +
+    ':' + pad(date.getMinutes()) +
+    ':' + pad(date.getSeconds()) +
+    diff + pad(tzOffset / 60) +
+    ':' + pad(tzOffset % 60);
+};
+
+const human_days = {
+  0: 7,
+  1: 1,
+  2: 2,
+  3: 3,
+  4: 4,
+  5: 5,
+  6: 6,
+}
+
 function CalendarControl() {
 
     const calendar = new Date();
@@ -28,7 +52,7 @@ function CalendarControl() {
         return new Date(calendar.getFullYear(), calendar.getMonth(), 1);
       },
       firstDayNumber: function () {
-        return calendarControl.firstDay().getDay();
+        return human_days[calendarControl.firstDay().getDay()];
       },
       getPreviousMonthLastDate: function () {
         return new Date(
@@ -71,14 +95,12 @@ function CalendarControl() {
       selectDate: function (e) {
         let my_date = new Date(`${e.target.textContent} ${
             calendarControl.calMonthName.en[calendar.getMonth()]
-        } ${calendar.getFullYear()}`)
-        my_date.setDate(my_date.getDate() + 1);
+        } ${calendar.getFullYear()}`);
         const payload = {
-          date: my_date.toISOString()
-        }
-
+            date: toISOStringWithTimezone(my_date)
+        };
         client.sendData(JSON.stringify(payload));
-      },
+    },
 
       plotSelectors: function () {
         document.querySelector(
@@ -93,7 +115,7 @@ function CalendarControl() {
           <div class="calendar-next"><a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128"><path fill="#666" d="M38.8 124.2l52.4-52.42L99 64l-7.77-7.78-52.4-52.4-9.8 7.77L81.44 64 29 116.42z"/></svg></a></div>
           </div>
           <div class="calendar-today-date">Сегодня:
-            ${calendarControl.calWeekDays[lang][calendarControl.localDate.getDay()]},
+            ${calendarControl.calWeekDays[lang][human_days[calendarControl.localDate.getDay()]]},
             ${calendarControl.localDate.getDate()},
             ${calendarControl.calMonthName[lang][calendarControl.localDate.getMonth()]}
             ${calendarControl.localDate.getFullYear()}
@@ -206,6 +228,7 @@ function CalendarControl() {
 
       plotPrevMonthDates: function(dates){
         dates.reverse();
+        console.log(dates)
 
         for(let i=0;i<dates.length;i++) {
             if(document.querySelectorAll(".prev-dates")) {
