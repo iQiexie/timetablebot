@@ -1,3 +1,5 @@
+from asyncio import exceptions
+
 from app.frontend.clients.chat_gpt import FailEnum
 from app.frontend.clients.chat_gpt import GPTApi
 from app.frontend.clients.chat_gpt import GPTMessage
@@ -23,7 +25,14 @@ async def get_completion(context: list[GPTMessage]) -> GPTMessage:
         )
 
     client = GPTApi(token=key)
-    completion = await client.get_completion(context=context)
+
+    try:
+        completion = await client.get_completion(context=context)
+    except exceptions.TimeoutError:
+        return GPTMessage(
+            role="function",
+            content="Прости, твой запрос оказался слишком сложным и не поместился в сообщение 🥲",
+        )
 
     if completion.failed_reason in (FailEnum.key_expired, FailEnum.rate_limit):
         await TelegramClient.bot.send_message(
