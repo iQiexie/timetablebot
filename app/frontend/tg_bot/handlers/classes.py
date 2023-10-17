@@ -117,7 +117,7 @@ async def find_by_week_day(
         back_payload=back_payload,
         current_user=current_user,
         state=state,
-        query=query,
+        message=query.message,
         back=CallbackActions.sweek,
     )
 
@@ -136,7 +136,7 @@ async def find_by_week_day_web_app(
         searching_date=searching_date,
         current_user=current_user,
         state=state,
-        query=message,
+        message=message,
         back=CallbackActions.detailed,
         is_webapp=True,
     )

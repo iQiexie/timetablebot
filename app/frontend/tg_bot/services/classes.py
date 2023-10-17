@@ -54,7 +54,7 @@ def get_searching_date(
 
 
 async def send_by_day(
-    query: CallbackQuery | Message,
+    message: Message,
     searching_date: datetime,
     current_user: User,
     state: FSMContext,
@@ -65,7 +65,7 @@ async def send_by_day(
     context_data = await state.get_data()
     pattern = context_data.get("pattern")
 
-    if not pattern and not await group_index_set(message=query, user=current_user):
+    if not pattern and not await group_index_set(message=message, user=current_user):
         return
 
     final_message = await compose_classes(
@@ -84,9 +84,10 @@ async def send_by_day(
     )
 
     await TelegramClient.send_message(
-        message=query.message,
+        message=message,
         text=final_message,
         reply_markup=keyboard,
+        new_message=is_webapp,
     )
 
     context_data["back"] = back

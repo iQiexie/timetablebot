@@ -51,12 +51,20 @@ async def hello_handler(
         answer_message = "Выбери нужное действие"
         reply_markup = get_menu_keyboard()
 
-    await TelegramClient.send_message(
-        message=message,
-        text=answer_message,
-        reply_markup=reply_markup,
-        new_message=True,
-    )
+    if isinstance(message, CallbackQuery):
+        await TelegramClient.send_message(
+            message=message.message,
+            text=answer_message,
+            reply_markup=reply_markup,
+            new_message=False,
+        )
+    else:
+        await TelegramClient.send_message(
+            message=message,
+            text=answer_message,
+            reply_markup=reply_markup,
+            new_message=True,
+        )
 
     await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,
