@@ -68,7 +68,7 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
             .filter(
                 UserActionModel.created_at > text(f"'{from_date.isoformat()}'::timestamp"),
                 UserActionModel.user_id == ExternalUserModel.id,
-                UserActionModel.button == "chat_gpt",
+                UserActionModel.button.in_({"chat_gpt", "chat_gpt_prompt"}),
                 UserActionModel.pattern.isnot(None),
             )
             .scalar_subquery()

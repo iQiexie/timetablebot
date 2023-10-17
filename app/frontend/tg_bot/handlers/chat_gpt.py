@@ -43,18 +43,18 @@ async def send_menu(query: CallbackQuery, state: FSMContext, current_user: User)
 
 @gpt_router.message(state=FSMStates.chat_gpt)
 async def process_message(message: Message, state: FSMContext, current_user: User) -> None:
+    current_user = await RequestClients.tg_backend.mark_prompt(
+        user_id=current_user.id,
+        telegram_id=current_user.telegram_id,
+        pattern=message.text,
+    )
+
     if not current_user.gpt_allowed:
         await message.answer(
             text="К сожалению, превышен лимит сообщений (5 раз в минуту)",
             reply_markup=get_light_menu_keyboard(),
         )
         return
-
-    await RequestClients.tg_backend.mark_action(
-        user_id=current_user.id,
-        button_name=ButtonsEnum.chat_gpt_prompt,
-        pattern=message.text,
-    )
 
     msg = await TelegramClient.bot.send_message(
         chat_id=message.chat.id,
@@ -86,8 +86,8 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         final_role = response.role
 
         if {
-            i > 30 and i % 10 != 0: True,
-            i > 100 and i % 20 != 0: True,
+            i > 30 and i % 10 != 0: True,  # noqa
+            i > 100 and i % 20 != 0: True,  # noqa
         }.get(True):
             continue
 
@@ -96,7 +96,7 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
             message=msg,
             text=header + final_msg,
             reply_markup=get_light_menu_keyboard(),
-            wait=wait if wait < 0.5 else 0.5,
+            wait=wait if wait < 0.5 else 0.5,  # noqa
         )
 
     await TelegramClient.send_message(

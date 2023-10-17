@@ -99,3 +99,18 @@ class BackendApi(BaseRequestsClient):
         url = "/v1/action/button"
 
         await self._make_request(method="POST", url=url, data=data)
+
+    async def mark_prompt(
+        self,
+        user_id: int,
+        pattern: str,
+        vk_id: Optional[int] = None,
+        telegram_id: Optional[int] = None,
+    ) -> User:
+        url = "/v1/action/prompt"
+        data = json.dumps(
+            {"user_id": user_id, "vk_id": vk_id, "telegram_id": telegram_id, "pattern": pattern}
+        )
+
+        response = await self._make_request(method="POST", url=url, data=data)
+        return User(**response)
