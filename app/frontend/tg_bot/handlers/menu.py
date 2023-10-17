@@ -13,7 +13,6 @@ from app.frontend.tg_bot.keyboards.feedback import get_empty_feedback_keyboard
 from app.frontend.tg_bot.keyboards.menu import get_calendar_keyboard
 from app.frontend.tg_bot.keyboards.menu import get_detailed_menu
 from app.frontend.tg_bot.keyboards.menu import get_menu_keyboard
-from app.frontend.tg_bot.keyboards.settings import get_change_group_keyboard
 from app.frontend.tg_bot.misc.callbacks import Callback
 from app.frontend.tg_bot.misc.callbacks import CallbackActions
 from app.frontend.tg_bot.misc.states import FSMStates
@@ -38,23 +37,13 @@ async def hello_handler(
             reply_markup=get_calendar_keyboard(),
         )
 
-    new_user = current_user.group_number is None
-
-    if new_user:
-        answer_message = (
-            'Привет! Для начала работы с ботом тебе нужно написать "/start", '
-            "а потом тебе нужно поменять свою группу через настройки. \n\n"
-            "Либо просто нажми на кнопку 👇 внизу 👇"
-        )
-        reply_markup = get_change_group_keyboard()
-    else:
-        answer_message = "Выбери нужное действие"
-        reply_markup = get_menu_keyboard()
+    answer_message = "Выбери нужное действие"
+    reply_markup = get_menu_keyboard()
 
     if isinstance(message, CallbackQuery):
         await TelegramClient.send_message(
             message=message.message,
-            text=answer_message,
+            text="Выбери нужное действие",
             reply_markup=reply_markup,
             new_message=False,
         )

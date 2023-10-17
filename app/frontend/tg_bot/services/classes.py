@@ -16,20 +16,18 @@ from app.frontend.tg_bot.misc.callbacks import CallbackActions
 
 
 async def group_index_set(message: CallbackQuery | Message, user: User) -> bool:
-    if isinstance(message, CallbackQuery):
-        message = message.message
+    if user.group_number:
+        return True
 
-    if not user.group_number:
-        text = "Пожалуйста, укажи группу. Для этого нажми на кнопку внизу 👇"
-        await TelegramClient.send_message(
-            message=message,
-            text=text,
-            reply_markup=get_change_group_keyboard(),
-            new_message=True,
-        )
+    text = "Пожалуйста, укажи группу. Для этого нажми на кнопку внизу 👇"
+    payload = dict(text=text, reply_markup=get_change_group_keyboard())
+
+    if isinstance(message, CallbackQuery):
+        await TelegramClient.send_message(message=message.message, **payload)
         return False
 
-    return True
+    await TelegramClient.bot.send_message(chat_id=message.from_user.id, **payload)
+    return False
 
 
 def get_searching_date(

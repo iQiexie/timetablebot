@@ -100,6 +100,10 @@ async def find_by_week_day(
     state: FSMContext,
 ) -> None:
     """Отправляет пары по указанному дню недели"""
+
+    if not await group_index_set(message=query, user=current_user):
+        return
+
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
 
     payload = urllib.parse.parse_qs(callback_data.data)
@@ -129,6 +133,9 @@ async def find_by_week_day_web_app(
     state: FSMContext,
 ) -> None:
     """Отправляет пары по указанному дню недели из веб апы"""
+
+    if not await group_index_set(message=message, user=current_user):
+        return
 
     searching_date = WebAppDateInfo(**json.loads(message.web_app_data.data)).date
 
