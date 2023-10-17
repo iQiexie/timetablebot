@@ -1,5 +1,6 @@
 import json
 
+import asyncstdlib as a
 from aiogram import F
 from aiogram import Router
 from aiogram.dispatcher.fsm.context import FSMContext
@@ -65,23 +66,31 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         "chat_context", [{"role": "user", "content": f"Привет, я {my_name}"}]
     )
     chat_context.append({"role": "user", "content": f"{message.text}"})
+    context = [GPTMessage(**c) for c in chat_context]
 
     final_msg = ""
     final_role = "assistant"
     header = "Генерация ответа... ⏳\n\n"
 
-    async for response in get_completion(context=[GPTMessage(**c) for c in chat_context]):
+    async for i, response in a.enumerate(get_completion(context=context)):
         if not response.content:
             continue
 
         final_msg += response.content
         final_role = response.role
-        header = header.replace("⏳", "⌛️") if "⏳" in message else header.replace("⌛", "⏳️")
 
+        if {
+            i > 30 and i % 10 != 0: True,
+            i > 100 and i % 20 != 0: True,
+        }.get(True):
+            continue
+
+        wait = 0 + i / 200
         await TelegramClient.send_message(
             message=msg,
             text=header + final_msg,
             reply_markup=get_light_menu_keyboard(),
+            wait=wait if wait < 0.5 else 0.5,
         )
 
     await TelegramClient.send_message(

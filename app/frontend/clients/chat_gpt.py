@@ -100,7 +100,7 @@ class GPTApi(BaseRequestsClient):
         if "[DONE]" in resp:
             return
 
-        raw_resp = resp.replace("data: ", "").replace("\\n", "")[:-1]
+        raw_resp = resp.replace("data: ", "")[:-1]
 
         if raw_resp in ("\n", '"') or not raw_resp:
             return
