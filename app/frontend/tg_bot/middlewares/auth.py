@@ -24,7 +24,7 @@ class AuthMiddleware(BaseMiddleware):
         data: dict[str, Any],
     ) -> Any:
         if isinstance(event, Message):
-            logging.info(f"Got: {event.dict()}")
+            logging.info(f"Got: {dict(id=event.message_id, chat=event.chat.id)}")
 
         subscriber_status = await TelegramClient.bot.get_chat_member(
             chat_id=settings.TELEGRAM_BLOG_CHANNEL_ID,
