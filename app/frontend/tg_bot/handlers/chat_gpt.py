@@ -50,6 +50,12 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         )
         return
 
+    await RequestClients.tg_backend.mark_action(
+        user_id=current_user.id,
+        button_name=ButtonsEnum.chat_gpt_prompt,
+        pattern=message.text,
+    )
+
     msg = await TelegramClient.bot.send_message(
         chat_id=message.chat.id,
         text="Генерирую ответ... ⏳",
@@ -71,12 +77,6 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     final_msg = ""
     final_role = "assistant"
     header = "Генерация ответа... ⏳\n\n"
-
-    await RequestClients.tg_backend.mark_action(
-        user_id=current_user.id,
-        button_name=ButtonsEnum.chat_gpt_prompt,
-        pattern=message.text,
-    )
 
     async for i, response in a.enumerate(get_completion(context=context)):
         if not response.content:
