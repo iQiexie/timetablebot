@@ -1,3 +1,4 @@
+import logging
 from typing import Any
 from typing import Awaitable
 from typing import Callable
@@ -22,6 +23,9 @@ class AuthMiddleware(BaseMiddleware):
         event: Message | CallbackQuery,
         data: dict[str, Any],
     ) -> Any:
+        if isinstance(event, Message):
+            logging.info(f"Got: {event.dict()}")
+
         subscriber_status = await TelegramClient.bot.get_chat_member(
             chat_id=settings.TELEGRAM_BLOG_CHANNEL_ID,
             user_id=event.from_user.id,
