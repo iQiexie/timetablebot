@@ -17,17 +17,15 @@ from app.frontend.tg_bot.misc.callbacks import CallbackActions
 
 async def group_index_set(message: CallbackQuery | Message, user: User) -> bool:
     if isinstance(message, CallbackQuery):
-        message_id = message.message.message_id
-    else:
-        message_id = message.message_id
+        message = message.message
 
     if not user.group_number:
         text = "Пожалуйста, укажи группу. Для этого нажми на кнопку внизу 👇"
-        await TelegramClient.bot.edit_message_text(
-            chat_id=message.from_user.id,
-            message_id=message_id,
+        await TelegramClient.send_message(
+            message=message,
             text=text,
             reply_markup=get_change_group_keyboard(),
+            new_message=True,
         )
         return False
 
