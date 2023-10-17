@@ -26,6 +26,7 @@ class ButtonsEnum(StrEnum):
     kill_keyboard = "kill_keyboard"
     settings = "settings"
     chat_gpt = "chat_gpt"
+    chat_gpt_prompt = "chat_gpt_prompt"
     uptime = "uptime"
     menu = "menu"
     back = "back"
