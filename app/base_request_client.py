@@ -1,9 +1,11 @@
 import logging
 from http import HTTPStatus
+from typing import AsyncIterator
 from typing import Optional
 
 import aiohttp
-from aiohttp import ClientResponse, ContentTypeError
+from aiohttp import ClientResponse
+from aiohttp import ContentTypeError
 from starlette import status
 
 
@@ -109,3 +111,17 @@ class BaseRequestsClient:
                     raise_exceptions=raise_exceptions,
                     return_json=return_json,
                 )
+
+    async def _stream_request(
+        self,
+        url: str,
+        data: dict | str | list = None,
+        json: dict | str | list = None,
+        params: dict | str | list = None,
+    ) -> AsyncIterator[str]:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                url=f"{self.base_url}{url}", json=json, data=data, params=params, headers=self.auth
+            ) as r:
+                async for line in r.content:
+                    yield line.decode(encoding="UTF-8")

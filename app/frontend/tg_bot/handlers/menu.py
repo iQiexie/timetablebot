@@ -52,9 +52,10 @@ async def hello_handler(
         reply_markup = get_menu_keyboard()
 
     await TelegramClient.send_message(
-        query=message,
+        message=message,
         text=answer_message,
         reply_markup=reply_markup,
+        new_message=True,
     )
 
     await RequestClients.tg_backend.mark_action(
@@ -87,7 +88,7 @@ async def pattern_search(query: CallbackQuery, current_user: User, state: FSMCon
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
 
     await Clients.telegram.send_message(
-        query=query,
+        message=query.message,
         text=greeting,
         reply_markup=get_empty_feedback_keyboard(
             back=CallbackActions.detailed,
@@ -119,7 +120,7 @@ async def detailed_search(query: CallbackQuery, current_user: User, state: FSMCo
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=header,
         reply_markup=keyboard,
     )
@@ -137,7 +138,7 @@ async def stop_search_pattern(query: CallbackQuery, current_user: User, state: F
     keyboard = get_detailed_menu()
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text="Режим поиска сброшен",
         reply_markup=keyboard,
     )

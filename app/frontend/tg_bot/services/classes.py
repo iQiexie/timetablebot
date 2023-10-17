@@ -84,7 +84,7 @@ async def send_by_day(
     )
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=final_message,
         reply_markup=keyboard,
     )

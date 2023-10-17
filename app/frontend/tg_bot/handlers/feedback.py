@@ -35,7 +35,7 @@ async def downvote(query: CallbackQuery, callback_data: Callback, state: FSMCont
     )
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=f"{query.message.text}\n\n{answer_text}",
         reply_markup=get_empty_feedback_keyboard(
             back=context_data.get("back"),
@@ -65,7 +65,7 @@ async def upvote(query: CallbackQuery, callback_data: Callback, state: FSMContex
     await query.answer("Обратная связь учтена. Спасибо 💖")
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=f"{query.message.text}\n\n👍 Правильно",
         reply_markup=get_empty_feedback_keyboard(
             back=context_data.get("back") or CallbackActions.menu,

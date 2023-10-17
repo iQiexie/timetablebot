@@ -1,4 +1,5 @@
 from asyncio import exceptions
+from typing import AsyncIterator
 
 from app.frontend.clients.chat_gpt import FailEnum
 from app.frontend.clients.chat_gpt import GPTApi
@@ -8,7 +9,25 @@ from app.frontend.clients.telegram import TelegramClient
 from config import settings
 
 
-async def get_completion(context: list[GPTMessage]) -> GPTMessage:
+async def _get_completion(key: str, context: list[GPTMessage]) -> AsyncIterator[GPTMessage]:
+    client = GPTApi(token=key)
+    async for response in client.stream_completions(context=context):
+        if response.failed_reason not in (FailEnum.key_expired, FailEnum.rate_limit):
+            yield GPTMessage(role=response.role, content=response.content)
+        else:
+            await TelegramClient.bot.send_message(
+                chat_id=settings.TELEGRAM_ADMIN,
+                text=(
+                    f"Key expired: {key}, left: {gpt_keys_manager.keys_count()}\n\n"
+                    f"Current keys: {gpt_keys_manager.get_keys()}"
+                ),
+            )
+            key = gpt_keys_manager.get_key()
+            async for completion in _get_completion(key=key, context=context):
+                yield completion
+
+
+async def get_completion(context: list[GPTMessage]) -> AsyncIterator[GPTMessage]:
     key = gpt_keys_manager.get_key()
     if not key:
         await TelegramClient.bot.send_message(
@@ -16,7 +35,7 @@ async def get_completion(context: list[GPTMessage]) -> GPTMessage:
             text="All the keys are expired!!!",
         )
 
-        return GPTMessage(
+        yield GPTMessage(
             role="function",
             content=(
                 "К сожалению, чатом сейчас пользуется слишком много людей, лимит "
@@ -24,24 +43,14 @@ async def get_completion(context: list[GPTMessage]) -> GPTMessage:
             ),
         )
 
-    client = GPTApi(token=key)
+        return
 
     try:
-        completion = await client.get_completion(context=context)
+        async for completion in _get_completion(key=key, context=context):
+            yield completion
     except exceptions.TimeoutError:
-        return GPTMessage(
+        yield GPTMessage(
             role="function",
             content="Прости, твой запрос оказался слишком сложным и не поместился в сообщение 🥲",
         )
-
-    if completion.failed_reason in (FailEnum.key_expired, FailEnum.rate_limit):
-        await TelegramClient.bot.send_message(
-            chat_id=settings.TELEGRAM_ADMIN,
-            text=(
-                f"Key expired: {key}, left: {gpt_keys_manager.keys_count()}\n\n"
-                f"Current keys: {gpt_keys_manager.get_keys()}"
-            ),
-        )
-        return await get_completion(context=context)
-
-    return GPTMessage(role=completion.role, content=completion.content)
+        return

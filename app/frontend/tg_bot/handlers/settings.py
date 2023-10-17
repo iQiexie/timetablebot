@@ -28,7 +28,7 @@ async def send_settings(query: CallbackQuery, current_user: User) -> None:
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
 
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=f"Настройки\n\nТекущая группа: {current_user.group_number}",
         reply_markup=get_settings_keyboard(),
     )
@@ -45,7 +45,7 @@ async def get_uptime(query: CallbackQuery, current_user: User) -> None:
 
     try:
         await TelegramClient.send_message(
-            query=query,
+            message=query.message,
             reply_markup=get_settings_keyboard(),
             text=(
                 f"Настройки\n\nТекущая группа: {current_user.group_number}\n\n"
@@ -69,7 +69,7 @@ async def get_uptime(query: CallbackQuery, current_user: User) -> None:
 async def change_group(query: CallbackQuery, current_user: User, state: FSMContext) -> None:
     await state.set_state(FSMStates.picking_group)
 
-    await TelegramClient.send_message(query=query, text="Теперь напиши номер своей группы")
+    await TelegramClient.send_message(message=query.message, text="Теперь напиши номер своей группы")
 
     await RequestClients.tg_backend.mark_action(
         user_id=current_user.id,

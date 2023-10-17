@@ -49,7 +49,7 @@ async def today_classes_filter(query: CallbackQuery, current_user: User, state: 
 
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=final_message,
         reply_markup=keyboard,
     )
@@ -82,7 +82,7 @@ async def tomorrow_classes_filter(
 
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=final_message,
         reply_markup=keyboard,
     )
@@ -149,9 +149,10 @@ async def search_by_pattern(message: Message, state: FSMContext) -> None:
     keyboard = get_detailed_menu(pattern=message.text)
 
     await Clients.telegram.send_message(
-        query=message,
+        message=message,
         text="Готово, теперь выбери нужную неделю и день",
         reply_markup=keyboard,
+        new_message=True,
     )
 
     await state.set_state(state=FSMStates.pattern_search)
@@ -177,7 +178,7 @@ async def day_selection(
 
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text=header,
         reply_markup=keyboard,
     )

@@ -26,7 +26,7 @@ gpt_router = Router()
 async def send_menu(query: CallbackQuery, state: FSMContext, current_user: User) -> None:
     await query.answer(settings.TELEGRAM_EMPTY_MESSAGE)
     await TelegramClient.send_message(
-        query=query,
+        message=query.message,
         text="🟢 Диалог с ChatGPT активен\n\nПривет, чем могу помочь?",
         reply_markup=get_gpt_menu_keyboard(),
         delete_message=True,
@@ -66,18 +66,34 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     )
     chat_context.append({"role": "user", "content": f"{message.text}"})
 
-    response = await get_completion(
-        context=[GPTMessage(**c) for c in chat_context],
-    )
-    chat_context.append(response.dict())
+    final_msg = ""
+    final_role = "assistant"
+    header = "Генерация ответа... ⏳\n\n"
 
-    await TelegramClient.bot.edit_message_text(
-        chat_id=msg.chat.id,
-        message_id=msg.message_id,
-        text=response.content,
-        reply_markup=get_light_menu_keyboard(),
+    async for response in get_completion(context=[GPTMessage(**c) for c in chat_context]):
+        if not response.content:
+            continue
+
+        final_msg += response.content
+        final_role = response.role
+        header = header.replace("⏳", "⌛️") if "⏳" in message else header.replace("⌛", "⏳️")
+
+        await TelegramClient.send_message(
+            message=msg,
+            text=header + final_msg,
+            reply_markup=get_light_menu_keyboard(),
+        )
+
+    await TelegramClient.send_message(
+        message=msg,
+        text=final_msg or "Произошла ошибка :(",
+        reply_markup=get_light_menu_keyboard() if final_msg else None,
     )
 
+    if not final_msg:
+        return
+
+    chat_context.append({"role": final_role, "content": final_msg})
     state_data["chat_context"] = chat_context
     await state.set_data(state_data)
 
