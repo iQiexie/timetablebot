@@ -59,7 +59,7 @@ class ExternalUserRepo(BaseRepo[ExternalUserModel]):
         telegram_id: Optional[int] = None,
         vk_id: Optional[int] = None,
     ) -> List[RowMapping]:
-        max_messages_per_minute = 5
+        max_messages_per_minute = 6
         from_date = datetime.now() - timedelta(minutes=1)
 
         sub = (
