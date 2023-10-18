@@ -66,11 +66,8 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
         action="typing",
     )
 
-    my_name = message.from_user.first_name or message.from_user.username
     state_data = await state.get_data()
-    chat_context = state_data.get(
-        "chat_context", [{"role": "user", "content": f"Привет, я {my_name}"}]
-    )
+    chat_context = state_data.get("chat_context", [])
     chat_context.append({"role": "user", "content": f"{message.text}"})
     context = [GPTMessage(**c) for c in chat_context]
 
