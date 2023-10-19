@@ -4,6 +4,7 @@ import asyncstdlib as a
 from aiogram import F
 from aiogram import Router
 from aiogram.dispatcher.fsm.context import FSMContext
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import CallbackQuery
 from aiogram.types import Message
 
@@ -67,7 +68,8 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     )
 
     state_data = await state.get_data()
-    chat_context = state_data.get("chat_context", [])
+    my_name = msg.from_user.first_name or message.from_user.username or "Anon"
+    chat_context = state_data.get("chat_context", [{"role": "user", "content": f" I'm {my_name}"}])
     chat_context.append({"role": "user", "content": f"{message.text}"})
     context = [GPTMessage(**c) for c in chat_context]
 
@@ -89,12 +91,24 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
             continue
 
         wait = 0 + i / 200
-        await TelegramClient.send_message(
-            message=msg,
-            text=header + final_msg,
-            reply_markup=get_light_menu_keyboard(),
-            wait=wait if wait < 0.5 else 0.5,  # noqa
-        )
+
+        try:
+            msg = await TelegramClient.send_message(
+                message=msg,
+                text=header + final_msg,
+                wait=wait if wait < 0.5 else 0.5,  # noqa
+            )
+        except TelegramBadRequest as e:
+            if "MESSAGE_TOO_LONG" not in e.message:
+                raise e
+
+            final_msg = response.content
+            msg = await TelegramClient.send_message(
+                message=msg,
+                text=header + final_msg,
+                wait=wait if wait < 0.5 else 0.5,  # noqa
+                new_message=True,
+            )
 
     await TelegramClient.send_message(
         message=msg,

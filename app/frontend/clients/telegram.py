@@ -86,7 +86,7 @@ class TelegramClient:
         try:
             await asyncio.sleep(wait or 0)
             return await TelegramClient.bot.send_message(
-                chat_id=message.from_user.id,
+                chat_id=message.chat.id,
                 text=text,
                 reply_markup=reply_markup,
             )
