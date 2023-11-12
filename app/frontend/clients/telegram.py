@@ -44,6 +44,15 @@ class TelegramClient:
                 text=text,
                 reply_markup=reply_markup,
             )
+        except TelegramBadRequest as e:
+            if "message is not modified" in e.message:
+                return await TelegramClient.bot.send_message(
+                    chat_id=message.chat.id,
+                    text=text,
+                    reply_markup=reply_markup,
+                )
+
+            raise e
 
     @classmethod
     async def _edit_message(
