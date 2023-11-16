@@ -1,4 +1,5 @@
 import json
+import logging
 from datetime import datetime
 from datetime import timedelta
 from enum import Enum
@@ -140,6 +141,7 @@ class GPTApi(BaseRequestsClient):
             if not data:
                 continue
 
+            logging.info(f"gpt_debug!! {data=}")
             if errors := data.get("error"):
                 yield self._parse_responses(message=errors)
             else:

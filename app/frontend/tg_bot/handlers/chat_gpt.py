@@ -1,4 +1,5 @@
 import json
+import logging
 
 import asyncstdlib as a
 from aiogram import F
@@ -77,6 +78,7 @@ async def process_message(message: Message, state: FSMContext, current_user: Use
     header = "Генерация ответа... ⏳\n\n"
 
     async for i, response in a.enumerate(get_completion(context=context)):
+        logging.info(f"gpt_debug!! {response}")
         if not response.content:
             continue
 
