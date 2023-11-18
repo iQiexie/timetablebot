@@ -13,6 +13,7 @@ class BaseRequestsClient:
     base_url: str = NotImplemented
     auth: dict = NotImplemented
     raise_exceptions: bool = NotImplemented
+    proxy: Optional[str] = NotImplemented
 
     def get_error_message(self, status_code: int, msg: Optional[str] = None) -> str:
         return (
@@ -121,7 +122,12 @@ class BaseRequestsClient:
     ) -> AsyncIterator[str]:
         async with aiohttp.ClientSession() as session:
             async with session.post(
-                url=f"{self.base_url}{url}", json=json, data=data, params=params, headers=self.auth
+                url=f"{self.base_url}{url}",
+                json=json,
+                data=data,
+                params=params,
+                headers=self.auth,
+                proxy=self.proxy,
             ) as r:
                 async for line in r.content:
                     yield line.decode(encoding="UTF-8")

@@ -49,6 +49,7 @@ class Settings(BaseSettings):
     GOOGLE_SECRET: dict
     GPT_PROVIDER_KEYS: list[str]
     GPT_PROVIDER_URL: str
+    GPT_PROXY: str
 
     @property
     def POSTGRES_URL(self) -> str:  # noqa

@@ -40,6 +40,7 @@ class GPTApi(BaseRequestsClient):
         self.auth = {"Authorization": f"Bearer {token}"}
         self.raise_exceptions = False
         self.token = token
+        self.proxy = settings.GPT_PROXY
 
     def _parse_responses(self, message: str) -> GPTResponse:
         if "Rate limit reached" in message:
