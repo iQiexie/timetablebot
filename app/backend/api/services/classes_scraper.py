@@ -1,15 +1,14 @@
 import logging
 from typing import List
 
-from app.backend.api.services.dto.classes import (
-    DURATIONS_MAP,
-    ClassCords,
-    LinePositionEnum,
-    WeekDaysEnum,
-)
+from app.backend.api.services.dto.classes import ClassCords
+from app.backend.api.services.dto.classes import DURATIONS_MAP
+from app.backend.api.services.dto.classes import LinePositionEnum
+from app.backend.api.services.dto.classes import WeekDaysEnum
 from app.backend.api.services.dto.classes_scraper import ScraperResult
 from app.backend.core.constants import GRADE_RANGE
-from app.backend.libs.dto.sheets import Sheet, SheetValue
+from app.backend.libs.dto.sheets import Sheet
+from app.backend.libs.dto.sheets import SheetValue
 
 
 def get_column_url(column: SheetValue) -> str:
@@ -76,7 +75,7 @@ def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
                     )
 
                 # indexing groups
-                if column_value.isdigit():
+                if column_value.isdigit() and int(column_value) >= 100:
                     # index - index of column that contains related group classes
                     group_indexes[int(column_value)] = index
                     group_indexes[f"index;{index}"] = int(column_value)
