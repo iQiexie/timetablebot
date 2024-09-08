@@ -1,7 +1,5 @@
 # Бот-расписание для моего университета
 
-https://vk.com/mpsu_schedule
-
 ## Стек
 
 - Backend: fastapi + postgres + sqlalchemy
