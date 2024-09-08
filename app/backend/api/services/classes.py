@@ -154,8 +154,8 @@ class ClassesService:
 
         sheets = dict()
 
-        for i in range(*GRADE_RANGE):
-            sheets[i] = await self.google_api.read_sheet(i)
+        for grade, range_str in GRADE_RANGE:
+            sheets[grade] = await self.google_api.read_sheet(range_str)
 
         return sheets
 

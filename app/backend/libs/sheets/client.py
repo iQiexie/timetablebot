@@ -55,11 +55,9 @@ class GoogleAPI:
 
         return build(service_name, service_version, credentials=creds)
 
-    async def read_sheet(self, group_index: int) -> Sheet:
+    async def read_sheet(self, range_str: str) -> Sheet:
         if self.sheets_service is None:
             raise RuntimeError("Sheets service is not initialized")
-
-        range_str = f"{group_index} курс"  # literal sheet's name
 
         values = (
             self.sheets_service.spreadsheets()

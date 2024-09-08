@@ -23,7 +23,7 @@ def get_column_url(column: SheetValue) -> str:
 def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
     final_classes = []
 
-    for grade in range(*GRADE_RANGE):
+    for grade in set(i for i, _ in GRADE_RANGE):
         logging.info(f"Parsing grade: {grade}")
         sheet = sheets[grade]
 
