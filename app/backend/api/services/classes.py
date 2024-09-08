@@ -147,7 +147,7 @@ class ClassesService:
             )
             return self._cast_classes(classes=classes, requested_date=requested_date)
 
-    async def _get_sheets(self) -> dict[int, Sheet]:
+    async def _get_sheets(self) -> dict[int, list[Sheet]]:
         async with self.google_api.repo.transaction() as t:
             await self.google_api.init_services()
             await t.commit()
@@ -155,7 +155,12 @@ class ClassesService:
         sheets = dict()
 
         for grade, range_str in GRADE_RANGE:
-            sheets[grade] = await self.google_api.read_sheet(range_str)
+            try:
+                existing_sheets = sheets[grade]
+            except KeyError:
+                existing_sheets = []
+
+            sheets[grade] = existing_sheets + [await self.google_api.read_sheet(range_str)]
 
         return sheets
 

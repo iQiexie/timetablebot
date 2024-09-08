@@ -20,86 +20,92 @@ def get_column_url(column: SheetValue) -> str:
             return url
 
 
-def scrape_spreadsheet(sheets: dict[int, Sheet]) -> List[ScraperResult]:
-    final_classes = []
+def get_sheet_data(sheet: Sheet) -> list[ScraperResult]:
+    group_indexes = {}
+    week_days = [value for value in WeekDaysEnum]
+    durations = DURATIONS_MAP.keys()
+    line_positions = [i for i in LinePositionEnum]
 
-    for grade in set(i for i, _ in GRADE_RANGE):
-        logging.info(f"Parsing grade: {grade}")
-        sheet = sheets[grade]
+    classes = []
+    last_week_day = None
+    last_duration = None
+    last_cords = None
 
-        group_indexes = {}
-        week_days = [value for value in WeekDaysEnum]
-        durations = DURATIONS_MAP.keys()
-        line_positions = [i for i in LinePositionEnum]
+    for row_index, row in enumerate(sheet.row_data):
+        if not row.values:
+            continue
 
-        classes = []
-        last_week_day = None
-        last_duration = None
-        last_cords = None
+        for index, column in enumerate(row.values):
+            column_value = column.formatted_value
+            column_url = get_column_url(column)
+            ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
 
-        for row_index, row in enumerate(sheet.row_data):
-            if not row.values:
+            if (not column_value) or (column_value in ending_values):
                 continue
 
-            for index, column in enumerate(row.values):
-                column_value = column.formatted_value
-                column_url = get_column_url(column)
-                ending_values = ("А.В. Кузнецов", "В.В. Товаренко")
+            column_value = column_value.strip()
 
-                if (not column_value) or (column_value in ending_values):
-                    continue
+            if column_value.upper() in week_days:
+                last_week_day = column_value.upper()
 
-                column_value = column_value.strip()
+            if column_value.replace(" ", "") in durations:
+                column_value = column_value.replace(" ", "")
+                column_value = {
+                    "16.00-17-30": "16.00-17.30",
+                    "17:00-18:30": "17.00-18.30",
+                    "18:40-20:10": "18.40-20.10",
+                }.get(column_value, column_value)
 
-                if column_value.upper() in week_days:
-                    last_week_day = column_value.upper()
+                last_duration = column_value
 
-                if column_value.replace(" ", "") in durations:
-                    column_value = column_value.replace(" ", "")
-                    column_value = {
-                        "16.00-17-30": "16.00-17.30",
-                        "17:00-18:30": "17.00-18.30",
-                        "18:40-20:10": "18.40-20.10",
-                    }.get(column_value, column_value)
+            if column_value.upper() in line_positions:
+                last_line_position = column_value.upper()
 
-                    last_duration = column_value
+                last_cords = ClassCords(
+                    week_day=last_week_day,  # noqa
+                    line_position=last_line_position,  # noqa
+                    duration=last_duration,
+                    row_index=int(row_index),
+                )
 
-                if column_value.upper() in line_positions:
-                    last_line_position = column_value.upper()
+            # indexing groups
+            if column_value.isdigit() and int(column_value) >= 100:
+                # index - index of column that contains related group classes
+                group_indexes[int(column_value)] = index
+                group_indexes[f"index;{index}"] = int(column_value)
 
-                    last_cords = ClassCords(
-                        week_day=last_week_day,  # noqa
-                        line_position=last_line_position,  # noqa
-                        duration=last_duration,
-                        row_index=int(row_index),
+            if index in group_indexes.values() and last_cords:
+                group_number = group_indexes[f"index;{index}"]
+                last_cords.group_number = int(group_number)
+
+                if column_url:
+                    classes.append(
+                        ScraperResult(
+                            **last_cords.dict(),
+                            value=column_value + f"\n\nСсылка: {column_url}",
+                        )
+                    )
+                else:
+                    classes.append(
+                        ScraperResult(
+                            **last_cords.dict(),
+                            value=column_value,
+                        )
                     )
 
-                # indexing groups
-                if column_value.isdigit() and int(column_value) >= 100:
-                    # index - index of column that contains related group classes
-                    group_indexes[int(column_value)] = index
-                    group_indexes[f"index;{index}"] = int(column_value)
+    return classes
 
-                if index in group_indexes.values() and last_cords:
-                    group_number = group_indexes[f"index;{index}"]
-                    last_cords.group_number = int(group_number)
 
-                    if column_url:
-                        classes.append(
-                            ScraperResult(
-                                **last_cords.dict(),
-                                value=column_value + f"\n\nСсылка: {column_url}",
-                            )
-                        )
-                    else:
-                        classes.append(
-                            ScraperResult(
-                                **last_cords.dict(),
-                                value=column_value,
-                            )
-                        )
+def scrape_spreadsheet(sheets: dict[int, list[Sheet]]) -> List[ScraperResult]:
+    final_classes = []
 
-        final_classes += classes
+    for grade in (i for i, _ in GRADE_RANGE):
+        logging.info(f"Parsing grade: {grade}")
+        _sheets = sheets[grade]
+
+        for sheet in _sheets:
+            classes = get_sheet_data(sheet=sheet)
+            final_classes += classes
 
     return final_classes
 
