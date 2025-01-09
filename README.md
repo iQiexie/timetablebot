@@ -1,9 +1,4 @@
-# Бот-расписание для моего университета
-
-## Стек
-
-- Backend: fastapi + postgres + sqlalchemy
-- Frontend: vkbottles + aiogram
+# Код бота, которого я сделал для своего универа
 
 
 ## Deploy
@@ -24,13 +19,6 @@
 
 1. Запускаем приложение `make deploy`
 
-
-## Contribute
-
-- Устанавливаем пре-коммит хуки `pre-commit install`
-- Новые БД модели должны быть импортированы тут `app.backend.db.base.py`  (Для совместимости с алембиком)
-- Новые ВК мидлвари должны быть импортированы тут `app.frontend.vk_bot.middlewares.__init__.py`
-- Новые ВК блупринты должны быть импортированы тут `app.frontend.vk_bot.blueprints.__init__.py`
 
 #### Енвы
 
